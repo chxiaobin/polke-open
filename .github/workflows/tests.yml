@@ -1,0 +1,19 @@
+name: tests
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+      - run: python -m spacy download en_core_web_sm
+      # Offline tiers only; LLM-tier tests need POLKE_LLM=1 + an API key.
+      - run: pytest -q

@@ -65,6 +65,32 @@ Each output record:
 }
 ```
 
+## Docker
+
+```bash
+docker build -t polke .
+docker run --rm -p 8100:8100 --env-file .env polke
+
+# or pull the published image (tags track releases):
+docker run --rm -p 8100:8100 --env-file .env ghcr.io/chxiaobin/polke:latest
+
+# CLI inside the container, corpus mounted from the host:
+docker run --rm -v ./corpus:/corpus --env-file .env polke \
+  polke annotate /corpus --jsonl /corpus/annotations.jsonl
+```
+
+The image ships with `en_core_web_sm` and `en_core_web_md`; select via
+`POLKE_SPACY_MODEL`. From another Compose service, build straight from the
+repo — no vendored code:
+
+```yaml
+polke:
+  build:
+    context: https://github.com/chxiaobin/polke-open.git#v0.1.0
+  environment:
+    OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+```
+
 ## HTTP API
 
 ```bash
