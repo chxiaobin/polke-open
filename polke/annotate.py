@@ -67,6 +67,8 @@ def catalog() -> list:
             "example": c.get("example", ""),
             "detector_type": c.get("detector_type", ""),
             "needs_llm": c.get("detector_type", "") in llm_mod.LLM_TYPES,
+            "definition": c.get("definition_raw", ""),
+            "use_notes": (c.get("use_notes") or "").strip(),
         })
     rows.sort(key=lambda r: (r["category"], r["id"]))
     return rows

@@ -6,7 +6,9 @@ phrase, noun phrase, clause & sentence grammar, clause connection, discourse &
 information structure, and spoken/interactional grammar; the Part VI spoken
 stratum was derived from a gap analysis against the *Grammar of Spoken and
 Written English* (Biber et al. 2021) and the *Cambridge Grammar of English*
-(Carter & McCarthy 2006) — see `docs/gap_analysis_report.md`.
+(Carter & McCarthy 2006) — see `docs/gap_analysis_report.md`. The full
+inventory with IDs, examples, and detector tiers is listed in
+[`docs/constructions.md`](docs/constructions.md).
 
 Detectors come in four tiers:
 
@@ -45,7 +47,7 @@ polke annotate path/to/corpus/
 # Only passives and relative clauses, combined JSONL output, offline tiers only:
 polke annotate corpus/ -c PAS,REL --no-llm --jsonl out.jsonl
 
-# Browse the inventory:
+# Browse the inventory (also listed in docs/constructions.md):
 polke catalog | less
 ```
 
@@ -98,7 +100,9 @@ polke serve --port 8100     # or: uvicorn polke.server:app
 ```
 
 - `GET /health` — service status + LLM readiness
-- `GET /catalog` — the 670-construct inventory
+- `GET /catalog` — the 670-construct inventory (incl. definitions/use notes)
+- `GET /reference` — browsable HTML reference: search, part/category/LLM-tier
+  filters, and a stable anchor per construction (`/reference#PAS-01`)
 - `POST /annotate` — `{"text": "...", "constructions": ["PAS", "REL-01"], "context": ["optional preceding utterances"]}`
 
 ```bash
@@ -148,7 +152,9 @@ polke/
                       lexicons.json (curated word lists)
   annotate.py         high-level Annotator API
   cli.py server.py    command line and FastAPI service
-docs/                 inventory provenance (gap analysis, detector notes)
+docs/                 constructions.md (full inventory reference; regenerate with
+                      scripts/generate_constructions_doc.py), inventory provenance
+                      (gap analysis, detector notes)
 ```
 
 ## License

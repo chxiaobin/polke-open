@@ -9,6 +9,7 @@ unavailable (the service still runs — rule/lexicon tiers are unaffected).
 Endpoints:
     GET  /health     service + LLM readiness
     GET  /catalog    the construct inventory
+    GET  /reference  human-readable, filterable inventory reference (HTML)
     POST /annotate   {text, constructions?, text_id?, context?}
 """
 from __future__ import annotations
@@ -18,11 +19,14 @@ from contextlib import asynccontextmanager
 from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
 
+from . import __version__
 from . import llm as llm_mod
 from .annotate import Annotator, catalog
 from .env import load_env, spacy_model
+from .reference import reference_html
 
 log = logging.getLogger("polke")
 
@@ -42,7 +46,7 @@ async def _lifespan(app: FastAPI):
 
 
 app = FastAPI(title="POLKE grammatical-construction annotator",
-              version="0.1.0", lifespan=_lifespan)
+              version=__version__, lifespan=_lifespan)
 
 
 class AnnotateRequest(BaseModel):
@@ -69,6 +73,13 @@ def health() -> dict:
 @app.get("/catalog")
 def get_catalog() -> dict:
     return {"constructions": catalog()}
+
+
+@app.get("/reference", response_class=HTMLResponse)
+def get_reference() -> str:
+    """Browsable inventory: search + part/category/LLM filters, one stable
+    anchor per construction (e.g. /reference#PAS-01)."""
+    return reference_html()
 
 
 @app.post("/annotate")
