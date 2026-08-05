@@ -5,6 +5,8 @@
     polke explain IDS                   how constructs are detected (pipeline)
     polke annotate PATH [options]       annotate a text file or corpus folder
     polke view PATH [-o FILE]           build an HTML viewer for annotations
+    polke probe PATH [-c IDS]           LLM sweep for false-negative candidates
+    polke score PATH VERDICTS           P/R/F1 per construct from adjudication
     polke serve [--host H] [--port P]   run the HTTP API
 
 `annotate` reads every *.txt file under PATH (or the single file PATH), runs
@@ -284,6 +286,68 @@ def cmd_view(args) -> int:
     return 0
 
 
+def cmd_probe(args) -> int:
+    from .annotate import load_nlp, resolve_ids
+    from .probe import make_prober, run
+
+    src = Path(args.path)
+    if not src.exists():
+        _warn(f"error: no such file or directory: {src}")
+        return 2
+    sel = ([s for part in args.constructions for s in part.split(",") if s]
+           if args.constructions else None)
+    wanted = resolve_ids(sel)
+    if not wanted:
+        _warn(f"error: no constructs match {','.join(sel or [])}")
+        return 2
+    try:
+        prober = make_prober(model=args.model)
+    except RuntimeError as exc:
+        _warn(f"error: {exc}")
+        return 2
+    reason = prober.check()
+    if reason is not None:
+        _warn(f"error: probe model {prober.model!r} not usable ({reason})")
+        return 2
+    try:
+        nlp = load_nlp()
+    except RuntimeError as exc:
+        _warn(f"error: {exc}")
+        return 2
+    print(f"probing with {prober.model} "
+          f"({len(wanted)} constructs, one call per sentence x category)…")
+    try:
+        stats = run(src, nlp, prober, wanted,
+                    progress=_progress_printer(src.name))
+    except ValueError as exc:
+        _warn(f"error: {exc}")
+        return 2
+    print(f"done: {stats['candidates']} candidate(s) from {stats['calls']} "
+          f"probe call(s) over {stats['sentences']} sentence(s) in "
+          f"{stats['files']} file(s); records updated in place")
+    print("next: `polke view` the same path — probe candidates appear as an "
+          "extra layer with confirm/reject buttons")
+    return 0
+
+
+def cmd_score(args) -> int:
+    from .score import compute, load_verdicts, report, _iter_records
+
+    try:
+        records = _iter_records(Path(args.path))
+        verdicts = load_verdicts(Path(args.verdicts))
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        _warn(f"error: {exc}")
+        return 2
+    result = compute(records, verdicts)
+    if args.json:
+        json.dump(result, sys.stdout, ensure_ascii=False, indent=2)
+        print()
+        return 0
+    print(report(result, min_support=args.min_support))
+    return 0
+
+
 def cmd_serve(args) -> int:
     import uvicorn
     uvicorn.run("polke.server:app", host=args.host, port=args.port,
@@ -350,6 +414,34 @@ def main(argv=None) -> int:
     pv.add_argument("--open", action="store_true",
                     help="open the page in a browser when done")
 
+    pp = sub.add_parser("probe",
+                        help="LLM recall probe: surface false-negative "
+                             "CANDIDATES in annotated records (adds a probe "
+                             "layer for adjudication in the viewer)")
+    pp.add_argument("path", help="annotation output: an .annotations.json / "
+                                 ".jsonl file or a folder of them")
+    pp.add_argument("-c", "--constructions", action="append", default=None,
+                    metavar="IDS",
+                    help="construct ids and/or category prefixes to probe "
+                         "for (default: all 670 — one LLM call per sentence "
+                         "per category)")
+    pp.add_argument("--model", default=None,
+                    help="probe model (default: POLKE_PROBE_MODEL or the "
+                         "annotator model; use a DIFFERENT model for the "
+                         "LLM-tier constructs). claude-* models run on the "
+                         "Anthropic API (pip install anthropic + "
+                         "ANTHROPIC_API_KEY), others on the OpenAI API")
+
+    pr = sub.add_parser("score",
+                        help="per-construct precision/recall/F1 from "
+                             "adjudicated verdicts")
+    pr.add_argument("path", help="the annotation output that was adjudicated")
+    pr.add_argument("verdicts", help="verdicts.json exported from the viewer")
+    pr.add_argument("--json", action="store_true", help="emit JSON")
+    pr.add_argument("--min-support", type=int, default=0, metavar="N",
+                    help="hide constructs with support below N (they still "
+                         "count in totals)")
+
     ps = sub.add_parser("serve", help="run the HTTP API")
     ps.add_argument("--host", default="127.0.0.1")
     ps.add_argument("--port", type=int, default=8100)
@@ -358,7 +450,8 @@ def main(argv=None) -> int:
     args = p.parse_args(argv)
     return {"check": cmd_check, "catalog": cmd_catalog,
             "explain": cmd_explain, "annotate": cmd_annotate,
-            "view": cmd_view, "serve": cmd_serve}[args.cmd](args)
+            "view": cmd_view, "probe": cmd_probe, "score": cmd_score,
+            "serve": cmd_serve}[args.cmd](args)
 
 
 if __name__ == "__main__":

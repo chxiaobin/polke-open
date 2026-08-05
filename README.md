@@ -91,6 +91,39 @@ to install or serve; open the file in any browser. Older annotation files
 without the embedded `text` field still work as long as the recorded source
 `.txt` path is resolvable (otherwise only the matched fragments are shown).
 
+### Verification workflow: probe → adjudicate → score
+
+To validate annotation quality on a real corpus (per-construct precision,
+recall, F1):
+
+```bash
+polke annotate corpus/                      # 1. annotate
+polke probe corpus/annotations/ -c PAS,VTA  # 2. LLM sweep for MISS candidates
+polke view corpus/annotations/ --open       # 3. adjudicate in the browser
+polke score corpus/annotations/ verdicts.json --min-support 5   # 4. stats
+```
+
+`probe` asks an LLM — per sentence, per category, with no rule gating — which
+constructions are present, and stores whatever the system did *not* annotate
+as probe candidates inside the records (one call per sentence × category;
+restrict with `-c`, and prefer a *different* model via `--model` /
+`POLKE_PROBE_MODEL` so probe errors don't correlate with the annotator's LLM
+tiers). The probe supports two providers, chosen by the model id: `claude-*`
+models run on the Anthropic API (`pip install "polke[anthropic]"` and set
+`ANTHROPIC_API_KEY`) — e.g. `--model claude-opus-5`, or `claude-haiku-4-5`
+for large corpora on a budget — everything else runs on the OpenAI API.
+Since the annotator's LLM tiers are OpenAI-based, an Anthropic probe gives
+you a genuinely independent second annotator. In the viewer every row then carries verdict buttons — system
+annotations: **TP** / **FP** / **ID?** (right span, wrong construct — you
+supply the correction) / **span** (right construction, wrong extent); probe
+candidates: **miss** (confirmed false negative) / **no** (probe noise).
+Verdicts persist in the browser (localStorage) and export as `verdicts.json`;
+`score` turns records + verdicts into per-construct TP/FP/FN, P/R/F1 and
+support, with pending items excluded and reported. A "wrong id" verdict counts
+as an FP for the marked construct and an FN for the corrected one. Recall/F1
+are relative to the pooled candidates (system + probe) — misses that neither
+surfaced stay invisible, so read them as upper bounds.
+
 ## Docker
 
 ```bash

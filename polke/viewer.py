@@ -137,9 +137,12 @@ def build_payload(path: Path, nlp=None) -> dict:
     for src, rec in _read_records(path):
         text = _resolve_text(src, rec)
         anns = rec.get("annotations") or []
+        probe = (rec.get("probe") or {}).get("candidates") or []
         ids |= {a.get("construct_id", "?") for a in anns}
+        ids |= {p.get("construct_id", "?") for p in probe}
         records.append({
             "label": rec.get("text_id") or src.stem,
+            "text_id": rec.get("text_id", ""),
             "source": str(src),
             "file": rec.get("file", ""),
             "spacy_model": rec.get("spacy_model", ""),
@@ -148,6 +151,7 @@ def build_payload(path: Path, nlp=None) -> dict:
             "sentences": (sentence_spans(text, nlp=nlp)
                           if text is not None else []),
             "annotations": anns,
+            "probe": probe,
         })
     records.sort(key=lambda r: r["label"])
     return {"version": __version__, "records": records,
@@ -210,7 +214,35 @@ mark { background: var(--mark); color: var(--markfg); border-radius: 3px;
   background: var(--chip); color: var(--muted); white-space: nowrap; }
 .tier.needs-llm { color: var(--accent); }
 .hidden { display: none !important; }
+:root { --ok: #1a7f37; --bad: #b42318; --warn: #b57e00; }
+@media (prefers-color-scheme: dark) { :root {
+  --ok: #4ac26b; --bad: #ff8577; --warn: #e3b341; } }
+li.ann.probe { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+li.ann { border-left: 3px solid transparent; }
+li.ann.v-tp, li.ann.v-fn { border-left-color: var(--ok); }
+li.ann.v-fp { border-left-color: var(--bad); }
+li.ann.v-wrong, li.ann.v-span { border-left-color: var(--warn); }
+li.ann.v-reject { opacity: .45; }
+.judge { display: flex; gap: .25rem; align-items: center; }
+.judge button { font: .72rem/1.4 inherit; padding: .1rem .45rem;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--bg);
+  color: var(--muted); cursor: pointer; }
+.judge button:hover { border-color: var(--accent); color: var(--fg); }
+.judge button.on-ok { background: var(--ok); border-color: var(--ok);
+  color: #fff; }
+.judge button.on-bad { background: var(--bad); border-color: var(--bad);
+  color: #fff; }
+.judge button.on-warn { background: var(--warn); border-color: var(--warn);
+  color: #fff; }
+.toolbar { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center;
+  padding: .5rem 0; font-size: .85rem; color: var(--muted); }
+.toolbar button { font: inherit; padding: .25rem .6rem; cursor: pointer;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--bg);
+  color: var(--fg); }
+.toolbar button:hover { border-color: var(--accent); }
+#adj-count b { color: var(--fg); }
 """
+
 
 _JS = """
 (function () {
@@ -221,7 +253,63 @@ _JS = """
       tierSel = document.getElementById('tier'),
       hideEmpty = document.getElementById('hide-empty'),
       count = document.getElementById('count'),
+      adjCount = document.getElementById('adj-count'),
       main = document.getElementById('main');
+
+  /* ---- verdict store (localStorage, exportable as verdicts.json) ---- */
+  var storeKey = 'polke-verdicts:' + data.records.map(function (r) {
+    return r.label;
+  }).join(',').slice(0, 180);
+  var verdicts = {};
+  try { verdicts = JSON.parse(localStorage.getItem(storeKey)) || {}; }
+  catch (e) { verdicts = {}; }
+
+  function saveStore() {
+    try { localStorage.setItem(storeKey, JSON.stringify(verdicts)); }
+    catch (e) {}
+  }
+
+  function keyOf(kind, tid, cid, s, e) {
+    return kind + '|' + tid + '|' + cid + '|' + s + '|' + e;
+  }
+
+  function setVerdict(key, v, corrected) {
+    var cur = verdicts[key];
+    if (cur && cur.verdict === v && v !== 'wrong') {
+      delete verdicts[key];               // clicking again un-judges
+    } else {
+      verdicts[key] = {verdict: v, corrected_id: corrected || null};
+    }
+    saveStore(); render();
+  }
+
+  document.getElementById('export').addEventListener('click', function () {
+    var payload = {tool: 'polke viewer', version: data.version,
+                   verdicts: verdicts},
+        blob = new Blob([JSON.stringify(payload, null, 1)],
+                        {type: 'application/json'}),
+        a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'verdicts.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  document.getElementById('import').addEventListener('change', function (ev) {
+    var f = ev.target.files[0];
+    if (!f) return;
+    var rd = new FileReader();
+    rd.onload = function () {
+      try {
+        var got = JSON.parse(rd.result);
+        var vs = got.verdicts || got;
+        Object.keys(vs).forEach(function (k) { verdicts[k] = vs[k]; });
+        saveStore(); render();
+      } catch (e) { alert('Not a verdicts.json file: ' + e); }
+    };
+    rd.readAsText(f);
+    ev.target.value = '';
+  });
 
   function h(tag, cls, text) {
     var el = document.createElement(tag);
@@ -232,7 +320,7 @@ _JS = """
 
   data.records.forEach(function (r, i) {
     var o = document.createElement('option');
-    o.value = i; o.textContent = r.label + ' — ' + r.source;
+    o.value = i; o.textContent = r.label + ' \u2014 ' + r.source;
     recSel.appendChild(o);
   });
   if (data.records.length < 2) recSel.classList.add('hidden');
@@ -242,17 +330,23 @@ _JS = """
            {name: '', cat: '', catName: '', tier: '', example: ''};
   }
 
+  function rowTier(item) {
+    return item.source === 'probe' ? 'probe'
+         : (meta(item.construct_id).tier || item.detector_type);
+  }
+
   function rebuildFilters(rec) {
     var cats = {}, tiers = {};
-    rec.annotations.forEach(function (a) {
+    rec.annotations.concat(rec.probe || []).forEach(function (a) {
       var m = meta(a.construct_id);
       if (m.cat) cats[m.cat] = m.catName;
-      tiers[m.tier || a.detector_type] = 1;
+      tiers[rowTier(a)] = 1;
     });
     catSel.innerHTML = '<option value="">All categories</option>';
     Object.keys(cats).sort().forEach(function (c) {
       var o = document.createElement('option');
-      o.value = c; o.textContent = c + ' — ' + cats[c]; catSel.appendChild(o);
+      o.value = c; o.textContent = c + ' \u2014 ' + cats[c];
+      catSel.appendChild(o);
     });
     tierSel.innerHTML = '<option value="">All tiers</option>';
     Object.keys(tiers).sort().forEach(function (t) {
@@ -270,89 +364,152 @@ _JS = """
     return p;
   }
 
+  function judgeButtons(key, kind) {
+    var box = h('span', 'judge'),
+        cur = verdicts[key] || {},
+        defs = kind === 'probe'
+          ? [['fn', 'miss', 'on-ok', 'Confirm: a real construction the system missed'],
+             ['reject', 'no', 'on-bad', 'Reject: probe noise, nothing was missed']]
+          : [['tp', 'TP', 'on-ok', 'Correct annotation'],
+             ['fp', 'FP', 'on-bad', 'Spurious: construction not present'],
+             ['wrong', 'ID?', 'on-warn', 'Right span, wrong construct id'],
+             ['span', 'span', 'on-warn', 'Right construction, wrong extent']];
+    defs.forEach(function (d) {
+      var b = h('button', cur.verdict === d[0] ? d[2] : '', d[1]);
+      b.title = d[3];
+      b.addEventListener('click', function () {
+        if (d[0] === 'wrong') {
+          var corr = window.prompt(
+            'Correct construct id (e.g. VTA-30):',
+            (cur.corrected_id || ''));
+          if (corr === null) return;
+          corr = corr.trim().toUpperCase();
+          if (!/^[A-Z]+-\\d+$/.test(corr)) { alert('Not a construct id.'); return; }
+          setVerdict(key, 'wrong', corr);
+        } else {
+          setVerdict(key, d[0]);
+        }
+      });
+      box.appendChild(b);
+    });
+    return box;
+  }
+
   function annRow(rec, a, s0, s1) {
-    var m = meta(a.construct_id),
-        li = h('li', 'ann'),
+    var kind = a.source === 'probe' ? 'probe' : 'sys',
+        m = meta(a.construct_id),
+        key = keyOf(kind, rec.text_id || '', a.construct_id,
+                    a.span.start_char, a.span.end_char),
+        cur = verdicts[key] || {},
+        li = h('li', 'ann' + (kind === 'probe' ? ' probe' : '') +
+                     (cur.verdict ? ' v-' + cur.verdict : '')),
         cid = h('span', 'cid', a.construct_id),
         body = h('div', 'body'),
-        name = h('p', 'name', m.name || a.construct_id);
-    var tip = [a.construct_id + ' — ' + (m.name || '?')];
-    if (m.cat) tip.push('Category: ' + m.cat + ' — ' + m.catName +
+        name = h('p', 'name', (m.name || a.construct_id) +
+                              (kind === 'probe' ? ' \u2014 probe candidate' : ''));
+    var tip = [a.construct_id + ' \u2014 ' + (m.name || '?')];
+    if (m.cat) tip.push('Category: ' + m.cat + ' \u2014 ' + m.catName +
                         (m.part ? '  (' + m.part + ')' : ''));
     if (m.family) tip.push('Family: ' + m.family);
     if (m.example) tip.push('e.g. ' + m.example);
     if (m.note) tip.push('Note: ' + m.note);
     if (m.det) {
-      tip.push('Detection: ' + (m.tier ? m.tier + ' — ' : '') + m.det.how +
+      tip.push('Detection: ' + (m.tier ? m.tier + ' \u2014 ' : '') + m.det.how +
                ' (' + m.det.cls + ' @ ' + m.det.version + ')');
       var g = m.det.group || [];
-      if (g.length) tip.push('Detector group: ' + g[0] + ' … ' +
+      if (g.length) tip.push('Detector group: ' + g[0] + ' \u2026 ' +
                              g[g.length - 1] + ' (' + g.length +
                              ' siblings, one detector)');
     } else if (m.tier) tip.push('Detector: ' + m.tier);
     cid.setAttribute('data-tip', tip.join('\\n'));
     body.appendChild(name);
     if (rec.text !== null) {
-      body.appendChild(fragment(rec.text, s0, s1,
-                                a.span.start_char, a.span.end_char));
-    } else if (a.evidence && a.evidence.matched) {
-      var p = h('p', 'frag'); p.appendChild(h('mark', null, a.evidence.matched));
+      var a0 = a.span.start_char, a1 = a.span.end_char;
+      if (kind === 'probe' && a.evidence && a.evidence.quoted) {
+        var qi = rec.text.slice(s0, s1).indexOf(a.evidence.quoted);
+        if (qi >= 0) { a0 = s0 + qi; a1 = a0 + a.evidence.quoted.length; }
+      }
+      body.appendChild(fragment(rec.text, s0, s1, a0, a1));
+    } else if (a.evidence && (a.evidence.matched || a.evidence.quoted)) {
+      var p = h('p', 'frag');
+      p.appendChild(h('mark', null, a.evidence.matched || a.evidence.quoted));
       body.appendChild(p);
     }
     var sub = [];
     if (a.confidence < 1) sub.push('confidence ' + a.confidence.toFixed(2));
     if (a.model) sub.push(a.model);
     if (a.evidence && a.evidence.rationale) sub.push(a.evidence.rationale);
-    if (a.span.end_char > s1 || a.span.start_char < s0)
+    if (kind === 'probe' && a.evidence && a.evidence.quoted)
+      sub.push('probe evidence: \u201c' + a.evidence.quoted + '\u201d');
+    if (cur.verdict === 'wrong' && cur.corrected_id)
+      sub.push('corrected to ' + cur.corrected_id);
+    if (kind === 'sys' && (a.span.end_char > s1 || a.span.start_char < s0))
       sub.push('span continues beyond this sentence');
-    if (sub.length) body.appendChild(h('p', 'sub', sub.join(' · ')));
+    if (sub.length) body.appendChild(h('p', 'sub', sub.join(' \u00b7 ')));
+    body.appendChild(judgeButtons(key, kind));
     li.appendChild(cid); li.appendChild(body);
-    var tier = h('span', 'tier' + (m.needsLlm ? ' needs-llm' : ''),
-                 m.tier || a.detector_type);
-    li.appendChild(tier);
+    li.appendChild(h('span', 'tier' + (m.needsLlm ? ' needs-llm' : ''),
+                     rowTier(a)));
     return li;
   }
 
-  function annVisible(a) {
+  function itemVisible(a) {
     var m = meta(a.construct_id),
         needle = q.value.trim().toLowerCase(),
         hay = (a.construct_id + ' ' + m.name + ' ' +
                ((a.evidence && a.evidence.matched) || '') + ' ' +
+               ((a.evidence && a.evidence.quoted) || '') + ' ' +
                ((a.evidence && a.evidence.rationale) || '')).toLowerCase();
     return (!catSel.value || m.cat === catSel.value) &&
-           (!tierSel.value || (m.tier || a.detector_type) === tierSel.value) &&
+           (!tierSel.value || rowTier(a) === tierSel.value) &&
            (!needle || hay.indexOf(needle) >= 0);
+  }
+
+  function updateAdjCount() {
+    var total = 0, done = 0;
+    data.records.forEach(function (r) {
+      r.annotations.concat(r.probe || []).forEach(function (a) {
+        total++;
+        var kind = a.source === 'probe' ? 'probe' : 'sys';
+        if (verdicts[keyOf(kind, r.text_id || '', a.construct_id,
+                           a.span.start_char, a.span.end_char)]) done++;
+      });
+    });
+    adjCount.innerHTML = '';
+    adjCount.appendChild(document.createTextNode('adjudicated '));
+    var b = h('b', null, done + ' / ' + total);
+    adjCount.appendChild(b);
+    adjCount.appendChild(document.createTextNode(' (all texts)'));
   }
 
   function render() {
     var rec = data.records[+recSel.value || 0], shown = 0;
     main.innerHTML = '';
-    var rm = h('p', 'recmeta',
-               (rec.file ? rec.file + ' · ' : '') +
-               rec.annotations.length + ' annotations · spaCy ' +
-               (rec.spacy_model || '?') +
-               (rec.llm && rec.llm.ready ? ' · LLM ' + rec.llm.model
-                                         : ' · offline tiers only'));
-    main.appendChild(rm);
+    var nProbe = (rec.probe || []).length;
+    main.appendChild(h('p', 'recmeta',
+        (rec.file ? rec.file + ' \u00b7 ' : '') +
+        rec.annotations.length + ' annotations' +
+        (nProbe ? ' \u00b7 ' + nProbe + ' probe candidates' : '') +
+        ' \u00b7 spaCy ' + (rec.spacy_model || '?') +
+        (rec.llm && rec.llm.ready ? ' \u00b7 LLM ' + rec.llm.model
+                                  : ' \u00b7 offline tiers only')));
 
-    var anns = rec.annotations.filter(annVisible);
+    var items = rec.annotations.concat(rec.probe || []).filter(itemVisible);
 
     if (rec.text === null) {
-      var note = h('div', 'notext',
+      main.appendChild(h('div', 'notext',
         'Source text unavailable (older annotation file without an embedded ' +
         '"text" field, and "' + rec.file + '" was not found). Showing ' +
-        'matched fragments only.');
-      main.appendChild(note);
+        'matched fragments only.'));
       var ul = h('ul', 'anns');
-      ul.style.marginTop = '1rem';
-      anns.forEach(function (a) { ul.appendChild(annRow(rec, a, 0, 0)); });
-      shown = anns.length;
+      items.forEach(function (a) { ul.appendChild(annRow(rec, a, 0, 0)); });
+      shown = items.length;
       var box = h('div', 'sent'); box.appendChild(ul); main.appendChild(box);
     } else {
       var assigned = new Set();
       rec.sentences.forEach(function (sp, i) {
         var s0 = sp[0], s1 = sp[1];
-        var here = anns.filter(function (a, j) {
+        var here = items.filter(function (a, j) {
           if (assigned.has(j)) return false;
           var hit = a.span.start_char < s1 && a.span.end_char > s0;
           if (hit) assigned.add(j);
@@ -374,7 +531,9 @@ _JS = """
         main.appendChild(box);
       });
     }
-    count.textContent = shown + ' / ' + rec.annotations.length + ' annotations';
+    count.textContent = shown + ' / ' +
+      (rec.annotations.length + nProbe) + ' items';
+    updateAdjCount();
   }
 
   recSel.addEventListener('change', function () {
@@ -408,6 +567,11 @@ def viewer_html(payload: dict) -> str:
 <select id="tier" aria-label="Detector tier"></select>
 <label><input type="checkbox" id="hide-empty"> Hide unannotated sentences</label>
 <span id="count"></span>
+</div>
+<div class="toolbar">
+<button id="export" title="Download all verdicts for `polke score`">Export verdicts.json</button>
+<label>Import: <input type="file" id="import" accept=".json,application/json"></label>
+<span id="adj-count"></span>
 </div>
 <div id="main"></div>
 <script id="data" type="application/json">{json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")}</script>
