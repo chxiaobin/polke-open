@@ -40,8 +40,8 @@ class _VerblessExclamative(Detector):
     def __init__(self, client=None):
         self._client = client or DummyClient()
 
-    def match(self, doc, text_id="doc"):
-        out = []
+    def llm_tasks(self, doc, text_id="doc"):
+        tasks = []
         for sent in doc.sents:
             if sent[-1].text != "!":
                 continue
@@ -50,19 +50,25 @@ class _VerblessExclamative(Detector):
                 continue                    # EXC-01 / EXC-02
             if sent.root.tag_ == "VB":
                 continue                    # imperative ("Listen!")
-            res = self._client.classify(_EXC03_SYS, sent.text,
-                                        ["EXC-03", "INS-01"])
-            if res.get("construct_id") != "EXC-03":
-                continue
-            out.append(Annotation(
-                text_id=text_id, construct_id="EXC-03",
-                span=Span(sent.start_char, sent.end_char, sent.start,
-                          sent.end - 1),
-                detector_type=self.detector_type, detector_version=self.version,
-                confidence=float(res.get("confidence", 0.0)),
-                model=getattr(self._client, "model", None),
-                evidence={"rationale": res.get("rationale", "")}))
-        return out
+            sp = Span(sent.start_char, sent.end_char, sent.start, sent.end - 1)
+            tasks.append(lambda user=sent.text, sp=sp:
+                         self._judge(user, sp, text_id))
+        return tasks
+
+    def _judge(self, user, sp, text_id):
+        res = self._client.classify(_EXC03_SYS, user, ["EXC-03", "INS-01"])
+        if res.get("construct_id") != "EXC-03":
+            return None
+        return Annotation(
+            text_id=text_id, construct_id="EXC-03", span=sp,
+            detector_type=self.detector_type, detector_version=self.version,
+            confidence=float(res.get("confidence", 0.0)),
+            model=getattr(self._client, "model", None),
+            evidence={"rationale": res.get("rationale", "")})
+
+    def match(self, doc, text_id="doc"):
+        anns = (t() for t in self.llm_tasks(doc, text_id=text_id))
+        return [a for a in anns if a is not None]
 
 
 def _exc01(doc):

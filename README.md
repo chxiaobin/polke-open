@@ -49,6 +49,11 @@ polke annotate corpus/ -c PAS,REL --no-llm --jsonl out.jsonl
 
 # Browse the inventory (also listed in docs/constructions.md):
 polke catalog | less
+polke catalog --full -c PAS,VTA-03   # with family, example, use notes, tier
+
+# How is a construct actually detected? Mechanism, dependency patterns,
+# lexicons, LLM prompts, and the contract test sentences:
+polke explain PAS-01,VTA-29          # or a whole category: polke explain REL
 ```
 
 Each output record:
@@ -59,6 +64,7 @@ Each output record:
   "text_id": "essay1",
   "spacy_model": "en_core_web_sm",
   "llm": {"ready": true, "model": "gpt-4o-mini", "reason": "ok"},
+  "text": "the annotated text, embedded so the record is self-contained",
   "annotations": [
     {"construct_id": "PAS-01",
      "span": {"start_char": 4, "end_char": 14, "token_start": 1, "token_end": 3},
@@ -66,6 +72,24 @@ Each output record:
   ]
 }
 ```
+
+## Checking annotations: the viewer
+
+```bash
+polke view corpus/annotations/          # or a single .annotations.json / .jsonl
+polke view out.jsonl -o report.html --open
+
+# or build it directly as part of annotation (--open also launches a browser):
+polke annotate corpus/ --view
+```
+
+Builds one self-contained HTML page (default: `view.html` next to the input)
+showing every annotation aligned under the sentence it falls in, with the
+annotated span highlighted — plus per-record selection, text search,
+category/tier filters, and LLM confidence + rationale where present. Nothing
+to install or serve; open the file in any browser. Older annotation files
+without the embedded `text` field still work as long as the recorded source
+`.txt` path is resolvable (otherwise only the matched fragments are shown).
 
 ## Docker
 
@@ -126,6 +150,7 @@ spans = ann.annotate("She has lived here for years.", selection=["VTA"])
 | `OPENAI_API_KEY` | key for the LLM tiers | unset → LLM tiers off |
 | `POLKE_LLM_MODEL` | chat model for reading classifiers | `gpt-4o-mini` |
 | `POLKE_SPACY_MODEL` | spaCy pipeline | `en_core_web_sm` |
+| `POLKE_LLM_CONCURRENCY` | parallel LLM calls per text | `8` |
 
 At startup (CLI `annotate`/`check` and server alike) the model API is probed;
 if it is unreachable a warning names the reason and the affected tier sizes,
@@ -151,6 +176,7 @@ polke/
   data/               constructs.json (inventory), detectors.json (contract),
                       lexicons.json (curated word lists)
   annotate.py         high-level Annotator API
+  viewer.py           self-contained HTML annotation viewer (polke view)
   cli.py server.py    command line and FastAPI service
 docs/                 constructions.md (full inventory reference; regenerate with
                       scripts/generate_constructions_doc.py), inventory provenance

@@ -4,9 +4,10 @@ All runtime configuration comes from environment variables, optionally supplied
 via a `.env` file (searched in the current working directory first, then the
 project root). Recognised variables:
 
-    OPENAI_API_KEY      key for the LLM tiers (hybrid_rule_llm / llm detectors)
-    POLKE_LLM_MODEL     chat model for the reading classifiers (default gpt-4o-mini)
-    POLKE_SPACY_MODEL   spaCy pipeline to load (default en_core_web_sm)
+    OPENAI_API_KEY          key for the LLM tiers (hybrid_rule_llm / llm detectors)
+    POLKE_LLM_MODEL         chat model for the reading classifiers (default gpt-4o-mini)
+    POLKE_SPACY_MODEL       spaCy pipeline to load (default en_core_web_sm)
+    POLKE_LLM_CONCURRENCY   parallel LLM calls per text (default 8)
 """
 from __future__ import annotations
 
@@ -36,3 +37,11 @@ def llm_model() -> str:
 
 def spacy_model() -> str:
     return os.getenv("POLKE_SPACY_MODEL", "en_core_web_sm")
+
+
+def llm_concurrency() -> int:
+    try:
+        n = int(os.getenv("POLKE_LLM_CONCURRENCY", "8"))
+    except ValueError:
+        return 8
+    return max(1, n)

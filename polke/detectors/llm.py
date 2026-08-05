@@ -3,6 +3,13 @@
 A cheap rule proposes candidate spans; an LLM adjudicates the reading among
 sibling constructs. LLM calls go through a small client protocol so the API is
 swappable. DummyClient lets offline tests run (it never needs a network call).
+
+Detectors with an LLM stage expose ``llm_tasks(doc, ...) -> list[callable]``:
+candidate collection (which reads the spaCy doc) happens up front on the
+calling thread, and each returned zero-arg task performs exactly one
+classify() call and returns an Annotation or None. Tasks touch no shared
+mutable state, so the Annotator may run them from a thread pool; ``match()``
+is equivalent to running the tasks sequentially.
 """
 from __future__ import annotations
 from typing import List, Optional, Protocol
@@ -48,24 +55,33 @@ class LLMReadingDetector(Detector):
         self._system = system_prompt
         self._client = client or DummyClient()
 
-    def match(self, doc, text_id: str = "doc") -> List[Annotation]:
-        out = []
+    def llm_tasks(self, doc, text_id: str = "doc") -> list:
+        tasks = []
         for _mid, token_ids in self._matcher(doc):
             span, toks = _mark(doc, token_ids)
             user = doc.text.replace(span.text, "[[" + span.text + "]]", 1)
-            res = self._client.classify(self._system, user, self.construct_ids)
-            cid = res.get("construct_id")
-            if cid not in self.construct_ids:
-                continue
-            out.append(Annotation(
-                text_id=text_id, construct_id=cid,
-                span=Span(span.start_char, span.end_char, toks[0], toks[-1]),
-                detector_type=self.detector_type, detector_version=self.version,
-                confidence=float(res.get("confidence", 0.0)),
-                model=getattr(self._client, "model", None),
-                evidence={"tokens": toks, "matched": span.text,
-                          "rationale": res.get("rationale", "")}))
-        return out
+            sp = Span(span.start_char, span.end_char, toks[0], toks[-1])
+            tasks.append(lambda user=user, sp=sp, toks=toks,
+                         matched=span.text:
+                         self._judge(user, sp, toks, matched, text_id))
+        return tasks
+
+    def _judge(self, user, sp, toks, matched, text_id):
+        res = self._client.classify(self._system, user, self.construct_ids)
+        cid = res.get("construct_id")
+        if cid not in self.construct_ids:
+            return None
+        return Annotation(
+            text_id=text_id, construct_id=cid, span=sp,
+            detector_type=self.detector_type, detector_version=self.version,
+            confidence=float(res.get("confidence", 0.0)),
+            model=getattr(self._client, "model", None),
+            evidence={"tokens": toks, "matched": matched,
+                      "rationale": res.get("rationale", "")})
+
+    def match(self, doc, text_id: str = "doc") -> List[Annotation]:
+        anns = (t() for t in self.llm_tasks(doc, text_id=text_id))
+        return [a for a in anns if a is not None]
 
 
 class LLMStandaloneDetector(Detector):
@@ -91,8 +107,8 @@ class LLMStandaloneDetector(Detector):
         self._gate = gate
         self.wants_context = wants_context
 
-    def match(self, doc, text_id: str = "doc", context=None) -> List[Annotation]:
-        out = []
+    def llm_tasks(self, doc, text_id: str = "doc", context=None) -> list:
+        tasks = []
         for sent in doc.sents:
             if self._gate is not None and not self._gate(sent):
                 continue
@@ -100,15 +116,24 @@ class LLMStandaloneDetector(Detector):
             if context:
                 prev = "\n".join("[previous utterance] %s" % u for u in context)
                 user = prev + "\n[current utterance] " + sent.text
-            res = self._client.classify(self._system, user,
-                                        [self.construct_ids[0], "NONE"])
-            if res.get("construct_id") != self.construct_ids[0]:
-                continue
-            out.append(Annotation(
-                text_id=text_id, construct_id=self.construct_ids[0],
-                span=Span(sent.start_char, sent.end_char, sent.start, sent.end - 1),
-                detector_type=self.detector_type, detector_version=self.version,
-                confidence=float(res.get("confidence", 0.0)),
-                model=getattr(self._client, "model", None),
-                evidence={"rationale": res.get("rationale", "")}))
-        return out
+            sp = Span(sent.start_char, sent.end_char, sent.start, sent.end - 1)
+            tasks.append(lambda user=user, sp=sp:
+                         self._judge(user, sp, text_id))
+        return tasks
+
+    def _judge(self, user, sp, text_id):
+        res = self._client.classify(self._system, user,
+                                    [self.construct_ids[0], "NONE"])
+        if res.get("construct_id") != self.construct_ids[0]:
+            return None
+        return Annotation(
+            text_id=text_id, construct_id=self.construct_ids[0], span=sp,
+            detector_type=self.detector_type, detector_version=self.version,
+            confidence=float(res.get("confidence", 0.0)),
+            model=getattr(self._client, "model", None),
+            evidence={"rationale": res.get("rationale", "")})
+
+    def match(self, doc, text_id: str = "doc", context=None) -> List[Annotation]:
+        anns = (t() for t in self.llm_tasks(doc, text_id=text_id,
+                                            context=context))
+        return [a for a in anns if a is not None]

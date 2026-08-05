@@ -116,27 +116,34 @@ class _SituationalFragment:
         from ..llm import DummyClient
         self._client = client or DummyClient()
 
-    def match(self, doc, text_id="doc"):
-        from ...schema import Annotation, Span
-        out = []
+    def llm_tasks(self, doc, text_id="doc"):
+        from ...schema import Span
+        tasks = []
         for sent in doc.sents:
             if any(t.pos_ in ("VERB", "AUX") for t in sent):
                 continue
             if not any(not t.is_punct for t in sent):
                 continue
-            res = self._client.classify(_SIT04_SYS, sent.text,
-                                        ["SIT-04", "NONE"])
-            if res.get("construct_id") != "SIT-04":
-                continue
-            out.append(Annotation(
-                text_id=text_id, construct_id="SIT-04",
-                span=Span(sent.start_char, sent.end_char, sent.start,
-                          sent.end - 1),
-                detector_type=self.detector_type, detector_version=self.version,
-                confidence=float(res.get("confidence", 0.0)),
-                model=getattr(self._client, "model", None),
-                evidence={"rationale": res.get("rationale", "")}))
-        return out
+            sp = Span(sent.start_char, sent.end_char, sent.start, sent.end - 1)
+            tasks.append(lambda user=sent.text, sp=sp:
+                         self._judge(user, sp, text_id))
+        return tasks
+
+    def _judge(self, user, sp, text_id):
+        from ...schema import Annotation
+        res = self._client.classify(_SIT04_SYS, user, ["SIT-04", "NONE"])
+        if res.get("construct_id") != "SIT-04":
+            return None
+        return Annotation(
+            text_id=text_id, construct_id="SIT-04", span=sp,
+            detector_type=self.detector_type, detector_version=self.version,
+            confidence=float(res.get("confidence", 0.0)),
+            model=getattr(self._client, "model", None),
+            evidence={"rationale": res.get("rationale", "")})
+
+    def match(self, doc, text_id="doc"):
+        anns = (t() for t in self.llm_tasks(doc, text_id=text_id))
+        return [a for a in anns if a is not None]
 
 
 def build(nlp, client=None):

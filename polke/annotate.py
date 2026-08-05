@@ -11,10 +11,11 @@ constructor; annotate() is then cheap per text.
 """
 from __future__ import annotations
 
-from typing import List, Optional, Sequence
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import Callable, List, Optional, Sequence
 
 from . import llm as llm_mod
-from .env import load_env, spacy_model
+from .env import llm_concurrency, load_env, spacy_model
 from .registry import constructs
 
 
@@ -88,12 +89,16 @@ class Annotator:
 
     def annotate(self, text: str, selection: Optional[Sequence[str]] = None,
                  text_id: str = "doc",
-                 context: Optional[Sequence[str]] = None) -> List[dict]:
+                 context: Optional[Sequence[str]] = None,
+                 progress: Optional[Callable[[int, int], None]] = None
+                 ) -> List[dict]:
         """Annotate one text. Returns Annotation dicts sorted by span.
 
         `selection` — construct ids and/or category prefixes (None = all).
         `context` — preceding dialogue utterances (oldest first) for the
         discourse-level detectors.
+        `progress` — called as progress(done, total) after each LLM judgment
+        (total = number of LLM calls this text needs; never called when 0).
         """
         wanted = resolve_ids(selection)
         if not wanted:
@@ -108,8 +113,22 @@ class Annotator:
                 dets.append(det)
         doc = self.nlp(text)
         out = []
+        # Offline detectors run inline; LLM-stage detectors only contribute
+        # their pending judgments here, which then run on a thread pool (each
+        # task is one classify() call over pre-extracted strings — no doc
+        # access off the main thread).
+        tasks = []
         for det in dets:
-            if context is not None and getattr(det, "wants_context", False):
+            wants_ctx = (context is not None
+                         and getattr(det, "wants_context", False))
+            if hasattr(det, "llm_tasks"):
+                if wants_ctx:
+                    tasks.extend(det.llm_tasks(doc, text_id=text_id,
+                                               context=context))
+                else:
+                    tasks.extend(det.llm_tasks(doc, text_id=text_id))
+                continue
+            if wants_ctx:
                 anns = det.match(doc, text_id=text_id, context=context)
             else:
                 anns = det.match(doc, text_id=text_id)
@@ -117,5 +136,15 @@ class Annotator:
                 # A group router emits for its whole group; keep what was asked.
                 if a.construct_id in wanted:
                     out.append(a.to_dict())
+        if tasks:
+            workers = min(llm_concurrency(), len(tasks))
+            with ThreadPoolExecutor(max_workers=workers) as ex:
+                futures = [ex.submit(t) for t in tasks]
+                for done, fut in enumerate(as_completed(futures), 1):
+                    a = fut.result()
+                    if progress is not None:
+                        progress(done, len(tasks))
+                    if a is not None and a.construct_id in wanted:
+                        out.append(a.to_dict())
         out.sort(key=lambda a: (a["span"]["token_start"], a["construct_id"]))
         return out
