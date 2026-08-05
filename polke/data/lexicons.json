@@ -1,0 +1,1425 @@
+{
+  "verb_prep": {
+    "node": "PREP-18/VCP-19/34",
+    "pairs": [
+      [
+        "depend",
+        "on"
+      ],
+      [
+        "rely",
+        "on"
+      ],
+      [
+        "consist",
+        "of"
+      ],
+      [
+        "refer",
+        "to"
+      ],
+      [
+        "belong",
+        "to"
+      ],
+      [
+        "object",
+        "to"
+      ],
+      [
+        "insist",
+        "on"
+      ],
+      [
+        "apologise",
+        "for"
+      ],
+      [
+        "apologize",
+        "for"
+      ],
+      [
+        "accuse",
+        "of"
+      ],
+      [
+        "congratulate",
+        "on"
+      ],
+      [
+        "succeed",
+        "in"
+      ],
+      [
+        "complain",
+        "about"
+      ],
+      [
+        "apply",
+        "for"
+      ],
+      [
+        "result",
+        "in"
+      ],
+      [
+        "result",
+        "from"
+      ],
+      [
+        "suffer",
+        "from"
+      ],
+      [
+        "concentrate",
+        "on"
+      ],
+      [
+        "approve",
+        "of"
+      ],
+      [
+        "deal",
+        "with"
+      ]
+    ]
+  },
+  "adj_prep": {
+    "node": "PREP-19",
+    "pairs": [
+      [
+        "good",
+        "at"
+      ],
+      [
+        "bad",
+        "at"
+      ],
+      [
+        "afraid",
+        "of"
+      ],
+      [
+        "scared",
+        "of"
+      ],
+      [
+        "fond",
+        "of"
+      ],
+      [
+        "keen",
+        "on"
+      ],
+      [
+        "proud",
+        "of"
+      ],
+      [
+        "capable",
+        "of"
+      ],
+      [
+        "aware",
+        "of"
+      ],
+      [
+        "married",
+        "to"
+      ],
+      [
+        "different",
+        "from"
+      ],
+      [
+        "different",
+        "to"
+      ],
+      [
+        "famous",
+        "for"
+      ],
+      [
+        "worried",
+        "about"
+      ],
+      [
+        "interested",
+        "in"
+      ],
+      [
+        "responsible",
+        "for"
+      ]
+    ]
+  },
+  "noun_prep": {
+    "node": "PREP-20",
+    "pairs": [
+      [
+        "reason",
+        "for"
+      ],
+      [
+        "solution",
+        "to"
+      ],
+      [
+        "increase",
+        "in"
+      ],
+      [
+        "decrease",
+        "in"
+      ],
+      [
+        "demand",
+        "for"
+      ],
+      [
+        "cause",
+        "of"
+      ],
+      [
+        "effect",
+        "on"
+      ],
+      [
+        "attitude",
+        "to"
+      ],
+      [
+        "attitude",
+        "towards"
+      ],
+      [
+        "relationship",
+        "with"
+      ],
+      [
+        "relationship",
+        "between"
+      ],
+      [
+        "interest",
+        "in"
+      ],
+      [
+        "lack",
+        "of"
+      ],
+      [
+        "need",
+        "for"
+      ]
+    ]
+  },
+  "reporting_verbs": {
+    "node": "PAS-16/17",
+    "lemmas": [
+      "say",
+      "believe",
+      "think",
+      "know",
+      "report",
+      "expect",
+      "consider",
+      "claim",
+      "allege",
+      "estimate",
+      "suppose",
+      "understand",
+      "assume",
+      "rumour",
+      "rumor",
+      "announce",
+      "acknowledge",
+      "find",
+      "declare",
+      "presume",
+      "reckon",
+      "suspect",
+      "hope",
+      "fear",
+      "feel"
+    ]
+  },
+  "need_ing_verbs": {
+    "node": "PAS-20",
+    "lemmas": [
+      "need",
+      "want",
+      "require"
+    ]
+  },
+  "phrasal_passive_verbs": {
+    "node": "PAS-14",
+    "pairs": [
+      [
+        "call",
+        "off"
+      ],
+      [
+        "look",
+        "after"
+      ],
+      [
+        "put",
+        "off"
+      ],
+      [
+        "turn",
+        "down"
+      ],
+      [
+        "take",
+        "off"
+      ],
+      [
+        "carry",
+        "out"
+      ],
+      [
+        "deal",
+        "with"
+      ],
+      [
+        "bring",
+        "up"
+      ],
+      [
+        "set",
+        "up"
+      ],
+      [
+        "point",
+        "out"
+      ],
+      [
+        "throw",
+        "away"
+      ],
+      [
+        "hand",
+        "in"
+      ],
+      [
+        "look",
+        "into"
+      ],
+      [
+        "look",
+        "up"
+      ],
+      [
+        "send",
+        "off"
+      ],
+      [
+        "break",
+        "off"
+      ]
+    ]
+  },
+  "phrasal_verbs": {
+    "node": "PHV",
+    "entries": [
+      {
+        "verb": "take",
+        "particle": "off",
+        "type": "intransitive",
+        "sense": "depart(plane)",
+        "separable": false
+      },
+      {
+        "verb": "take",
+        "particle": "off",
+        "type": "transitive",
+        "sense": "remove",
+        "separable": true
+      },
+      {
+        "verb": "turn",
+        "particle": "off",
+        "type": "transitive",
+        "sense": "switch off",
+        "separable": true
+      },
+      {
+        "verb": "turn",
+        "particle": "on",
+        "type": "transitive",
+        "sense": "switch on",
+        "separable": true
+      },
+      {
+        "verb": "look",
+        "particle": "after",
+        "type": "prepositional",
+        "sense": "care for",
+        "separable": false
+      },
+      {
+        "verb": "give",
+        "particle": "up",
+        "type": "transitive",
+        "sense": "quit",
+        "separable": true
+      },
+      {
+        "verb": "carry",
+        "particle": "on",
+        "type": "intransitive",
+        "sense": "continue",
+        "separable": false
+      },
+      {
+        "verb": "find",
+        "particle": "out",
+        "type": "transitive",
+        "sense": "discover",
+        "separable": true
+      }
+    ]
+  },
+  "phrasal_prepositional": {
+    "node": "PHV-05",
+    "entries": [
+      {
+        "verb": "look",
+        "particles": [
+          "forward",
+          "to"
+        ],
+        "sense": "anticipate",
+        "to_is_prep": true
+      },
+      {
+        "verb": "run",
+        "particles": [
+          "out",
+          "of"
+        ],
+        "sense": "exhaust supply"
+      },
+      {
+        "verb": "put",
+        "particles": [
+          "up",
+          "with"
+        ],
+        "sense": "tolerate"
+      },
+      {
+        "verb": "get",
+        "particles": [
+          "on",
+          "with"
+        ],
+        "sense": "have a good relationship / continue"
+      }
+    ]
+  },
+  "connectors": {
+    "node": "COH",
+    "entries": [
+      {
+        "item": "moreover",
+        "function": "additive",
+        "position": "initial"
+      },
+      {
+        "item": "furthermore",
+        "function": "additive",
+        "position": "initial"
+      },
+      {
+        "item": "however",
+        "function": "contrastive",
+        "position": "initial|medial"
+      },
+      {
+        "item": "nevertheless",
+        "function": "contrastive-concessive",
+        "position": "initial"
+      },
+      {
+        "item": "therefore",
+        "function": "causal",
+        "position": "initial|medial"
+      },
+      {
+        "item": "consequently",
+        "function": "causal",
+        "position": "initial"
+      },
+      {
+        "item": "subsequently",
+        "function": "temporal",
+        "position": "initial"
+      },
+      {
+        "item": "for instance",
+        "function": "exemplifying",
+        "position": "initial|medial"
+      },
+      {
+        "item": "in other words",
+        "function": "reformulating",
+        "position": "initial"
+      },
+      {
+        "item": "the latter",
+        "function": "reference",
+        "position": "nominal"
+      },
+      {
+        "item": "the former",
+        "function": "reference",
+        "position": "nominal"
+      }
+    ]
+  },
+  "fixed_prep_phrases": {
+    "node": "PREP/ART-23",
+    "entries": [
+      {
+        "phrase": "on time",
+        "sense": "punctual"
+      },
+      {
+        "phrase": "in time",
+        "sense": "early enough"
+      },
+      {
+        "phrase": "at the end",
+        "sense": "point in time/place"
+      },
+      {
+        "phrase": "in the end",
+        "sense": "eventually"
+      },
+      {
+        "phrase": "on the way",
+        "sense": "en route"
+      },
+      {
+        "phrase": "in the way",
+        "sense": "obstructing"
+      },
+      {
+        "phrase": "at the moment",
+        "sense": "now"
+      },
+      {
+        "phrase": "in a moment",
+        "sense": "soon"
+      }
+    ]
+  },
+  "inserts_interjections": {
+    "node": "INS-01",
+    "entries": [
+      "oh",
+      "ah",
+      "aha",
+      "wow",
+      "whoa",
+      "ouch",
+      "ow",
+      "ugh",
+      "oops",
+      "whoops",
+      "oop",
+      "phew",
+      "yay",
+      "hooray",
+      "hurrah",
+      "eww",
+      "yuck",
+      "yikes",
+      "huh",
+      "ha",
+      "hah",
+      "oh dear",
+      "oh no",
+      "oh my",
+      "dear me",
+      "goodness me",
+      "my goodness",
+      "boy",
+      "oh boy",
+      "man",
+      "oh man"
+    ]
+  },
+  "inserts_greetings": {
+    "node": "INS-02",
+    "entries": [
+      "hi",
+      "hello",
+      "hiya",
+      "hey there",
+      "hi there",
+      "good morning",
+      "good afternoon",
+      "good evening",
+      "good night",
+      "goodnight",
+      "morning",
+      "afternoon",
+      "evening",
+      "bye",
+      "goodbye",
+      "bye bye",
+      "bye-bye",
+      "see you",
+      "see you later",
+      "see ya",
+      "see you soon",
+      "take care",
+      "cheerio",
+      "so long",
+      "farewell",
+      "later",
+      "night",
+      "catch you later",
+      "talk to you later",
+      "welcome",
+      "how do you do",
+      "howdy",
+      "what's up",
+      "good day"
+    ]
+  },
+  "inserts_attention": {
+    "node": "INS-03",
+    "entries": [
+      "hey",
+      "oi",
+      "look",
+      "listen",
+      "excuse me",
+      "yo",
+      "psst",
+      "hey there",
+      "look here",
+      "listen up",
+      "hang on",
+      "hold on",
+      "wait",
+      "here"
+    ]
+  },
+  "inserts_response_elicitors": {
+    "node": "INS-04",
+    "entries": [
+      "eh",
+      "right",
+      "okay",
+      "ok",
+      "yeah",
+      "no",
+      "huh",
+      "you know",
+      "see",
+      "alright",
+      "all right",
+      "get it",
+      "you see",
+      "know what i mean",
+      "don't you think"
+    ]
+  },
+  "inserts_response_tokens": {
+    "node": "INS-05",
+    "entries": [
+      "yeah",
+      "yes",
+      "no",
+      "nope",
+      "yep",
+      "yup",
+      "aye",
+      "nah",
+      "mm",
+      "mhm",
+      "mmhm",
+      "uh huh",
+      "uh-huh",
+      "uh uh",
+      "right",
+      "sure",
+      "okay",
+      "ok",
+      "fine",
+      "alright",
+      "all right",
+      "exactly",
+      "absolutely",
+      "definitely",
+      "certainly",
+      "indeed",
+      "quite",
+      "of course",
+      "totally",
+      "true",
+      "too true",
+      "fair enough",
+      "really",
+      "good",
+      "great",
+      "lovely",
+      "brilliant",
+      "cool",
+      "wonderful",
+      "gotcha",
+      "got it",
+      "i see",
+      "i know",
+      "no way",
+      "dunno"
+    ]
+  },
+  "inserts_hesitators": {
+    "node": "INS-06",
+    "entries": [
+      "er",
+      "erm",
+      "um",
+      "uh",
+      "em",
+      "hmm",
+      "hm",
+      "mmm"
+    ]
+  },
+  "inserts_politeness": {
+    "node": "INS-07",
+    "entries": [
+      "please",
+      "thanks",
+      "thank you",
+      "thanks a lot",
+      "thanks very much",
+      "thank you very much",
+      "many thanks",
+      "cheers",
+      "ta",
+      "sorry",
+      "so sorry",
+      "i'm sorry",
+      "pardon",
+      "pardon me",
+      "i beg your pardon",
+      "no problem",
+      "no worries",
+      "you're welcome",
+      "my pleasure",
+      "don't mention it",
+      "not at all",
+      "never mind",
+      "apologies",
+      "my apologies",
+      "my bad",
+      "after you",
+      "bless you",
+      "congratulations",
+      "well done",
+      "good luck",
+      "happy birthday",
+      "merry christmas"
+    ]
+  },
+  "inserts_expletives_moderated": {
+    "node": "INS-08 (non-taboo variants)",
+    "entries": [
+      "gosh",
+      "golly",
+      "gee",
+      "geez",
+      "jeez",
+      "blimey",
+      "crikey",
+      "cor",
+      "crumbs",
+      "dang",
+      "darn",
+      "drat",
+      "heck",
+      "shoot",
+      "sugar",
+      "flip",
+      "flippin' heck",
+      "good grief",
+      "good lord",
+      "good heavens",
+      "heavens",
+      "oh my gosh",
+      "oh my word",
+      "goodness",
+      "goodness gracious",
+      "for goodness sake",
+      "for heaven's sake",
+      "blooming heck",
+      "strewth",
+      "gordon bennett"
+    ]
+  },
+  "taboo": {
+    "node": "INS-08 / INS-09",
+    "description": "Actual taboo items, isolated in this block so downstream users can disable or filter them independently of the moderated variants (inserts_expletives_moderated).",
+    "interjections": [
+      "damn",
+      "dammit",
+      "damn it",
+      "goddammit",
+      "goddamn it",
+      "hell",
+      "bloody hell",
+      "bloody nora",
+      "what the hell",
+      "what the fuck",
+      "god",
+      "my god",
+      "oh god",
+      "oh my god",
+      "dear god",
+      "good god",
+      "jesus",
+      "christ",
+      "jesus christ",
+      "for christ's sake",
+      "for god's sake",
+      "for fuck's sake",
+      "shit",
+      "oh shit",
+      "holy shit",
+      "crap",
+      "holy crap",
+      "fuck",
+      "fucking hell",
+      "bugger",
+      "bugger it",
+      "bollocks",
+      "sod it",
+      "damn and blast",
+      "bloody hell fire"
+    ],
+    "intensifiers": [
+      "bloody",
+      "damn",
+      "damned",
+      "fucking",
+      "frigging",
+      "freaking",
+      "flipping",
+      "flaming",
+      "sodding",
+      "bleeding",
+      "blooming",
+      "effing",
+      "goddamn",
+      "goddamned",
+      "blasted",
+      "friggin",
+      "freakin",
+      "fuckin",
+      "bloomin"
+    ]
+  },
+  "general_extenders": {
+    "node": "VAG-01",
+    "entries": [
+      "and stuff",
+      "and stuff like that",
+      "and things",
+      "and things like that",
+      "and all that",
+      "and all that stuff",
+      "and all that sort of thing",
+      "and so on",
+      "and so forth",
+      "and so on and so forth",
+      "and everything",
+      "and whatnot",
+      "and what have you",
+      "and the like",
+      "and that",
+      "and all the rest of it",
+      "and blah blah blah",
+      "or something",
+      "or something like that",
+      "or whatever",
+      "or anything",
+      "or anything like that",
+      "or what",
+      "et cetera",
+      "etcetera"
+    ]
+  },
+  "vague_nouns": {
+    "node": "VAG-02",
+    "placeholders": [
+      "thingy",
+      "thingie",
+      "thingummy",
+      "thingamajig",
+      "thingamabob",
+      "whatsit",
+      "whatsits",
+      "whatchamacallit",
+      "whatsisname",
+      "whatshername",
+      "whatsername",
+      "whatsisface",
+      "doohickey",
+      "doodah",
+      "doodad",
+      "gizmo",
+      "whatnot"
+    ],
+    "hyphenated_placeholders": [
+      "what-d'you-call-it",
+      "what-do-you-call-it",
+      "what's-his-name",
+      "what's-her-name",
+      "who-d'you-call-it"
+    ],
+    "bare_vague": [
+      "thing",
+      "things",
+      "stuff",
+      "bits",
+      "bits and pieces",
+      "bits and bobs",
+      "odds and ends"
+    ]
+  },
+  "hedging_sort_kind": {
+    "node": "VAG-03",
+    "entries": [
+      "sort of",
+      "kind of",
+      "sorta",
+      "kinda"
+    ]
+  },
+  "numeral_approximators": {
+    "node": "VAG-04 (rule tier, Phase 3)",
+    "pre": [
+      "about",
+      "around",
+      "roughly",
+      "approximately",
+      "some",
+      "nearly",
+      "almost",
+      "getting on for",
+      "upwards of",
+      "something like",
+      "in the region of",
+      "odd"
+    ],
+    "post": [
+      "or so",
+      "or thereabouts",
+      "odd",
+      "ish",
+      "something",
+      "or more",
+      "or less",
+      "plus",
+      "max",
+      "tops"
+    ]
+  },
+  "comment_parentheticals": {
+    "node": "CMT-02",
+    "entries": [
+      "you know",
+      "you see",
+      "mind you",
+      "you know what i mean",
+      "if you like",
+      "as it were",
+      "so to speak"
+    ]
+  },
+  "discourse_markers": {
+    "node": "DMG-01..08 (utterance-initial); COH-11 remains the residual",
+    "description": "comma: 'require' = a comma (or another discourse-marker word) must follow for the marker reading; 'none' = initial position with continuation suffices.",
+    "entries": [
+      {
+        "phrase": "well",
+        "id": "DMG-01",
+        "comma": "require"
+      },
+      {
+        "phrase": "oh",
+        "id": "DMG-02",
+        "comma": "none"
+      },
+      {
+        "phrase": "oh well",
+        "id": "DMG-02",
+        "comma": "none"
+      },
+      {
+        "phrase": "oh right",
+        "id": "DMG-02",
+        "comma": "none"
+      },
+      {
+        "phrase": "you know",
+        "id": "DMG-03",
+        "comma": "require"
+      },
+      {
+        "phrase": "i mean",
+        "id": "DMG-04",
+        "comma": "require"
+      },
+      {
+        "phrase": "so",
+        "id": "DMG-06",
+        "comma": "require"
+      },
+      {
+        "phrase": "anyway",
+        "id": "DMG-07",
+        "comma": "none"
+      },
+      {
+        "phrase": "anyhow",
+        "id": "DMG-07",
+        "comma": "none"
+      },
+      {
+        "phrase": "anyways",
+        "id": "DMG-07",
+        "comma": "none"
+      },
+      {
+        "phrase": "right",
+        "id": "DMG-08",
+        "comma": "require"
+      },
+      {
+        "phrase": "okay",
+        "id": "DMG-08",
+        "comma": "require"
+      },
+      {
+        "phrase": "ok",
+        "id": "DMG-08",
+        "comma": "require"
+      },
+      {
+        "phrase": "righto",
+        "id": "DMG-08",
+        "comma": "none"
+      },
+      {
+        "phrase": "okey-dokey",
+        "id": "DMG-08",
+        "comma": "none"
+      }
+    ],
+    "dm_followers": [
+      "anyway",
+      "anyhow",
+      "yeah",
+      "yes",
+      "no",
+      "um",
+      "er",
+      "erm",
+      "uh",
+      "well",
+      "right",
+      "okay",
+      "ok",
+      "then",
+      "look",
+      "listen",
+      "now",
+      "anyways"
+    ]
+  },
+  "vocatives_kinship_endearment": {
+    "node": "VOC-02",
+    "entries": [
+      "mum",
+      "mummy",
+      "mom",
+      "mommy",
+      "mama",
+      "ma",
+      "dad",
+      "daddy",
+      "papa",
+      "pa",
+      "gran",
+      "granny",
+      "grandma",
+      "grandpa",
+      "granddad",
+      "nan",
+      "nana",
+      "auntie",
+      "uncle",
+      "son",
+      "sis",
+      "bro",
+      "love",
+      "luv",
+      "darling",
+      "dear",
+      "dearie",
+      "honey",
+      "hon",
+      "sweetheart",
+      "sweetie",
+      "pet",
+      "duck",
+      "chuck",
+      "mate",
+      "pal",
+      "buddy",
+      "bud",
+      "dude",
+      "man",
+      "girl",
+      "boy",
+      "kid",
+      "kiddo",
+      "fella",
+      "lad",
+      "lads",
+      "lass",
+      "babe",
+      "baby",
+      "champ",
+      "chief",
+      "boss",
+      "sunshine"
+    ]
+  },
+  "vocatives_impersonal_honorific": {
+    "node": "VOC-03",
+    "entries": [
+      "you guys",
+      "guys",
+      "you lot",
+      "you two",
+      "everyone",
+      "everybody",
+      "folks",
+      "people",
+      "ladies",
+      "gentlemen",
+      "ladies and gentlemen",
+      "boys and girls",
+      "team",
+      "all",
+      "sir",
+      "madam",
+      "ma'am",
+      "miss",
+      "mister",
+      "officer",
+      "doctor",
+      "professor",
+      "your honour",
+      "your honor",
+      "my lord",
+      "my friend",
+      "my friends",
+      "class"
+    ]
+  },
+  "preface_questions": {
+    "node": "QIN-05",
+    "entries": [
+      "you know what",
+      "know what",
+      "guess what",
+      "you know something",
+      "know something",
+      "you'll never guess what",
+      "guess who",
+      "you know what else"
+    ]
+  },
+  "invariant_tags": {
+    "node": "QIN-06 (clause-final, comma + '?'); 'innit' is vernacular",
+    "entries": [
+      "innit",
+      "yeah",
+      "eh",
+      "right",
+      "okay",
+      "ok",
+      "huh",
+      "no",
+      "hey",
+      "what",
+      "see",
+      "alright",
+      "all right",
+      "aye",
+      "hm",
+      "hmm",
+      "yes"
+    ]
+  },
+  "binomial_intensifiers": {
+    "node": "PSC-03",
+    "description": "first adjective of the 'ADJ and ADJ' intensifying binomial. 'nice and' + any gradable adjective; the others only before the listed second adjectives (else it is ordinary coordination: 'good and kind').",
+    "open_first": [
+      "nice"
+    ],
+    "restricted_first": {
+      "good": [
+        "ready",
+        "proper",
+        "drunk",
+        "tired",
+        "angry",
+        "mad",
+        "sure",
+        "lost",
+        "dead",
+        "hot",
+        "wet",
+        "sick"
+      ],
+      "lovely": [
+        "warm",
+        "cool",
+        "fresh",
+        "soft",
+        "quiet",
+        "clean"
+      ],
+      "big": [
+        "strong",
+        "ugly"
+      ],
+      "well": [
+        "good",
+        "truly"
+      ]
+    }
+  },
+  "quotative_markers": {
+    "node": "QUO-01 / QUO-02",
+    "go_lemmas": [
+      "go"
+    ],
+    "be_complements": [
+      "like",
+      "all"
+    ]
+  },
+  "vernacular_forms": {
+    "node": "VER-02 / VER-05",
+    "aint_sequences": [
+      [
+        "ai",
+        "n't"
+      ],
+      [
+        "ain",
+        "'t"
+      ],
+      [
+        "aint"
+      ],
+      [
+        "ain't"
+      ]
+    ],
+    "leveled_regularized": [
+      "knowed",
+      "growed",
+      "throwed",
+      "blowed",
+      "drawed",
+      "seed",
+      "catched",
+      "teached",
+      "buyed",
+      "bringed",
+      "thinked",
+      "runned",
+      "drinked",
+      "eated",
+      "falled",
+      "gived",
+      "goed",
+      "taked",
+      "maked",
+      "selled",
+      "speaked",
+      "stealed",
+      "swimmed",
+      "writed",
+      "brung",
+      "clumb",
+      "drug",
+      "growed"
+    ],
+    "leveled_participle_preterites": [
+      "seen",
+      "done",
+      "been",
+      "gone",
+      "begun",
+      "drunk",
+      "sung",
+      "swum",
+      "rung",
+      "sunk",
+      "come"
+    ]
+  },
+  "reduced_forms": {
+    "node": "VER-06 (+ QIN-06 innit, ISB-02 cos). Sequences as tokenised by en_core_web_sm.",
+    "semi_modal_sequences": [
+      [
+        "gon",
+        "na"
+      ],
+      [
+        "gonna"
+      ],
+      [
+        "wan",
+        "na"
+      ],
+      [
+        "wanna"
+      ],
+      [
+        "got",
+        "ta"
+      ],
+      [
+        "gotta"
+      ],
+      [
+        "hafta"
+      ],
+      [
+        "oughta"
+      ],
+      [
+        "gotsta"
+      ]
+    ],
+    "other": [
+      "innit",
+      "cos",
+      "cause",
+      "cuz",
+      "coz",
+      "dunno",
+      "gimme",
+      "lemme",
+      "gotcha",
+      "outta",
+      "sorta",
+      "kinda",
+      "cuppa",
+      "d'you",
+      "y'know",
+      "c'mon"
+    ]
+  },
+  "epistemic_periphrastics": {
+    "node": "MOD-38 / MOD-39",
+    "certainty_adjs": [
+      "bound",
+      "sure",
+      "certain",
+      "guaranteed"
+    ],
+    "likelihood_adjs": [
+      "likely",
+      "unlikely"
+    ]
+  },
+  "noun_of_ing": {
+    "node": "NCL-14",
+    "lemmas": [
+      "possibility",
+      "chance",
+      "risk",
+      "danger",
+      "fear",
+      "hope",
+      "idea",
+      "intention",
+      "habit",
+      "prospect",
+      "likelihood",
+      "probability",
+      "importance",
+      "necessity",
+      "difficulty",
+      "problem",
+      "pleasure",
+      "privilege",
+      "honour",
+      "honor",
+      "cost",
+      "process",
+      "means",
+      "method",
+      "way",
+      "experience",
+      "mistake",
+      "thought",
+      "option",
+      "point",
+      "business",
+      "job",
+      "task",
+      "act",
+      "advantage",
+      "benefit",
+      "burden",
+      "consequence",
+      "effect"
+    ]
+  },
+  "thing_is_nouns": {
+    "node": "FOC-18",
+    "lemmas": [
+      "thing",
+      "problem",
+      "trouble",
+      "point",
+      "fact",
+      "truth",
+      "question",
+      "issue",
+      "upshot",
+      "worry",
+      "snag",
+      "catch",
+      "beauty",
+      "irony",
+      "funny thing",
+      "annoying thing",
+      "amazing thing",
+      "best thing",
+      "worst thing",
+      "main thing",
+      "only thing",
+      "other thing"
+    ]
+  }
+}

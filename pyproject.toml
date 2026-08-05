@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "polke"
+version = "0.1.0"
+description = "POLKE — span-level annotator for 670 pedagogical grammar constructions in English text"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Xiaobin Chen" }]
+requires-python = ">=3.10"
+keywords = ["grammar", "constructions", "annotation", "corpus", "SLA", "NLP"]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Text Processing :: Linguistic",
+]
+dependencies = [
+    "spacy>=3.7,<4",
+    "python-dotenv>=1.0",
+    "openai>=1.40",
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.30",
+    "pydantic>=2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "httpx>=0.27"]
+
+[project.scripts]
+polke = "polke.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["polke*"]
+
+[tool.setuptools.package-data]
+polke = ["data/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
