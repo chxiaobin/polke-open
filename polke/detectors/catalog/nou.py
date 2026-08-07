@@ -361,10 +361,14 @@ def build(nlp, client=None):
         "NOU-07": "an uncountable noun coerced to a count reading (two coffees, "
                   "three beers)",
         "NOU-17": "a double genitive (a friend of mine / of John's)",
-        "NOU-18": "a group genitive (the King of Spain's visit; someone else's)",
+        "NOU-18": "a group genitive - the 's attaches to the END of a multi-"
+                  "word phrase rather than to its head noun (the King of "
+                  "Spain's visit; someone else's idea; the man next door's "
+                  "car)",
         "NOU-21": "a noun+noun compound (bus stop, coffee table)",
-        "NOU-22": "a singular measure noun modifying another noun "
-                  "(a three-hour meeting, a ten-pound note)",
+        "NOU-22": "a singular noun used as a modifier of another noun, "
+                  "including measure nouns that stay singular (a three-hour "
+                  "meeting, a ten-pound note, a shoe shop)",
         "NOU-23": "a collective noun with singular-vs-plural (notional) "
                   "agreement (the team is / are)",
     }

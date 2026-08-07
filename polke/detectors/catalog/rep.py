@@ -59,7 +59,9 @@ _STMT_SYS = (
     "A reported statement (reporting verb + that-clause). Choose:\n"
     "REP-01 backshift of tense (She said she was tired) | REP-03 pronoun/"
     "possessive shift (I->he, my->his) | REP-10 modal backshift (will->would, "
-    "can->could, must->had to, may->might).")
+    "can->could, must->had to, may->might).\n"
+    "Reported questions (asked whether/if ...) are a different construct - "
+    "return NONE for those.")
 _QUES_SYS = (
     "A reported question (statement word order, no inversion). Choose:\n"
     "REP-05 reported yes/no question with if/whether (He asked whether I "

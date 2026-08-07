@@ -46,7 +46,9 @@ _COORD08 = ["whether"]
 # --------------------------------------------------------------------------- #
 _COORD01_SYS = ("Return COORD-01 for 'and' coordination and specify nothing "
                 "further; distinguish its reading (addition/sequence/result/"
-                "condition, e.g. 'Touch it and you'll regret it').")
+                "condition, e.g. 'Touch it and you'll regret it'). Correlative "
+                "pairs (both ... and, either ... or, not only ... but also) "
+                "are different constructs - return NONE for those.")
 _COORD04_SYS = ("Return COORD-04 for clause coordination with 'so' (result) or "
                 "'for' (reason, formal).")
 _COORD06_SYS = ("Return COORD-06 for the correlative 'either ... or'.")

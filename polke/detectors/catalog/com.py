@@ -249,9 +249,11 @@ def build(nlp, client=None):
     # --- LLM tier (registered, skipped offline) ---
     dets.append(LLMReadingDetector(
         nlp, ["COM-03"], _ADJ_FORM,
-        "The bracketed adjective is two syllables and may take either -er/-est "
-        "or more/most (clever/cleverer/more clever). Return COM-03 for this "
-        "two-syllable variation.",
+        "The bracketed adjective is two syllables and idiomatically allows "
+        "BOTH -er/-est and more/most (clever, narrow, simple, quiet: cleverer "
+        "/ more clever). Return COM-03 only for such both-form adjectives; "
+        "adjectives with one standard form (happy -> happier; useful -> more "
+        "useful) and adverbs return NONE.",
         client=client, version="com03-twosyll@0.1"))
     dets.append(LLMReadingDetector(
         nlp, ["COM-07"], _ADJ_FORM,

@@ -171,7 +171,9 @@ def build(nlp, client=None):
         "DET-02": "a demonstrative in a temporal / textual / emotive (non-"
                   "spatial) use (this week; that idea; this guy...)",
         "DET-05": "assertive 'some' quantifying an indefinite amount (I bought "
-                  "some apples)",
+                  "some apples); NOT stressed 'some' meaning certain/"
+                  "particular (some people just don't listen - a different "
+                  "construct)",
         "DET-06": "'some' softening an offer or request (would you like some "
                   "tea?)",
         "DET-07": "'some' meaning a certain / particular (some people just "
@@ -192,12 +194,16 @@ def build(nlp, client=None):
                   "students; the whole class)",
         "DET-19": "each / every distributive determiner with singular agreement",
         "DET-20": "either / neither (of) selecting between two",
-        "DET-23": "a predeterminer (all/both/half + det; such a; what a; rather/"
-                  "quite a; many a)",
+        "DET-23": "a predeterminer standing BEFORE another determiner (all the/"
+                  "both these/half a; such a; what a; rather/quite a; many a); "
+                  "a bare quantifier directly before a noun (enough chairs, "
+                  "many people) is a different construct",
         "DET-24": "enough / several / various / certain / numerous quantifying "
                   "a noun",
         "DET-25": "a number, fraction or multiplier quantifying a noun (three "
-                  "books; two-thirds of; twice the size)",
+                  "books; two-thirds of; twice the size); NOT half/all/both "
+                  "before a determiner (predeterminer - a different construct) "
+                  "and NOT distributive per",
         "DET-27": "another / other(s) / the other(s)",
         "DET-28": "possessive + own for emphatic ownership (my own room; a place "
                   "of my own)",

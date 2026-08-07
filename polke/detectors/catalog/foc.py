@@ -187,9 +187,14 @@ _FRONT_SYS = (
     "A constituent is fronted (marked theme). Choose:\n"
     "FOC-07 object/complement fronting (That I can't accept; Brilliant it was "
     "not) | FOC-08 adverbial fronting without inversion (In the corner stood a "
-    "lamp / To this day I remember).")
-_FOC16_SYS = ("Return FOC-16 for end-weight / end-focus packaging (extraposition, "
-              "existential, or passive used to place heavy/new information last).")
+    "lamp / To this day I remember).\n"
+    "It-clefts (It was X that ...) and wh-/pseudo-clefts (What I need is ...) "
+    "are different constructs - return NONE for those.")
+_FOC16_SYS = ("Return FOC-16 for end-weight / end-focus packaging ONLY via "
+              "extraposition (It's clear that ...), existential there, or a "
+              "passive used to place heavy/new information last. It-clefts "
+              "and wh-clefts are different constructs - return NONE for "
+              "those.")
 _FOC17_SYS = ("Return FOC-17 for right/left dislocation, where a detached NP is "
               "co-referential with a pronoun (My brother, he's a doctor; She's "
               "clever, your daughter). NOT FOC-17: a tail that merely copies "

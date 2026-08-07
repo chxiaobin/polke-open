@@ -223,7 +223,10 @@ _TWOAMOD_FORM = [
      "RIGHT_ATTRS": {"DEP": {"IN": ["amod", "conj"]}}},
 ]
 _AMODJJ_FORM = [{"RIGHT_ID": "a", "RIGHT_ATTRS": {"POS": "ADJ"}}]
-_ING_FORM = [{"RIGHT_ID": "a", "RIGHT_ATTRS": {"TAG": "VBG"}}]
+# -ing participial adjectives are tagged VBG in predicative but often plain
+# JJ in attributive position (an interesting book) — accept both.
+_ING_FORM = [{"RIGHT_ID": "a", "RIGHT_ATTRS": {
+    "TAG": {"IN": ["VBG", "JJ"]}, "LOWER": {"REGEX": "ing$"}}}]
 _ED_FORM = [{"RIGHT_ID": "a", "RIGHT_ATTRS": {"TAG": {"IN": ["VBN", "JJ"]}}}]
 _THEADJ_FORM = [
     {"RIGHT_ID": "a", "RIGHT_ATTRS": {"POS": "ADJ"}},
@@ -308,7 +311,8 @@ def build(nlp, client=None):
         "Two or more attributive adjectives premodify the bracketed noun. Return "
         "ADJ-06 if they follow the canonical order "
         "(opinion-size-age-shape-colour-origin-material-purpose), e.g. a large "
-        "round wooden table.",
+        "round wooden table. Comma-separated coordinated adjectives (a long, "
+        "hot summer) are a different construct - return NONE for those.",
         client=client, version="adj06-order@0.1"))
     dets.append(LLMReadingDetector(
         nlp, ["ADJ-07"], _AMODJJ_FORM,
@@ -318,14 +322,17 @@ def build(nlp, client=None):
         client=client, version="adj07-coordinate@0.1"))
     dets.append(LLMReadingDetector(
         nlp, ["ADJ-08"], _AMODJJ_FORM,
-        "Return ADJ-08 if the bracketed adjective is gradable and takes a "
-        "scalar degree modifier such as very/quite/rather (very tired).",
+        "Return ADJ-08 if the bracketed adjective is gradable and a scalar "
+        "degree modifier such as very/quite/rather is actually present with it "
+        "in the text (very tired). A gradable adjective with no degree word "
+        "returns NONE.",
         client=client, version="adj08-gradable@0.1"))
     dets.append(LLMReadingDetector(
         nlp, ["ADJ-09"], _AMODJJ_FORM,
         "Return ADJ-09 if the bracketed adjective is non-gradable/absolute and "
-        "takes an intensifier like absolutely/completely/utterly (absolutely "
-        "freezing).",
+        "an intensifier like absolutely/completely/utterly is actually present "
+        "with it in the text (absolutely freezing). Without such an "
+        "intensifier, or with plain very + gradable adjective, return NONE.",
         client=client, version="adj09-nongradable@0.1"))
     dets.append(LLMReadingDetector(
         nlp, ["ADJ-10"], _AMODJJ_FORM,

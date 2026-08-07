@@ -257,7 +257,10 @@ def build(nlp, client=None):
     _llm = {
         "PREP-05": "for/since expressing duration vs starting point of a time span",
         "PREP-07": "by/until(till) expressing a deadline vs up-to-a-point in time",
-        "PREP-11": "of expressing possession/partitive/material/about",
+        "PREP-11": "the preposition OF expressing possession (the leg of the "
+                  "table), partitive (a cup of tea), material (made of wood) "
+                  "or topic (tales of adventure); other prepositions such as "
+                  "about/on do not count",
         "PREP-12": "with/without expressing accompaniment/instrument/manner",
         "PREP-13": "by expressing agent/means/measure",
         "PREP-14": "for expressing purpose/recipient/duration/exchange",

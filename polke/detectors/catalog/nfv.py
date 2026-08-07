@@ -330,7 +330,9 @@ _PURPOSE_SYS = (
 _PART_SYS = (
     "The bracketed word heads a non-finite participle clause. Choose one:\n"
     "NFV-28 present participle (-ing, simultaneous/active: 'Smiling, she...') | "
-    "NFV-29 past participle (-ed, passive: 'Asked to leave, he refused')."
+    "NFV-29 past participle (-ed, passive: 'Asked to leave, he refused').\n"
+    "A perfect participle clause ('Having finished, ...') is a different "
+    "construct - return NONE for it."
 )
 _PERCEPTION_SYS = (
     "Return NFV-11 if a perception verb (see/hear/watch/feel/notice) takes a "
@@ -354,7 +356,9 @@ _MEANING_SYS = (
 )
 _LIKE_SYS = (
     "Return NFV-25 for the like + infinitive (choose to) vs like + -ing (enjoy) "
-    "nuance ('I like to check' vs 'I like checking')."
+    "nuance ('I like to check' vs 'I like checking'). Only for like/love/hate/"
+    "prefer; other verbs taking to/-ing (begin, stop, remember) are different "
+    "constructs - return NONE."
 )
 _WOULD_LIKE_SYS = (
     "Return NFV-31 for would like/love/hate/prefer + to-infinitive (specific "

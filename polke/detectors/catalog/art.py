@@ -300,19 +300,28 @@ def build(nlp, client=None):
     # --- LLM tier (registered structurally; skipped offline) --------------- #
     _llm = {
         "ART-01": "indefinite a/an introducing a first-mention / non-specific "
-                  "singular count noun (I saw a dog)",
+                  "singular count noun (I saw a dog); NOT the classifying use "
+                  "after be (she's a teacher - a different construct)",
         "ART-02": "indefinite a/an classifying (occupation or category: she's a "
                   "teacher)",
-        "ART-06": "anaphoric the (second mention of something introduced earlier)",
+        "ART-06": "anaphoric the (second mention of something introduced "
+                  "earlier in the text); NOT situational shared-knowledge the "
+                  "(shut the door) and NOT the identified by a following "
+                  "modifier - those are different constructs",
         "ART-07": "cataphoric the (definite because post-modified: the man who "
                   "called)",
-        "ART-08": "situational the (shared-knowledge referent: shut the door)",
+        "ART-08": "situational the (shared-knowledge referent: shut the door); "
+                  "NOT anaphoric the (second mention) and NOT the identified "
+                  "by a post-modifier (the book that you lent me) - those are "
+                  "different constructs",
         "ART-11": "generic the + singular naming a whole class (the tiger is "
                   "endangered)",
         "ART-13": "the + adjective/nationality denoting a group (the rich, the "
                   "unemployed, the Chinese)",
         "ART-15": "zero article with a generic plural or uncountable noun (dogs "
-                  "bark; I like music)",
+                  "bark; I like music); NOT fixed institutional phrases (have "
+                  "lunch, go to school, by bus) - those are different "
+                  "constructs",
         "ART-17": "zero article with an institution in its purpose sense "
                   "(in hospital / at school as a patient / pupil)",
         "ART-24": "the contrasting uses of 'most' (most people / the most "

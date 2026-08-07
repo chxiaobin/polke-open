@@ -272,21 +272,28 @@ _PC_SYS = (
     "one:\nVTA-12 temporary situation (staying this week) | VTA-13 changing/"
     "developing situation (getting warmer) | VTA-14 repeated action + annoyance "
     "(always interrupting) | VTA-15 fixed future arrangement (meeting at six) | "
-    "VTA-16 background in a present narrative (it's raining and people are running)."
+    "VTA-16 background in a present narrative (it's raining and people are "
+    "running).\nA plain action in progress right now (I'm reading your draft) "
+    "is a different construct - return NONE for it."
 )
 _PST_SYS = (
     "The bracketed past-simple verb group has one of these USES. Choose one:\n"
     "VTA-19 past habit/repeated action (walked to school every day) | "
     "VTA-21 remote/polite/tentative (I wondered if you could help) | "
     "VTA-22 hypothetical/unreal past-tense form (If I knew; I wish I had; "
-    "It's time we left)."
+    "It's time we left).\nA plain single past event or state (He had long "
+    "hair then; I saw her yesterday) is a different construct - return NONE "
+    "for it."
 )
 _PSTC_SYS = (
     "The bracketed past-continuous verb group has one of these USES. Choose one:\n"
     "VTA-24 interrupted action (was cooking when the phone rang) | "
     "VTA-25 background to past events (the sun was shining when we set off) | "
     "VTA-27 temporary past situation / repeated annoyance (was always losing) | "
-    "VTA-28 polite/tentative (I was wondering whether)."
+    "VTA-28 polite/tentative (I was wondering whether).\n"
+    "An action simply in progress at a stated time point (At nine I was "
+    "working) and two simultaneous actions (While I cooked, she was setting "
+    "the table) are different constructs - return NONE for those."
 )
 _PPC_SYS = (
     "The bracketed present-perfect-continuous verb group has one of these USES. "
@@ -303,7 +310,9 @@ _V45_SYS = ("Return VTA-45 if a past-perfect-continuous explains the CAUSE of a 
             "past state/result (His eyes were red; he'd been crying).")
 _V46_SYS = ("Return VTA-46 if a stative verb (cognition/perception/possession/"
             "emotion: know, believe, own, like) is used in the simple, RESISTING "
-            "the progressive.")
+            "the progressive. If the stative verb actually appears IN the "
+            "progressive (I'm loving it), that is not this construct - return "
+            "NONE.")
 _V47_SYS = ("Return VTA-47 if it contrasts a stative perception verb (see/hear) "
             "with an active one (look/listen/watch).")
 _V48_SYS = ("Return VTA-48 if a normally stative verb is COERCED into the "

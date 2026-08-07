@@ -53,15 +53,22 @@ _POSTV_SYS = (
     "will) | ELS-02 infinitive ellipsis - stranded 'to' (I'd love to Ø) | "
     "ELS-05 do/do so/do it/do that substitution (he did (so)).")
 _GAP_SYS = ("Return ELS-03 for gapping/stripping in coordination - the verb is "
-            "omitted in the second conjunct (I ordered tea and she Ø coffee; "
-            "..., and Bob too).")
+            "omitted in the second conjunct with NO auxiliary left behind (I "
+            "ordered tea and she Ø coffee; ..., and Bob too). Post-auxiliary "
+            "ellipsis ('... but she has Ø') is a different construct - return "
+            "NONE.")
 _NOM_SYS = ("Return ELS-04 for nominal ellipsis - a determiner/numeral/adjective "
             "with the head noun omitted (I'll take two Ø; the rich Ø; the first "
             "Ø to arrive).")
-_SAME_SYS = ("Return ELS-07 for substitution with the same / such (I'll have the "
-             "same; such was his anger).")
-_RESP_SYS = ("Return ELS-08 for response/answer ellipsis (Yes, I do; Me too; Not "
-             "me; So do I).")
+_SAME_SYS = ("Return ELS-07 for substitution with the literal words 'the same' "
+             "or 'such' (I'll have the same; such was his anger). Other "
+             "ellipsis or omitted material that could merely be paraphrased "
+             "with 'the same' returns NONE.")
+_RESP_SYS = ("Return ELS-08 for response/answer ellipsis - a short reply or "
+             "reaction standing for a full clause (Yes, I do; Me too; Not me; "
+             "So do I). Ellipsis inside one speaker's own coordination ('and "
+             "she coffee', '... but she has') is a different construct - "
+             "return NONE.")
 _ONE_SYS = ("Return ELS-09 for one/ones nominal substitution (the blue one; the "
             "ones I bought).")
 _CMP_SYS = ("Return ELS-10 for comparative-clause ellipsis (She's taller than me "

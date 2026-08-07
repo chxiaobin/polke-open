@@ -175,7 +175,9 @@ def build(nlp, client=None):
                   "left their bag)",
         "PRO-12": "one / ones as a substitute noun (the red one; the ones on the "
                   "left)",
-        "PRO-13": "generic / formal one (one should be careful)",
+        "PRO-13": "generic / formal one (one should be careful); only the "
+                  "pronoun 'one' counts - generic 'you' is a different "
+                  "construct",
     }
     for cid, desc in _llm.items():
         dets.append(LLMStandaloneDetector(

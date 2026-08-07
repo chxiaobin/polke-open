@@ -727,8 +727,8 @@ _INTRANS_SYS = (
     "change that the same verb can express transitively: 'the door opened', "
     "'the glass broke', 'the price increased') | "
     "VCP-06 middle voice (a patient subject with a generic/characterising "
-    "reading, usually + adverb: 'this shirt washes easily', 'the book sells "
-    "well') | "
+    "reading, usually + adverb or won't/wouldn't: 'this shirt washes easily', "
+    "'the book sells well', 'the door won't lock') | "
     "VCP-07 reciprocal intransitive (a plural/conjoined subject acting on each "
     "other: 'they met', 'we argued', 'the two lines intersect')."
 )

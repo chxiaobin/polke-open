@@ -143,7 +143,9 @@ _FUT11_SYS = ("Return FUT-11 if a present continuous refers to a fixed future "
               "ARRANGEMENT (We're flying on Monday).")
 _FUT15_SYS = ("Return FUT-15 if a future continuous expresses the future as a "
               "matter of course, or a polite enquiry (Will you be using the car "
-              "tonight?).")
+              "tonight?). An action simply in progress at a future time point "
+              "(This time tomorrow I'll be flying) is a different construct - "
+              "return NONE.")
 _FUT21_SYS = ("Return FUT-21 if this expresses FUTURE IN THE PAST (would / was to "
               "/ was about to): a future viewpoint from a past reference time "
               "(He didn't know he would never return).")

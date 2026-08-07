@@ -182,10 +182,14 @@ _REL07_FORM = [
      "RIGHT_ATTRS": {"TAG": {"IN": ["WDT", "WP"]}, "LOWER": "that"}},
 ]
 _ND_FORM = [{"RIGHT_ID": "w", "RIGHT_ATTRS": {"TAG": {"IN": ["WP", "WDT"]}}}]
+# Post-nominal modifiers only (>++ = child to the RIGHT of the noun): acl/
+# relcl participial and infinitive relatives, plus postposed adjectives (the
+# people responsible), which parse as amod but only ever follow the noun in
+# this reduced-relative use. Plain prenominal amod stays excluded.
 _RED_FORM = [
     {"RIGHT_ID": "n", "RIGHT_ATTRS": {"POS": {"IN": ["NOUN", "PROPN"]}}},
-    {"LEFT_ID": "n", "REL_OP": ">", "RIGHT_ID": "a",
-     "RIGHT_ATTRS": {"DEP": {"IN": ["acl", "relcl"]}}},
+    {"LEFT_ID": "n", "REL_OP": ">++", "RIGHT_ID": "a",
+     "RIGHT_ATTRS": {"DEP": {"IN": ["acl", "relcl", "amod"]}}},
 ]
 
 

@@ -142,7 +142,10 @@ def build(nlp, client=None):
     dets.append(LLMStandaloneDetector(
         "PHV-06",
         'A phrasal verb can be literal (spatial/compositional) or idiomatic. '
-        'Decide whether the sentence uses a phrasal verb in its IDIOMATIC sense. '
+        'Decide whether the sentence uses, in its IDIOMATIC sense, a phrasal '
+        'verb that ALSO has a literal spatial sense (take off = succeed/depart '
+        'vs take off = remove). Combinations with only one established sense '
+        '(look after, depend on) are not this contrast - return NONE. '
         'Return JSON {"construct_id":"PHV-06"|"NONE","confidence":0..1,"rationale":"..."}.',
         client=client, version="phv06-llm@0.1"))
     return dets

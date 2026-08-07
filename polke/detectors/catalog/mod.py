@@ -223,7 +223,8 @@ _ADVICE_SYS = (
     "The bracketed modal gives ADVICE. Choose one:\nMOD-25 should/ought to (You "
     "should rest) | MOD-27 should/ought to/could/might have + pp = past criticism "
     "(You should have told me) | MOD-28 why don't you / why not / it might be a "
-    "good idea to (Why not ask her?)."
+    "good idea to (Why not ask her?).\n"
+    "'had better' is a different construct - return NONE for it."
 )
 _DEDUCT_SYS = (
     "The bracketed modal expresses epistemic DEDUCTION/CERTAINTY. Choose one:\n"
@@ -237,10 +238,13 @@ _VOLITION_SYS = (
     "The bracketed modal expresses VOLITION/HABIT/PREFERENCE. Choose one:\nMOD-34 "
     "will/won't = willingness/insistence of things (The door won't open) | MOD-35 "
     "would = past habit (On Sundays we would visit grandma) | MOD-36 will = "
-    "characteristic/general truth (Oil will float on water)."
+    "characteristic/general truth (Oil will float on water).\n"
+    "'would rather/sooner/prefer' is a different construct - return NONE for it."
 )
-_MOD23_SYS = ("Return MOD-23 if 'didn't need to' says an action was UNNECESSARY "
-              "(and typically not done): I didn't need to wait.")
+_MOD23_SYS = ("Return MOD-23 only for the literal form 'didn't need to' saying "
+              "an action was UNNECESSARY (and typically not done): I didn't "
+              "need to wait. 'don't have to' (present) and 'needn't have + "
+              "pp' are different constructs - return NONE for those.")
 _MOD33_SYS = ("Return MOD-33 if will/would expresses a confident epistemic "
               "assumption (That'll be the courier; he'd be about fifty now).")
 _MOD36_SYS = ("Return MOD-36 if 'will' states a characteristic or general truth "

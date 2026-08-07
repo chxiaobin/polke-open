@@ -743,7 +743,7 @@
       "test_cases": {
         "positive": [
           "I've lost my keys.",
-          "She's just left."
+          "She has just left."
         ],
         "negative": [
           "I've been to Japan.",
@@ -767,7 +767,7 @@
       "use_notes": "",
       "test_cases": {
         "positive": [
-          "He's broken his leg"
+          "He has broken his leg."
         ],
         "negative": [
           "I've been to Japan.",
@@ -1077,8 +1077,8 @@
       "use_notes": "",
       "test_cases": {
         "positive": [
-          "His eyes were red",
-          "he'd been crying."
+          "His eyes were red; he'd been crying.",
+          "The ground was wet; it had been raining."
         ],
         "negative": [
           "Water boils at 100°C.",
@@ -1105,9 +1105,9 @@
           "I know /"
         ],
         "negative": [
-          "I see it / I'm looking at it.",
+          "I'm looking at the photos now.",
           "I'm loving it.",
-          "He said (that) he was tired."
+          "She is being silly."
         ]
       },
       "status": "todo",
@@ -1125,7 +1125,7 @@
       "use_notes": "",
       "test_cases": {
         "positive": [
-          "I see it / I'm looking at it."
+          "I was listening carefully, but I couldn't hear anything."
         ],
         "negative": [
           "I know /",
@@ -2461,7 +2461,7 @@
         "negative": [
           "On Sundays we would visit grandma.",
           "Oil will float on water.",
-          "would rather / would sooner / would prefer"
+          "I'd rather stay home."
         ]
       },
       "status": "todo",
@@ -3113,7 +3113,7 @@
           "I came to help."
         ],
         "negative": [
-          "He left early so as not to miss it.",
+          "He awoke to find the house empty.",
           "I decided to leave.",
           "easy to please",
           "a decision to resign"
@@ -3284,7 +3284,7 @@
       "test_cases": {
         "positive": [
           "He awoke to find the house empty.",
-          "only to fail."
+          "She grew up to become a doctor."
         ],
         "negative": [
           "I came to help.",
@@ -3706,8 +3706,8 @@
         "negative": [
           "want/decide/hope/manage/refuse + to.",
           "avoid/admit/consider/deny/finish/suggest/risk + -ing.",
-          "begin/start/continue/like/love/hate/prefer + to/-ing.",
-          "stop/remember/forget/try/regret/go on/mean/need + to vs -ing."
+          "She began to cry.",
+          "He stopped smoking."
         ]
       },
       "status": "todo",
@@ -5412,9 +5412,9 @@
         ],
         "negative": [
           "a chair / two chairs.",
-          "a coffee/coffee",
+          "I ordered a coffee.",
           "scissors, trousers, jeans, glasses, clothes, goods.",
-          "news, mathematics, physics, economics is..."
+          "He drank two coffees."
         ]
       },
       "status": "todo",
@@ -5539,7 +5539,7 @@
         "negative": [
           "a chair / two chairs.",
           "advice, information, news, furniture, luggage, money, research.",
-          "a coffee/coffee",
+          "Coffee keeps me awake.",
           "scissors, trousers, jeans, glasses, clothes, goods."
         ]
       },
@@ -5800,7 +5800,7 @@
       "test_cases": {
         "positive": [
           "the King of Spain's visit",
-          "someone else's idea."
+          "It was someone else's idea."
         ],
         "negative": [
           "the dog's tail.",
@@ -5902,7 +5902,7 @@
         "positive": [
           "a three-hour meeting",
           "a ten-pound note",
-          "a shoe shop."
+          "She works in a shoe shop."
         ],
         "negative": [
           "a bus stop",
@@ -6031,7 +6031,7 @@
           "She's a teacher.",
           "twice a day",
           "What a day!",
-          "a university, an hour, an MP."
+          "He goes to the gym every day."
         ]
       },
       "status": "todo",
@@ -6056,7 +6056,7 @@
           "I saw a dog.",
           "twice a day",
           "What a day!",
-          "a university, an hour, an MP."
+          "I saw a dog in the park."
         ]
       },
       "status": "todo",
@@ -6148,8 +6148,8 @@
       "use_notes": "",
       "test_cases": {
         "positive": [
-          "I bought a book.",
-          "The book was great."
+          "I bought a book and a pen, and the book was expensive.",
+          "She adopted a kitten, and the kitten follows her everywhere."
         ],
         "negative": [
           "the book on the table",
@@ -6202,7 +6202,7 @@
         ],
         "negative": [
           "I bought a book.",
-          "the book on the table",
+          "The book that you lent me was brilliant.",
           "the sun, the moon, the government, the internet.",
           "the best, the first, the only one."
         ]
@@ -6371,8 +6371,8 @@
           "I like Ø music."
         ],
         "negative": [
-          "have Ø lunch",
-          "study Ø biology",
+          "We had lunch at noon.",
+          "She goes to school by bus.",
           "what kind of Ø person."
         ]
       },
@@ -7154,7 +7154,7 @@
         ],
         "negative": [
           "no money",
-          "enough chairs",
+          "We don't have enough chairs.",
           "three books",
           "€5 per person"
         ]
@@ -7205,9 +7205,9 @@
         ],
         "negative": [
           "no money",
-          "half the time",
+          "I'm away half the time.",
           "enough chairs",
-          "€5 per person"
+          "The cost per person varies."
         ]
       },
       "status": "todo",
@@ -7849,7 +7849,7 @@
           "very tired."
         ],
         "negative": [
-          "a large round wooden table.",
+          "The water was absolutely boiling.",
           "a long, hot summer.",
           "absolutely freezing",
           "nuclear power"
@@ -7870,10 +7870,10 @@
       "use_notes": "",
       "test_cases": {
         "positive": [
-          "absolutely freezing"
+          "It was an absolutely freezing morning."
         ],
         "negative": [
-          "a large round wooden table.",
+          "The tea was very hot.",
           "a long, hot summer.",
           "very tired.",
           "nuclear power"
@@ -7898,7 +7898,7 @@
           "a daily routine."
         ],
         "negative": [
-          "a large round wooden table.",
+          "This puzzle is quite difficult.",
           "a long, hot summer.",
           "very tired.",
           "absolutely freezing"
@@ -7919,14 +7919,14 @@
       "use_notes": "",
       "test_cases": {
         "positive": [
-          "an interesting book",
+          "It's an interesting book.",
           "the news is boring."
         ],
         "negative": [
           "a large round wooden table.",
           "a long, hot summer.",
           "very tired.",
-          "absolutely freezing"
+          "There was a growing number of complaints."
         ]
       },
       "status": "todo",
@@ -7949,7 +7949,7 @@
         "negative": [
           "a large round wooden table.",
           "a long, hot summer.",
-          "very tired.",
+          "He swept up the broken glass.",
           "absolutely freezing"
         ]
       },
@@ -8933,8 +8933,8 @@
           "simpler / more simple."
         ],
         "negative": [
-          "taller, bigger, happier.",
-          "more useful, more carefully."
+          "She is taller and happier now.",
+          "He drives more carefully now."
         ]
       },
       "status": "todo",
@@ -9554,7 +9554,7 @@
           "with a knife",
           "by train",
           "for you",
-          "a book about/on grammar."
+          "I read a book about grammar."
         ]
       },
       "status": "todo",
@@ -10141,7 +10141,7 @@
         "negative": [
           "She works.",
           "Tom and Sue are",
-          "Ten years is a long time",
+          "Ten years is a long time.",
           "What we need is/are..."
         ]
       },
@@ -10606,9 +10606,9 @@
       "test_cases": {
         "positive": [
           "So you're leaving, are you?",
-          "aren't I",
-          "will you (imperative)",
-          "shall we (let's)."
+          "I'm late, aren't I?",
+          "Sit down, will you?",
+          "You're coming, are you?"
         ],
         "negative": [
           "Are you ready?",
@@ -10815,7 +10815,7 @@
           "I don't know",
           "isn't, don't, won't, can't, shan't, mustn't",
           "no money",
-          "I have no time / I don't have any time."
+          "I have no time."
         ]
       },
       "status": "todo",
@@ -10865,7 +10865,7 @@
           "I don't know",
           "isn't, don't, won't, can't, shan't, mustn't",
           "I don't have any",
-          "no money"
+          "The answer is no."
         ]
       },
       "status": "todo",
@@ -11337,7 +11337,7 @@
           "small but strong",
           "tea or coffee",
           "It was late, so we left",
-          "both fast and reliable."
+          "The car is both fast and reliable."
         ]
       },
       "status": "todo",
@@ -11676,7 +11676,7 @@
         "negative": [
           "Call me when you arrive.",
           "While I cooked, she read.",
-          "Wait until I come back.",
+          "When he came, we ate.",
           "I've known her since we were kids."
         ]
       },
@@ -11797,7 +11797,7 @@
           "We left because it was late.",
           "Now that you're here, let's start.",
           "I wrote it down so that I'd remember.",
-          "He whispered so as not to wake her."
+          "He seemed to hesitate."
         ]
       },
       "status": "todo",
@@ -12801,7 +12801,7 @@
       "test_cases": {
         "positive": [
           "the only thing that matters",
-          "everything that..."
+          "She told me everything that happened."
         ],
         "negative": [
           "the man who called.",
@@ -12985,7 +12985,7 @@
       "use_notes": "",
       "test_cases": {
         "positive": [
-          "the people waiting outside."
+          "The man sitting next to me fell asleep."
         ],
         "negative": [
           "the report written last year.",
@@ -13033,7 +13033,7 @@
         "positive": [
           "the next train to arrive",
           "the best way to do it",
-          "the first to know."
+          "He was the first man to walk on the moon."
         ],
         "negative": [
           "the people waiting outside.",
@@ -13056,8 +13056,8 @@
       "use_notes": "",
       "test_cases": {
         "positive": [
-          "the people responsible",
-          "the woman in the corner."
+          "They arrested the people responsible.",
+          "It's the only room available."
         ],
         "negative": [
           "the people waiting outside.",
@@ -13179,10 +13179,10 @@
       "use_notes": "",
       "test_cases": {
         "positive": [
-          "I know Ø you're busy"
+          "I know you're busy."
         ],
         "negative": [
-          "I think (that) it works.",
+          "I think that it works.",
           "That he lied is clear",
           "the fact that he resigned",
           "I'm sure that..."
@@ -13433,7 +13433,7 @@
         ],
         "negative": [
           "He said the Earth is round.",
-          "\"I lost my keys\" → He said he'd lost his keys.",
+          "He says he's lost his keys.",
           "this→that, here→there, now→then, today→that day, tomorrow→the next day, ago→before",
           "He asked whether I agreed."
         ]
@@ -13477,7 +13477,7 @@
       "use_notes": "",
       "test_cases": {
         "positive": [
-          "\"I lost my keys\" → He said he'd lost his keys."
+          "\"I love my job\" → She says she loves her job."
         ],
         "negative": [
           "She said (that) she was tired.",
@@ -14205,7 +14205,7 @@
           "She likes jazz, and Bob too."
         ],
         "negative": [
-          "I haven't finished but she has Ø",
+          "I haven't finished, but she has.",
           "I'd love to Ø",
           "I'll take two Ø",
           "He promised to call and he did (so)."
@@ -14308,8 +14308,8 @@
         "negative": [
           "I haven't finished but she has Ø",
           "I'd love to Ø",
-          "I ordered tea and she Ø coffee",
-          "I'll take two Ø"
+          "I ordered tea and she coffee.",
+          "I'll take two."
         ]
       },
       "status": "todo",
@@ -14333,10 +14333,10 @@
           "So do I."
         ],
         "negative": [
-          "I haven't finished but she has Ø",
-          "I'd love to Ø",
-          "I ordered tea and she Ø coffee",
-          "I'll take two Ø"
+          "I haven't finished, but she has.",
+          "I'd love to.",
+          "I ordered tea and she coffee.",
+          "I'll take two."
         ]
       },
       "status": "todo",

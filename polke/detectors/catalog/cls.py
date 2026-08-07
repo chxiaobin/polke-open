@@ -258,7 +258,9 @@ def build(nlp, client=None):
         nlp, ["CLS-10"], _QUANT_SUBJ_FORM,
         "Return CLS-10 if the subject is quantifier-headed and agreement is "
         "notional: each/either/neither/none (sg or pl), 'a number of X are' "
-        "(plural) vs 'the number of X is' (singular).",
+        "(plural) vs 'the number of X is' (singular). Measure/quantity "
+        "subjects taken as one unit (Ten years is a long time) are a "
+        "different construct - return NONE.",
         client=client, version="cls10-quantifier@0.1"))
     dets.append(LLMReadingDetector(
         nlp, ["CLS-11"], _QUANT_SUBJ_FORM,
