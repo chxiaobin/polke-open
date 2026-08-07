@@ -38,6 +38,28 @@ def llm_construct_ids() -> set:
             if c.get("detector_type") in LLM_TYPES}
 
 
+def model_available(client, model: str):
+    """None when the model is served, else a reason string.
+
+    Tries `models.retrieve` first; some OpenAI-compatible servers (vLLM
+    behind certain gateways) only implement the model *list*, so fall back
+    to that before declaring failure.
+    """
+    try:
+        client.models.retrieve(model)
+        return None
+    except Exception as exc:  # noqa: BLE001
+        retrieve_err = f"{type(exc).__name__}: {exc}"
+    try:
+        served = [m.id for m in client.models.list()]
+    except Exception:  # noqa: BLE001 — server truly unreachable
+        return f"model API not reachable ({retrieve_err})"
+    if model in served:
+        return None
+    return (f"model {model!r} is not served; available: "
+            f"{', '.join(served) or '(none)'}")
+
+
 def check_llm(timeout: float = 10.0) -> dict:
     """Probe the model API. Returns {ready, model, reason}.
 
@@ -58,10 +80,12 @@ def check_llm(timeout: float = 10.0) -> dict:
                           "(pip install openai)"}
     try:
         client = OpenAI(timeout=timeout)
-        client.models.retrieve(model)
-    except Exception as exc:  # noqa: BLE001 — any failure means "not ready"
+    except Exception as exc:  # noqa: BLE001
         return {"ready": False, "model": model,
-                "reason": f"model API not reachable ({type(exc).__name__}: {exc})"}
+                "reason": f"could not build the client ({type(exc).__name__}: {exc})"}
+    reason = model_available(client, model)
+    if reason is not None:
+        return {"ready": False, "model": model, "reason": reason}
     return {"ready": True, "model": model, "reason": "ok"}
 
 

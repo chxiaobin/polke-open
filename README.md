@@ -124,6 +124,40 @@ as an FP for the marked construct and an FN for the corrected one. Recall/F1
 are relative to the pooled candidates (system + probe) — misses that neither
 surfaced stay invisible, so read them as upper bounds.
 
+### Spoken corpora: utterance segmentation + the Spoken BNC2014
+
+Transcribed speech has no sentence punctuation, so the parser's sentence
+segmentation is unreliable there. For files with **one utterance per line**,
+pass `--by-line` (or set `POLKE_SEGMENT=line`) to make each line the
+annotation unit — supported by `annotate`, `view`, and `probe` (use it
+consistently across all three):
+
+```bash
+polke annotate corpus/ --by-line
+```
+
+`scripts/spoken_bnc_prepare.py` turns the downloadable XML edition of the
+[Spoken BNC2014](http://corpora.lancs.ac.uk/bnc2014/) into that format —
+cleaning transcription markup (vocalisations, pauses, truncations, foreign
+material dropped; `<unclear>` best-guesses kept; anonymisation tags replaced
+by fixed placeholders) and writing a `.utt.json` sidecar per text that maps
+each line to its original utterance number and speaker id (speaker
+demographics are in the download's metadata TSVs):
+
+```bash
+python scripts/spoken_bnc_prepare.py convert \
+    --src path/to/bnc2014-download --out spokenBNC-corpus
+python scripts/spoken_bnc_prepare.py sample \
+    --corpus spokenBNC-corpus --out validation-chunks \
+    --chunks 50 --utterances 40 --seed 42
+polke annotate validation-chunks/ --by-line
+```
+
+The corpus is free for research (licence signature required) but **must not
+be redistributed** — keep the download and everything derived from it (the
+converted texts, and annotation records, which embed the source text) out of
+version control.
+
 ## Docker
 
 ```bash
@@ -184,6 +218,27 @@ spans = ann.annotate("She has lived here for years.", selection=["VTA"])
 | `POLKE_LLM_MODEL` | chat model for reading classifiers | `gpt-4o-mini` |
 | `POLKE_SPACY_MODEL` | spaCy pipeline | `en_core_web_sm` |
 | `POLKE_LLM_CONCURRENCY` | parallel LLM calls per text | `8` |
+| `POLKE_SEGMENT` | `parser`, or `line` = each input line is one sentence (utterance-per-line transcripts) | `parser` |
+| `OPENAI_BASE_URL` | point the OpenAI client at a self-hosted OpenAI-compatible server (vLLM, TGI, …) | OpenAI API |
+| `POLKE_LLM_NO_THINK` | `1` = disable reasoning mode on self-hosted reasoning models (they otherwise spend the whole token budget thinking); leave unset for the OpenAI API | unset |
+
+### Self-hosted / open-weights models
+
+The LLM tiers and the probe speak the OpenAI chat API, so any
+OpenAI-compatible server works:
+
+```bash
+OPENAI_BASE_URL=https://your-cluster/v1
+OPENAI_API_KEY=<cluster token>
+POLKE_LLM_MODEL='google/gemma-4-31B-it-qat-w4a16-ct'    # annotator tiers
+POLKE_PROBE_MODEL='Qwen/Qwen3.6-35B-A3B'                # independent probe
+POLKE_LLM_NO_THINK=1     # if the served models have reasoning mode enabled
+```
+
+Readiness checks fall back to the server's model *list* when the
+single-model retrieve endpoint is not implemented. Validate a candidate
+model against the construct contract with `POLKE_LLM=1 pytest -q
+tests/test_contract.py`.
 
 At startup (CLI `annotate`/`check` and server alike) the model API is probed;
 if it is unreachable a warning names the reason and the affected tier sizes,

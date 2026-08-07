@@ -121,11 +121,8 @@ class Prober:
         """None when ready, else the failure reason."""
         if not os.getenv("OPENAI_API_KEY"):
             return "OPENAI_API_KEY is not set"
-        try:
-            self._client.models.retrieve(self.model)
-        except Exception as exc:  # noqa: BLE001
-            return f"{type(exc).__name__}: {exc}"
-        return None
+        from .llm import model_available
+        return model_available(self._client, self.model)
 
     def sentence(self, category: str, block: str, text: str,
                  prev: Optional[str] = None) -> List[dict]:
@@ -134,6 +131,10 @@ class Prober:
             user += f"[previous sentence] {prev}\n"
         user += f"[current sentence] {text}"
         try:
+            from .env import llm_no_think
+            extra = ({"extra_body": {"chat_template_kwargs":
+                                     {"enable_thinking": False}}}
+                     if llm_no_think() else {})
             resp = self._client.chat.completions.create(
                 model=self.model,
                 messages=[{"role": "system", "content": _SYSTEM},
@@ -141,6 +142,7 @@ class Prober:
                 response_format={"type": "json_object"},
                 temperature=0,
                 max_tokens=500,
+                **extra,
             )
             data = json.loads(resp.choices[0].message.content or "{}")
             out = data.get("present", [])
