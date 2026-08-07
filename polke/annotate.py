@@ -15,21 +15,41 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Callable, List, Optional, Sequence
 
 from . import llm as llm_mod
-from .env import llm_concurrency, load_env, spacy_model
+from .env import llm_concurrency, load_env, segment_mode, spacy_model
 from .registry import constructs
 
 
-def load_nlp(model: Optional[str] = None):
+def _line_senter(doc):
+    """Sentence boundaries at line breaks ONLY: each input line is one
+    sentence. For transcribed speech (one utterance per line) where the
+    parser's punctuation-driven segmentation is unreliable."""
+    for i, tok in enumerate(doc):
+        tok.is_sent_start = i == 0 or "\n" in doc[i - 1].text
+    return doc
+
+
+def load_nlp(model: Optional[str] = None, segment: Optional[str] = None):
     """Load the spaCy pipeline, with an actionable error if the model is
-    missing."""
+    missing.
+
+    `segment` — "parser" (default) or "line" (each input line = one
+    sentence); falls back to the POLKE_SEGMENT environment variable.
+    """
     import spacy
     name = model or spacy_model()
     try:
-        return spacy.load(name)
+        nlp = spacy.load(name)
     except OSError as exc:
         raise RuntimeError(
             f"spaCy model {name!r} is not installed — run: "
             f"python -m spacy download {name}") from exc
+    if (segment or segment_mode()) == "line":
+        from spacy.language import Language
+        if not Language.has_factory("polke_line_senter"):
+            Language.component("polke_line_senter", func=_line_senter)
+        nlp.add_pipe("polke_line_senter",
+                     before="parser" if nlp.has_pipe("parser") else None)
+    return nlp
 
 
 def resolve_ids(selection: Optional[Sequence[str]]) -> set:
@@ -79,9 +99,10 @@ class Annotator:
     """One spaCy pipeline + the full detector registry + one LLM client."""
 
     def __init__(self, spacy_model_name: Optional[str] = None,
-                 no_llm: bool = False, llm_status: Optional[dict] = None):
+                 no_llm: bool = False, llm_status: Optional[dict] = None,
+                 segment: Optional[str] = None):
         load_env()
-        self.nlp = load_nlp(spacy_model_name)
+        self.nlp = load_nlp(spacy_model_name, segment=segment)
         client, status = llm_mod.build_client(no_llm=no_llm, status=llm_status)
         self.llm_status = status
         from .build import build_all

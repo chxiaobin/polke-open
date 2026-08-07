@@ -8,3 +8,15 @@ dist/
 .pytest_cache/
 annotations/
 *.annotations.json
+
+# local verification corpus (sampled from ARES hiwi-texts; not for distribution)
+examples/verification-corpus/
+
+# Spoken BNC2014 (licensed, copyright Cambridge University Press — never
+# commit) and everything derived from it
+examples/verification-spokenBNC-xml/
+examples/spokenBNC-corpus/
+examples/verification-corpus-bnc*/
+
+# model bake-off logs (local measurement artefacts)
+examples/bakeoff-logs/

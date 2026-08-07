@@ -203,7 +203,8 @@ def cmd_annotate(args) -> int:
         if not status["ready"]:
             _warn(llm_mod.warning_text(status))
     try:
-        ann = Annotator(no_llm=args.no_llm, llm_status=status)
+        ann = Annotator(no_llm=args.no_llm, llm_status=status,
+                        segment="line" if args.by_line else None)
     except RuntimeError as exc:
         _warn(f"error: {exc}")
         return 2
@@ -267,7 +268,7 @@ def cmd_view(args) -> int:
     nlp = None
     try:
         from .annotate import load_nlp
-        nlp = load_nlp()
+        nlp = load_nlp(segment="line" if args.by_line else None)
         # Register the detectors so the viewer can describe, per construct,
         # how detection works (mechanism tooltips).
         from .build import build_all
@@ -310,7 +311,7 @@ def cmd_probe(args) -> int:
         _warn(f"error: probe model {prober.model!r} not usable ({reason})")
         return 2
     try:
-        nlp = load_nlp()
+        nlp = load_nlp(segment="line" if args.by_line else None)
     except RuntimeError as exc:
         _warn(f"error: {exc}")
         return 2
@@ -396,6 +397,10 @@ def main(argv=None) -> int:
                     help="input extension when PATH is a folder (default .txt)")
     pa.add_argument("--no-llm", action="store_true",
                     help="skip the LLM tiers even if a key is configured")
+    pa.add_argument("--by-line", action="store_true",
+                    help="treat each input line as one sentence (for "
+                         "transcribed speech: one utterance per line; also "
+                         "settable via POLKE_SEGMENT=line)")
     pa.add_argument("--view", action="store_true",
                     help="also build the HTML annotation viewer for the "
                          "output (same as running `polke view` on it)")
@@ -413,6 +418,9 @@ def main(argv=None) -> int:
                          "input)")
     pv.add_argument("--open", action="store_true",
                     help="open the page in a browser when done")
+    pv.add_argument("--by-line", action="store_true",
+                    help="align annotations to lines, not parsed sentences "
+                         "(use if the records were annotated --by-line)")
 
     pp = sub.add_parser("probe",
                         help="LLM recall probe: surface false-negative "
@@ -431,6 +439,9 @@ def main(argv=None) -> int:
                          "LLM-tier constructs). claude-* models run on the "
                          "Anthropic API (pip install anthropic + "
                          "ANTHROPIC_API_KEY), others on the OpenAI API")
+    pp.add_argument("--by-line", action="store_true",
+                    help="probe per line, not per parsed sentence (use if "
+                         "the records were annotated --by-line)")
 
     pr = sub.add_parser("score",
                         help="per-construct precision/recall/F1 from "
