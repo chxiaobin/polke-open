@@ -258,6 +258,47 @@ def cmd_annotate(args) -> int:
     return 0
 
 
+def cmd_adjudicate(args) -> int:
+    from .adjudicate import make_server
+    from .viewer import build_payload, viewer_html
+
+    src = Path(args.path)
+    if not src.exists():
+        _warn(f"error: no such file or directory: {src}")
+        return 2
+    nlp = None
+    try:
+        from .annotate import load_nlp
+        nlp = load_nlp(segment="line" if args.by_line else None)
+        from .build import build_all
+        build_all(nlp)
+    except RuntimeError as exc:
+        _warn(f"note: {exc}; using approximate sentence splitting")
+    try:
+        html = viewer_html(build_payload(src, nlp=nlp))
+    except ValueError as exc:
+        _warn(f"error: {exc}")
+        return 2
+    verdicts_file = (src if src.is_dir() else src.parent) / "verdicts.json"
+    server = make_server(html, verdicts_file, args.host, args.port)
+    host = args.host
+    print(f"adjudication server: http://{host}:{args.port}/")
+    print(f"verdicts are saved on every judgment -> {verdicts_file}")
+    if host in ("127.0.0.1", "localhost"):
+        print("from another machine, tunnel first:  "
+              f"ssh -L {args.port}:127.0.0.1:{args.port} <user>@<this-server>"
+              f"  then open http://localhost:{args.port}/")
+    print("stop with Ctrl-C; score with: "
+          f"polke score {src} {verdicts_file}")
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        server.server_close()
+    return 0
+
+
 def cmd_view(args) -> int:
     from .viewer import write_viewer
 
@@ -422,6 +463,20 @@ def main(argv=None) -> int:
                     help="align annotations to lines, not parsed sentences "
                          "(use if the records were annotated --by-line)")
 
+    pj = sub.add_parser("adjudicate",
+                        help="serve the viewer over HTTP with verdicts "
+                             "persisted server-side (adjudicate remotely, "
+                             "e.g. through an SSH tunnel)")
+    pj.add_argument("path", help="an .annotations.json / .jsonl file, or a "
+                                 "folder containing them")
+    pj.add_argument("--host", default="127.0.0.1",
+                    help="bind address (default 127.0.0.1; use an SSH "
+                         "tunnel, or 0.0.0.0 to expose on the network)")
+    pj.add_argument("--port", type=int, default=8123)
+    pj.add_argument("--by-line", action="store_true",
+                    help="align annotations to lines, not parsed sentences "
+                         "(use if the records were annotated --by-line)")
+
     pp = sub.add_parser("probe",
                         help="LLM recall probe: surface false-negative "
                              "CANDIDATES in annotated records (adds a probe "
@@ -461,7 +516,8 @@ def main(argv=None) -> int:
     args = p.parse_args(argv)
     return {"check": cmd_check, "catalog": cmd_catalog,
             "explain": cmd_explain, "annotate": cmd_annotate,
-            "view": cmd_view, "probe": cmd_probe, "score": cmd_score,
+            "view": cmd_view, "adjudicate": cmd_adjudicate,
+            "probe": cmd_probe, "score": cmd_score,
             "serve": cmd_serve}[args.cmd](args)
 
 

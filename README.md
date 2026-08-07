@@ -103,6 +103,19 @@ polke view corpus/annotations/ --open       # 3. adjudicate in the browser
 polke score corpus/annotations/ verdicts.json --min-support 5   # 4. stats
 ```
 
+For **remote adjudication** (records on a server, judging from your own
+machine), serve the viewer instead of opening the file:
+
+```bash
+polke adjudicate corpus/annotations/ --by-line          # http://127.0.0.1:8123
+ssh -L 8123:127.0.0.1:8123 you@server                   # then browse localhost:8123
+```
+
+Every verdict is persisted server-side to `verdicts.json` next to the
+records as you judge (the browser's localStorage is only a cache), so
+`polke score` reads it directly — no export/import dance — and you can
+switch machines mid-adjudication.
+
 `probe` asks an LLM — per sentence, per category, with no rule gating — which
 constructions are present, and stores whatever the system did *not* annotate
 as probe candidates inside the records (one call per sentence × category;

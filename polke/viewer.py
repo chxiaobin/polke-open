@@ -267,6 +267,47 @@ _JS = """
   function saveStore() {
     try { localStorage.setItem(storeKey, JSON.stringify(verdicts)); }
     catch (e) {}
+    pushStore();
+  }
+
+  /* ---- server sync (active only under `polke adjudicate`) -------------- */
+  var sync = null;   /* null = local-only; else {el, timer} */
+  function syncNote(txt) { if (sync && sync.el) sync.el.textContent = txt; }
+  function pushStore() {
+    if (!sync) return;
+    clearTimeout(sync.timer);
+    sync.timer = setTimeout(function () {
+      syncNote('saving to server…');
+      fetch('verdicts.json', {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({verdicts: verdicts})
+      }).then(function (r) {
+        syncNote(r.ok ? 'saved on server' : 'server error — use Export!');
+      }).catch(function () {
+        syncNote('offline — verdicts kept in this browser only');
+      });
+    }, 400);
+  }
+  if (location.protocol.indexOf('http') === 0) {
+    fetch('verdicts.json', {cache: 'no-store'}).then(function (r) {
+      if (!r.ok) throw new Error('no sync endpoint');
+      return r.json();
+    }).then(function (got) {
+      var el = document.createElement('span');
+      el.style.marginLeft = '8px';
+      el.style.opacity = '0.75';
+      var anchor = document.getElementById('adj-count');
+      if (anchor && anchor.parentNode) {
+        anchor.parentNode.insertBefore(el, anchor.nextSibling);
+      }
+      sync = {el: el, timer: null};
+      var sv = (got && got.verdicts) || {}, k;
+      for (k in sv) verdicts[k] = sv[k];   /* server wins at load */
+      saveStore();
+      syncNote('synced with server');
+      render();
+    }).catch(function () { /* static hosting: stay local-only */ });
   }
 
   function keyOf(kind, tid, cid, s, e) {

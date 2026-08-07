@@ -201,3 +201,21 @@ def test_anthropic_sentence_parses_structured_output():
 def test_anthropic_sentence_handles_refusal():
     p, _ = _anthropic_prober_with(_FakeResponse("refusal", []))
     assert p.sentence("PAS", "block", "text") == []
+
+
+def test_probe_second_model_marks_agreement(ann_file, nlp):
+    run(ann_file, nlp, FakeProber(), {"PAS-01"})
+
+    class OtherProber(FakeProber):
+        def __init__(self):
+            self.model = "other-model"
+
+    run(ann_file, nlp, OtherProber(), {"PAS-01"})
+    rec = json.loads(ann_file.read_text(encoding="utf-8"))
+    cands = rec["probe"]["candidates"]
+    assert all(c["models"] == ["fake-model", "other-model"] for c in cands)
+    # rerunning the SAME model adds neither candidates nor model entries
+    run(ann_file, nlp, OtherProber(), {"PAS-01"})
+    rec = json.loads(ann_file.read_text(encoding="utf-8"))
+    assert all(c["models"] == ["fake-model", "other-model"]
+               for c in rec["probe"]["candidates"])

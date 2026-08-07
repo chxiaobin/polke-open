@@ -302,9 +302,16 @@ def run(path: Path, nlp, prober: Prober, wanted_ids,
                     continue                      # not a miss: system got it
                 cands = rec.setdefault("probe", {}).setdefault(
                     "candidates", [])
-                if any(c["construct_id"] == cid
-                       and c["span"]["start_char"] == lo for c in cands):
-                    continue                      # duplicate candidate
+                dup = next((c for c in cands if c["construct_id"] == cid
+                            and c["span"]["start_char"] == lo), None)
+                if dup is not None:
+                    # A second probe model proposing the same candidate is
+                    # agreement, not noise — record it so adjudication can
+                    # prioritise multi-model candidates.
+                    models = dup.setdefault("models", [dup.get("model")])
+                    if prober.model not in models:
+                        models.append(prober.model)
+                    continue
                 try:
                     conf = max(0.0, min(1.0, float(hit.get("confidence", 0))))
                 except (TypeError, ValueError):
@@ -312,6 +319,7 @@ def run(path: Path, nlp, prober: Prober, wanted_ids,
                 cands.append({
                     "text_id": rec.get("text_id", ""),
                     "construct_id": cid,
+                    "models": [prober.model],
                     "span": {"start_char": lo, "end_char": hi,
                              "token_start": t0, "token_end": t1},
                     "detector_type": "llm_probe",
