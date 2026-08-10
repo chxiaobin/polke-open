@@ -131,10 +131,26 @@ def cmd_convert(args) -> int:
     return 0
 
 
+def _excluded_sources(dirs) -> set:
+    """Source text ids used by earlier samples (chunk files are named
+    '<TEXTID>__uN-uM.*'); a new sample must draw from DISJOINT recordings."""
+    ids = set()
+    for d in dirs or []:
+        for f in Path(d).glob("*.txt"):
+            ids.add(f.stem.split("__")[0])
+    return ids
+
+
 def cmd_sample(args) -> int:
     corpus = Path(args.corpus)
     texts_dir = corpus / "texts" if (corpus / "texts").is_dir() else corpus
     files = sorted(texts_dir.glob("*.txt"))
+    banned = _excluded_sources(getattr(args, "exclude", None))
+    if banned:
+        before = len(files)
+        files = [f for f in files if f.stem not in banned]
+        print(f"excluding {len(banned)} source recordings from earlier "
+              f"samples ({before} -> {len(files)} candidates)")
     if len(files) < args.chunks:
         print(f"error: only {len(files)} converted texts under {texts_dir}, "
               f"cannot sample {args.chunks}", file=sys.stderr)
@@ -195,6 +211,9 @@ def main(argv=None) -> int:
                     help="consecutive utterances per chunk (default 40)")
     ps.add_argument("--seed", type=int, default=42,
                     help="random seed (default 42)")
+    ps.add_argument("--exclude", action="append", default=[],
+                    help="folder of earlier sampled chunks whose source "
+                         "recordings must NOT be drawn again (repeatable)")
     ps.set_defaults(fn=cmd_sample)
 
     args = ap.parse_args(argv)
