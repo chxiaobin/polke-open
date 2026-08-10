@@ -22,6 +22,7 @@ attach as ``neg``/``advmod`` with the operator (aux/MD) preceding the subject.
 from __future__ import annotations
 from ...schema import Annotation, Span
 from ..base import Detector
+from .common import SentenceScoped
 from ..lexical import PhraseLexiconDetector
 from ..routing import RuleRoutingDetector
 from ..llm import LLMReadingDetector, LLMStandaloneDetector
@@ -82,7 +83,7 @@ def _classify_neg01(doc, token_ids):
     subj = [c for c in h.children if c.dep_ in ("nsubj", "nsubjpass")]
     if not any(s.pos_ in ("PRON", "NOUN", "PROPN") for s in subj):
         return None
-    if _has_any_series(doc) or _has_no_det(doc):
+    if _has_any_series(neg.sent) or _has_no_det(neg.sent):
         return None                       # -> NEG-03 / NEG-05
     return "NEG-01"
 
@@ -90,7 +91,7 @@ def _classify_neg01(doc, token_ids):
 # --------------------------------------------------------------------------- #
 # NEG-02: the negative contractions themselves.
 # --------------------------------------------------------------------------- #
-class _Contractions(Detector):
+class _Contractions(SentenceScoped):
     construct_ids = ["NEG-02"]
     detector_type = "rule"
     version = "neg02-contractions@0.1"
@@ -104,7 +105,7 @@ class _Contractions(Detector):
             confidence=1.0, evidence={"tokens": list(range(lo, hi + 1)),
                                       "matched": matched})
 
-    def match(self, doc, text_id="doc"):
+    def match_sent(self, doc, text_id="doc"):
         negs = [t for t in doc if t.dep_ == "neg" and t.text.lower() == "n't"]
         out, seen = [], set()
         # (a) a metalinguistic list of >=2 negative contractions
@@ -131,12 +132,12 @@ class _Contractions(Detector):
 # --------------------------------------------------------------------------- #
 # NEG-04: negative determiner "no" + noun, or a negative pronoun.
 # --------------------------------------------------------------------------- #
-class _NegDeterminer(Detector):
+class _NegDeterminer(SentenceScoped):
     construct_ids = ["NEG-04"]
     detector_type = "rule"
     version = "neg04-det@0.1"
 
-    def match(self, doc, text_id="doc"):
+    def match_sent(self, doc, text_id="doc"):
         if _has_any_series(doc):
             return []                     # "no X / not any X" contrast -> NEG-05
         out, seen = [], set()
@@ -187,12 +188,12 @@ class _NegEither(Detector):
 # --------------------------------------------------------------------------- #
 # NEG-13: negative-adverbial fronting + inversion.
 # --------------------------------------------------------------------------- #
-class _NegFronting(Detector):
+class _NegFronting(SentenceScoped):
     construct_ids = ["NEG-13"]
     detector_type = "rule"
     version = "neg13-fronting@0.1"
 
-    def match(self, doc, text_id="doc"):
+    def match_sent(self, doc, text_id="doc"):
         hit = fronted_inversion(doc, _NEG13_FRONT)
         if not hit:
             return []

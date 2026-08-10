@@ -12,7 +12,7 @@ from __future__ import annotations
 from ...schema import Annotation, Span
 from ..base import Detector
 from ..llm import DummyClient
-from .common import Scan
+from .common import Scan, ends_with
 
 _EXC03_SYS = (
     "The utterance is an exclamation without a canonical finite clause. "
@@ -43,13 +43,23 @@ class _VerblessExclamative(Detector):
     def llm_tasks(self, doc, text_id="doc"):
         tasks = []
         for sent in doc.sents:
-            if sent[-1].text != "!":
+            toks = [t for t in sent if not t.is_punct and not t.is_space]
+            if not toks:
                 continue
-            first = next((t for t in sent if not t.is_punct), None)
-            if first is None or first.lower_ in ("what", "how"):
+            first = toks[0]
+            if first.lower_ in ("what", "how"):
                 continue                    # EXC-01 / EXC-02
             if sent.root.tag_ == "VB":
                 continue                    # imperative ("Listen!")
+            bang = ends_with(sent, "!")
+            # Speech path: transcripts have no "!", so also propose short
+            # verbless evaluative fragments ("nice one", "brilliant").
+            fragment = (not bang and len(toks) <= 6
+                        and not ends_with(sent, "?")
+                        and not any(t.pos_ in ("VERB", "AUX") for t in toks)
+                        and any(t.pos_ == "ADJ" for t in toks))
+            if not (bang or fragment):
+                continue
             sp = Span(sent.start_char, sent.end_char, sent.start, sent.end - 1)
             tasks.append(lambda user=sent.text, sp=sp:
                          self._judge(user, sp, text_id))
@@ -73,7 +83,7 @@ class _VerblessExclamative(Detector):
 
 def _exc01(doc):
     for sent in doc.sents:
-        if sent[-1].text == "?":
+        if ends_with(sent, "?"):
             continue
         first = next((t for t in sent if not t.is_punct), None)
         if first is None or first.lower_ != "what":
@@ -90,7 +100,7 @@ def _exc01(doc):
 
 def _exc02(doc):
     for sent in doc.sents:
-        if sent[-1].text == "?":
+        if ends_with(sent, "?"):
             continue
         first = next((t for t in sent if not t.is_punct), None)
         if first is None or first.lower_ != "how":

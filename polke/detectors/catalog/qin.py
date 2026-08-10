@@ -15,7 +15,7 @@ from __future__ import annotations
 from ...registry import lexicons
 from ..llm import LLMStandaloneDetector
 from ..spoken import FinalTagDetector, FreestandingUnitDetector
-from .common import Scan
+from .common import Scan, ends_with
 
 _QIN01_SYS = (
     "Decide whether the utterance is a DECLARATIVE QUESTION (QIN-01): full "
@@ -52,14 +52,14 @@ _QIN04_SYS = (
 
 
 def _ends_q(sent):
-    return sent[-1].text == "?"
+    return ends_with(sent, "?")
 
 _OPERATOR_TAGS = {"VBZ", "VBP", "VBD", "MD"}
 
 
 def _qin02(doc):
     for sent in doc.sents:
-        if sent[-1].text == "?":
+        if ends_with(sent, "?"):
             continue                        # operator tags with "?" -> QUE-11/12
         commas = [t for t in sent if t.text == ","]
         if not commas:
@@ -81,7 +81,7 @@ def _qin02(doc):
 
 def _qin03(doc):
     for sent in doc.sents:
-        if sent[-1].text != "!":
+        if not ends_with(sent, "!"):
             continue
         first = next((t for t in sent if not t.is_punct), None)
         if first is None or first.pos_ not in ("AUX", "VERB") \

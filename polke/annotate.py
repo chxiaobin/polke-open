@@ -20,11 +20,15 @@ from .registry import constructs
 
 
 def _line_senter(doc):
-    """Sentence boundaries at line breaks ONLY: each input line is one
-    sentence. For transcribed speech (one utterance per line) where the
-    parser's punctuation-driven segmentation is unreliable."""
+    """Force a sentence boundary at every line break (one utterance per
+    line), but leave other tokens undecided so the parser may still split
+    WITHIN a line — utterances like "you ready? sit down" contain several
+    sentences, and forbidding internal splits distorts their parses. A
+    sentence therefore never crosses a line break, and line spans remain
+    recoverable for utterance-level alignment."""
     for i, tok in enumerate(doc):
-        tok.is_sent_start = i == 0 or "\n" in doc[i - 1].text
+        if i == 0 or "\n" in doc[i - 1].text:
+            tok.is_sent_start = True
     return doc
 
 

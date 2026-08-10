@@ -18,7 +18,7 @@ SIT-04 (other situational fragments) is hybrid tier -> Phase 4.
 """
 from __future__ import annotations
 from ...registry import lexicons
-from .common import Scan
+from .common import Scan, ends_with
 
 _FINITE_TAGS = {"VBZ", "VBD", "VBP"}
 
@@ -32,7 +32,7 @@ def _root_and_subj(sent):
 def _sit01(doc):
     """Initial subject ellipsis: finite verb group, no subject, declarative."""
     for sent in doc.sents:
-        if sent[-1].text == "?":
+        if ends_with(sent, "?"):
             continue                       # interrogative -> SIT-02 territory
         root, subj = _root_and_subj(sent)
         if root.pos_ not in ("VERB", "AUX") or subj:
@@ -53,7 +53,7 @@ def _sit02(doc):
     """Subject + operator ellipsis: verb-initial, subjectless, interrogative.
     The '?' is the imperative exclude ("Look at this picture.")."""
     for sent in doc.sents:
-        if sent[-1].text != "?":
+        if not ends_with(sent, "?"):
             continue
         root, subj = _root_and_subj(sent)
         if root.pos_ not in ("VERB", "AUX") or subj:

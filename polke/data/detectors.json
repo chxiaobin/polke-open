@@ -10334,7 +10334,8 @@
       "test_cases": {
         "positive": [
           "Are you ready?",
-          "Has she left?"
+          "Has she left?",
+          "She left early. Are you coming tonight? He stayed."
         ],
         "negative": [
           "Do you agree?",
@@ -10359,7 +10360,8 @@
       "test_cases": {
         "positive": [
           "Do you agree?",
-          "Did they come?"
+          "Did they come?",
+          "It rained. Do you want a cup of tea? We do."
         ],
         "negative": [
           "Are you ready?",
@@ -10433,7 +10435,8 @@
       "use_notes": "",
       "test_cases": {
         "positive": [
-          "Where/When/Why/How did they go?"
+          "Where/When/Why/How did they go?",
+          "He arrived. Where did they go? Nobody knew."
         ],
         "negative": [
           "Are you ready?",
@@ -10759,7 +10762,8 @@
         "positive": [
           "I don't know",
           "she isn't ready",
-          "they haven't left."
+          "they haven't left.",
+          "It was sunny. She isn't ready. We waited."
         ],
         "negative": [
           "isn't, don't, won't, can't, shan't, mustn't",
@@ -10841,7 +10845,7 @@
           "I don't know",
           "isn't, don't, won't, can't, shan't, mustn't",
           "I don't have any",
-          "I have no time / I don't have any time."
+          "I don't have any time."
         ]
       },
       "status": "todo",
@@ -14001,7 +14005,8 @@
       "test_cases": {
         "positive": [
           "So do I",
-          "Neither did she."
+          "Neither did she.",
+          "She sang well. So did he. We left."
         ],
         "negative": [
           "It was Maria who solved it.",
@@ -14151,7 +14156,7 @@
       "use_notes": "",
       "test_cases": {
         "positive": [
-          "I haven't finished but she has Ø",
+          "I haven't finished, but she has.",
           "I will if you will."
         ],
         "negative": [
@@ -14176,8 +14181,8 @@
       "use_notes": "",
       "test_cases": {
         "positive": [
-          "I'd love to Ø",
-          "You can go if you want to Ø."
+          "I'd love to.",
+          "You can go if you want to."
         ],
         "negative": [
           "I haven't finished but she has Ø",
@@ -14226,9 +14231,9 @@
       "use_notes": "",
       "test_cases": {
         "positive": [
-          "I'll take two Ø",
-          "the rich Ø",
-          "the first Ø to arrive."
+          "I'll take two.",
+          "The rich are different.",
+          "He was the first to arrive."
         ],
         "negative": [
           "I haven't finished but she has Ø",
@@ -14252,7 +14257,7 @@
       "use_notes": "",
       "test_cases": {
         "positive": [
-          "He promised to call and he did (so)."
+          "He promised to call and he did."
         ],
         "negative": [
           "I haven't finished but she has Ø",
@@ -14915,7 +14920,9 @@
           "Er.",
           "Erm, let me think.",
           "It's, uh, complicated.",
-          "Well, um, I suppose so."
+          "Well, um, I suppose so.",
+          "erm yes I suppose so",
+          "er I think so"
         ],
         "negative": [
           "Um is a common hesitation marker.",
@@ -15167,7 +15174,8 @@
           "He was, you know, quite upset.",
           "It's over there, you see.",
           "It's cold, mind you.",
-          "It works, you know what I mean."
+          "It works, you know what I mean.",
+          "he was you know quite upset"
         ],
         "negative": [
           "You know, it wasn't that bad.",
@@ -15246,13 +15254,16 @@
         "positive": [
           "John, are you coming?",
           "Thanks, Dr Smith.",
-          "Sarah, could you help me?"
+          "Sarah, could you help me?",
+          "thanks Sam",
+          "Sam are you coming"
         ],
         "negative": [
           "John is coming tonight.",
           "I thanked Dr Smith for the report.",
           "Mary and John left early.",
-          "Sarah could help me."
+          "Sarah could help me.",
+          "Sam is coming to the party."
         ]
       },
       "status": "todo",
@@ -15852,13 +15863,15 @@
         "positive": [
           "I'm like, 'What?'",
           "And he's all, 'Calm down.'",
-          "She was like, 'Leave me alone.'"
+          "She was like, 'Leave me alone.'",
+          "and I was like oh my god"
         ],
         "negative": [
           "It was like really strange.",
           "There were like fifty people.",
           "He runs like the wind.",
-          "He's all wet."
+          "He's all wet.",
+          "he looks like his dad"
         ]
       },
       "status": "todo",

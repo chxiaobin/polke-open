@@ -20,6 +20,7 @@ first sentence-initial VB, falling back to the ROOT.
 from __future__ import annotations
 from ...schema import Annotation, Span
 from ..base import Detector
+from .common import SentenceScoped
 from ..llm import LLMReadingDetector
 
 _SUBJECT_DEPS = ("nsubj", "nsubjpass", "expl")
@@ -54,7 +55,7 @@ def _has_real_subject(v):
     return False
 
 
-class _Imperatives(Detector):
+class _Imperatives(SentenceScoped):
     construct_ids = ["IMP-01", "IMP-02", "IMP-03", "IMP-05", "IMP-06"]
     detector_type = "rule"
     version = "imp-router@0.1"
@@ -87,7 +88,7 @@ class _Imperatives(Detector):
             return "IMP-05", v
         return "IMP-01", v
 
-    def match(self, doc, text_id="doc"):
+    def match_sent(self, doc, text_id="doc"):
         cid, v = self._classify(doc)
         if cid is None:
             return []
@@ -107,12 +108,12 @@ class _Imperatives(Detector):
 # --------------------------------------------------------------------------- #
 # IMP-09: softened imperative (please / just + imperative).
 # --------------------------------------------------------------------------- #
-class _SoftImperative(Detector):
+class _SoftImperative(SentenceScoped):
     construct_ids = ["IMP-09"]
     detector_type = "rule"
     version = "imp09-soft@0.1"
 
-    def match(self, doc, text_id="doc"):
+    def match_sent(self, doc, text_id="doc"):
         v = _imperative_verb(doc)
         if v is None or _has_real_subject(v):
             return []

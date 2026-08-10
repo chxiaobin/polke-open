@@ -24,6 +24,7 @@ FOC-10 by a pronoun (additive echo) vs full-NP (locative-style) subject.
 from __future__ import annotations
 from ...schema import Annotation, Span
 from ..base import Detector
+from .common import SentenceScoped
 from ..lexical import PhraseLexiconDetector
 from ..llm import LLMReadingDetector, LLMStandaloneDetector
 
@@ -40,7 +41,7 @@ def _is_operator(t):
                               and t.tag_ in ("VBD", "VBP", "VBZ", "VB"))
 
 
-class _FocusRules(Detector):
+class _FocusRules(SentenceScoped):
     construct_ids = ["FOC-09", "FOC-10", "FOC-11", "FOC-12", "FOC-13", "FOC-14"]
     detector_type = "rule"
     version = "foc-router@0.1"
@@ -121,7 +122,7 @@ class _FocusRules(Detector):
                 return (t.i, t.head.i)
         return None
 
-    def match(self, doc, text_id="doc"):
+    def match_sent(self, doc, text_id="doc"):
         out = []
 
         def emit(cid, span):
@@ -167,7 +168,10 @@ _INTENSIFIERS = ["on earth", "the hell", "the heck", "the devil",
 
 
 def _wh_before(doc, start, end):
-    return any(doc[i].lower_ in _WH for i in range(0, start))
+    # scoped to the match's own sentence — a wh-word in some earlier
+    # utterance of the document must not license the intensifier
+    sent = doc[start].sent
+    return any(doc[i].lower_ in _WH for i in range(sent.start, start))
 
 
 # --------------------------------------------------------------------------- #

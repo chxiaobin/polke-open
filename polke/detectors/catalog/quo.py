@@ -62,6 +62,29 @@ class _QuotativeGo(Detector):
         return out
 
 
+_QUOTE_OPENERS = {"oh", "no", "yeah", "yes", "what", "why", "how", "wow",
+                  "whoa", "hey", "ooh", "nah", "okay", "ok", "right", "well"}
+
+
+def _speechy_follows(doc, i):
+    """Speech path for the quotative (transcripts carry no quote marks):
+    be + like/all counts as quotative when what follows opens direct speech
+    — a pronoun-subject clause or an interjection ("I was like oh my god",
+    "he's like no way"). Comparative "he's like his dad" (PRP$) and
+    approximator "it's like really strange" (RB) do not match."""
+    # scan within the same LINE (utterance) — the parser often opens a new
+    # sentence exactly at the quote ("I was like | oh my god"), so the
+    # sentence boundary must not stop the scan, but a line break must
+    for t in doc[i + 1:]:
+        if "\n" in t.text:
+            break
+        if t.is_space or t.is_punct:
+            continue
+        return (t.tag_ in ("PRP", "UH", "WP", "WRB")
+                or t.lower_ in _QUOTE_OPENERS)
+    return False
+
+
 class _QuotativeBeLikeAll(Detector):
     detector_type = "lexicon"
     version = "quo02-be-like@0.1"
@@ -79,7 +102,7 @@ class _QuotativeBeLikeAll(Detector):
                       t.head.lemma_ == "be"
             if not be_left:
                 continue
-            if _quote_follows(doc, t.i):
+            if _quote_follows(doc, t.i) or _speechy_follows(doc, t.i):
                 lo = t.i - 1 if t.i > 0 and doc[t.i - 1].lemma_ == "be" else t.i
                 out.append(_mk(self, doc, "QUO-02", lo, t.i, text_id))
         return out

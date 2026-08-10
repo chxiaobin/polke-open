@@ -13,6 +13,10 @@ from ..spoken import VocativeDetector
 from .common import Scan
 
 
+_ARG_DEPS = {"nsubj", "nsubjpass", "dobj", "pobj", "attr", "poss", "dative",
+             "conj", "compound", "appos", "oprd"}
+
+
 def _voc01(doc):
     """VOC-01 (rule tier): comma-peripheral proper-name/title NP. Same
     positional grammar as the lexicon vocatives, but over PROPN windows
@@ -33,7 +37,22 @@ def _voc01(doc):
             after_comma = i > sent.start and doc[i - 1].text == ","
             final = after_comma and all(t.is_punct for t in doc[e:sent.end])
             medial = after_comma and e < sent.end and doc[e].text == ","
-            if initial or final or medial:
+            # Spoken paths — transcripts have no commas. A name at an
+            # utterance edge is vocative when it fills no argument slot:
+            # "thanks Sam" / "Sam are you coming" fire, "Sam is coming"
+            # (nsubj) and "I thanked Sam" (dobj) do not.
+            # A "subject" name is still vocative when its verb has ANOTHER
+            # subject of its own ("Sam are you coming" attaches both Sam
+            # and you to "coming"); "Sam is coming" (sole subject) is not.
+            other_subj = any(t.dep_ in ("nsubj", "nsubjpass")
+                             and t.head == doc[j].head
+                             for t in doc[e:sent.end])
+            non_arg = (doc[j].dep_ not in _ARG_DEPS
+                       or (doc[j].dep_ == "nsubj" and other_subj))
+            tail_ok = all(t.is_punct or t.is_space for t in doc[e:sent.end])
+            final_nc = i > start and tail_ok and non_arg
+            initial_nc = i == start and e < sent.end and non_arg and other_subj
+            if initial or final or medial or final_nc or initial_nc:
                 yield (i, j)
             i = e
 

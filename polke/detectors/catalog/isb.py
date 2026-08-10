@@ -10,7 +10,7 @@ sentence opening with WDT *which* ("... Which was nice."); interrogative
 "Which book do you want?" is excluded by the "?".
 """
 from __future__ import annotations
-from .common import Scan
+from .common import Scan, ends_with
 
 
 def _root_mark(sent, markers):
@@ -37,7 +37,7 @@ def _isb02(doc):
 
 def _isb03(doc):
     for sent in doc.sents:
-        if sent[-1].text == "?":
+        if ends_with(sent, "?"):
             continue                        # interrogative which
         first = next((t for t in sent if not t.is_punct), None)
         if first is None or first.tag_ != "WDT" or first.lower_ != "which":

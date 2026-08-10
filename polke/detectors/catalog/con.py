@@ -20,6 +20,7 @@ the subject with no ``mark``.
 from __future__ import annotations
 from ...schema import Annotation, Span
 from ..base import Detector
+from .common import SentenceScoped
 from ..lexical import PhraseLexiconDetector
 from ..llm import LLMReadingDetector
 
@@ -30,13 +31,13 @@ def _sent_initial(doc, start, end):
     return start == 0 or doc[start - 1].is_punct
 
 
-class _InvertedConditional(Detector):
+class _InvertedConditional(SentenceScoped):
     """CON-13: Had/Were/Should + subject (no 'if')."""
     construct_ids = ["CON-13"]
     detector_type = "rule"
     version = "con13-inversion@0.1"
 
-    def match(self, doc, text_id="doc"):
+    def match_sent(self, doc, text_id="doc"):
         if len(doc) < 2:
             return []
         t0 = doc[0]

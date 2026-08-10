@@ -46,20 +46,34 @@ class LLMReadingDetector(Detector):
 
     def __init__(self, nlp, construct_ids: List[str], form_pattern: list,
                  system_prompt: str, client: Optional[LLMClient] = None,
-                 version: str = "0.1"):
+                 version: str = "0.1", gate=None):
         from spacy.matcher import DependencyMatcher
         self.construct_ids = list(construct_ids)
         self.version = version
         self._matcher = DependencyMatcher(nlp.vocab)
-        self._matcher.add("form", [form_pattern])
+        # one pattern (list of node dicts) or several alternatives (list of
+        # such lists)
+        patterns = (form_pattern if isinstance(form_pattern[0], list)
+                    else [form_pattern])
+        self._matcher.add("form", patterns)
         self._system = system_prompt
         self._client = client or DummyClient()
+        self._gate = gate    # gate(doc, token_ids) -> bool may veto a match
 
     def llm_tasks(self, doc, text_id: str = "doc") -> list:
         tasks = []
         for _mid, token_ids in self._matcher(doc):
+            if self._gate is not None and not self._gate(doc, token_ids):
+                continue
             span, toks = _mark(doc, token_ids)
-            user = doc.text.replace(span.text, "[[" + span.text + "]]", 1)
+            # The judgment context is the span's SENTENCE, with the span
+            # marked by character position. (Using the whole document text
+            # with str.replace marked the first string-equal occurrence —
+            # often a different token in another utterance.)
+            sent = span.sent
+            off = sent.start_char
+            user = (sent.text[:span.start_char - off] + "[[" + span.text
+                    + "]]" + sent.text[span.end_char - off:]).strip()
             sp = Span(span.start_char, span.end_char, toks[0], toks[-1])
             tasks.append(lambda user=user, sp=sp, toks=toks,
                          matched=span.text:

@@ -13,6 +13,7 @@ spaCy splits ("ain't" -> ai + n't, "you're welcome" -> you + 're + welcome)
 match the same way they tokenise in running text.
 """
 from __future__ import annotations
+from .catalog.common import ends_with
 from typing import Iterable, List, Optional, Sequence, Tuple, Union
 from ..schema import Annotation, Span
 from .base import Detector
@@ -139,12 +140,16 @@ class InitialMarkerDetector(Detector):
 
 
 class DelimitedInsertDetector(Detector):
-    """An insert item anywhere in the utterance, delimited by punctuation on
-    both sides (or the utterance edge): hesitators er/erm/um/uh (INS-06).
-    "Erm, let me think." / "It's, uh, complicated." / "Um." fire;
-    "Um is a common hesitation marker." does not (right edge not delimited).
-    """
+    """A hesitator / filled pause anywhere in the utterance: er, erm, um, uh
+    (INS-06). The items are lexically unambiguous, so no punctuation
+    delimitation is required — transcribed speech has none ("erm yes in
+    terms of...", a bare "erm" line). The one exclusion is the
+    metalinguistic MENTION, where the item fills an argument slot ("Um is a
+    common hesitation marker" — 'um' as subject)."""
     detector_type = "lexicon"
+
+    _ARG_DEPS = {"nsubj", "nsubjpass", "dobj", "pobj", "attr", "poss",
+                 "dative", "oprd"}
 
     def __init__(self, nlp, construct_id: str, items: Iterable[str],
                  version: str = "0.1"):
@@ -152,17 +157,28 @@ class DelimitedInsertDetector(Detector):
         self.version = version
         self._items = {i.lower() for i in items}
 
+    @staticmethod
+    def _is_mention(t, doc):
+        """'Um is a common hesitation marker' — the item fills the subject
+        slot of the following root verb (which then has no other subject)."""
+        for nxt in doc[t.i + 1:t.sent.end]:
+            if nxt.is_space or nxt.is_punct:
+                continue
+            return (nxt.pos_ in ("AUX", "VERB") and nxt.dep_ == "ROOT"
+                    and nxt.tag_ in ("VBZ", "VBP", "VBD")   # finite, not "let"
+                    and not any(c.dep_ in ("nsubj", "nsubjpass")
+                                for c in nxt.children))
+        return False
+
     def match(self, doc, text_id: str = "doc") -> List[Annotation]:
         out = []
-        for sent in doc.sents:
-            for t in sent:
-                if t.lower_ not in self._items:
-                    continue
-                left_ok = t.i == sent.start or doc[t.i - 1].is_punct
-                right_ok = t.i == sent.end - 1 or doc[t.i + 1].is_punct
-                if left_ok and right_ok:
-                    out.append(_mk(self, doc, self.construct_ids[0],
-                                   t.i, t.i, text_id))
+        for t in doc:
+            if t.lower_ not in self._items:
+                continue
+            if t.dep_ in self._ARG_DEPS or self._is_mention(t, doc):
+                continue                  # mention, not use
+            out.append(_mk(self, doc, self.construct_ids[0],
+                           t.i, t.i, text_id))
         return out
 
 
@@ -198,8 +214,20 @@ class MedialFinalParentheticalDetector(Detector):
                 s, e = hit
                 medial_or_final = s > start
                 comma_before = s > sent.start and doc[s - 1].text == ","
-                delimited_after = e >= sent.end or doc[e].is_punct
-                if medial_or_final and comma_before and delimited_after:
+                delimited_after = (e >= sent.end or doc[e].is_punct
+                                   or doc[e].is_space)
+                # Written path: comma-delimited. Spoken path (transcripts
+                # have no commas): the phrase's verb takes no complement of
+                # its own — integrated "you know the answer" has a dobj/
+                # ccomp, parenthetical "he was you know quite upset" does
+                # not.
+                integrated = any(
+                    c.dep_ in ("dobj", "ccomp", "xcomp", "attr", "acomp")
+                    and not s <= c.i < e
+                    for w in doc[s:e] if w.pos_ in ("VERB", "AUX")
+                    for c in w.children)
+                if medial_or_final and ((comma_before and delimited_after)
+                                        or not integrated):
                     out.append(_mk(self, doc, self.construct_ids[0],
                                    s, e - 1, text_id))
                 i = e
@@ -266,7 +294,7 @@ class FinalTagDetector(Detector):
     def match(self, doc, text_id: str = "doc") -> List[Annotation]:
         out = []
         for sent in doc.sents:
-            if sent[-1].text != "?":
+            if not ends_with(sent, "?"):
                 continue
             # tokens of the tag candidate: between the last comma and the "?"
             tail = [t for t in sent if not t.is_punct]

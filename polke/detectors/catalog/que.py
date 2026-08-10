@@ -34,8 +34,13 @@ _OPENERS = {("what", "about"), ("how", "about"),
             ("how", "come"), ("what", "if")}
 
 
-def _is_question(doc):
-    for t in reversed(doc):
+def _is_question(sent):
+    """Does this SENTENCE end in '?' — scoped to the sentence, never the
+    whole doc (multi-utterance documents!), and skipping trailing whitespace
+    tokens (utterance-per-line input keeps the '\\n' inside the sentence)."""
+    for t in reversed(sent):
+        if t.is_space:
+            continue
         if t.is_punct:
             if t.text == "?":
                 return True
@@ -44,8 +49,8 @@ def _is_question(doc):
     return False
 
 
-def _has_wh(doc):
-    return any(t.tag_ in _WH_TAGS for t in doc)
+def _has_wh(sent):
+    return any(t.tag_ in _WH_TAGS for t in sent)
 
 
 # --------------------------------------------------------------------------- #
@@ -59,7 +64,8 @@ _YESNO_FORM = [
 
 
 def _classify_yesno(doc, token_ids):
-    if not _is_question(doc) or _has_wh(doc):
+    sent = doc[token_ids[0]].sent
+    if not _is_question(sent) or _has_wh(sent):
         return None
     head, subj = doc[token_ids[0]], doc[token_ids[1]]
     auxes = [c for c in head.children if c.dep_ in ("aux", "auxpass")]
@@ -90,7 +96,7 @@ def _classify_short(doc, token_ids):
     v, i = doc[token_ids[0]], doc[token_ids[1]]
     if i.lower_ not in _YESNO_WORDS:
         return None
-    if _is_question(doc):
+    if _is_question(v.sent):
         return None
     if v.tag_ != "MD" and v.lemma_ not in ("do", "be", "have"):
         return None
@@ -105,7 +111,7 @@ _WH_FORM = [{"RIGHT_ID": "w", "RIGHT_ATTRS": {"TAG": {"IN": list(_WH_TAGS)}}}]
 
 def _classify_wh(doc, token_ids):
     w = doc[token_ids[0]]
-    if not _is_question(doc):
+    if not _is_question(w.sent):
         return None
     if w.dep_ == "pobj":
         return None                                   # -> QUE-09
@@ -140,7 +146,7 @@ _PREP_FORM = [
 
 def _classify_prep(doc, token_ids):
     w = doc[token_ids[1]]
-    if not _is_question(doc) or w.lower_ not in _PREP_WH:
+    if not _is_question(w.sent) or w.lower_ not in _PREP_WH:
         return None
     return "QUE-09"
 
