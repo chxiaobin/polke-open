@@ -261,6 +261,13 @@ class _OfGenitive(Detector):
     detector_type = "rule"
     version = "nou16-ofgen@0.1"
     _POSS_PRON = {"mine", "yours", "hers", "ours", "theirs", "his"}
+    # quantifier/measure heads make a PARTITIVE of-phrase, not a genitive
+    _QUANT_HEADS = {"bit", "lot", "lots", "kind", "sort", "type", "load",
+                    "loads", "couple", "plenty", "bunch", "deal", "ton",
+                    "tons", "heap", "heaps", "pile", "amount", "number",
+                    "rest", "half", "majority", "none", "stack", "mass",
+                    "pair", "series", "range", "variety", "cup", "glass",
+                    "bottle", "piece", "slice"}
 
     def match(self, doc, text_id="doc"):
         out = []
@@ -269,6 +276,8 @@ class _OfGenitive(Detector):
                 continue
             head = t.head
             if head.pos_ not in ("NOUN", "PROPN"):
+                continue
+            if head.lemma_.lower() in self._QUANT_HEADS:
                 continue
             pobjs = [c for c in t.children if c.dep_ == "pobj"]
             if not pobjs:

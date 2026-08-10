@@ -49,7 +49,7 @@ def build(nlp, client=None):
         InitialMarkerDetector(nlp, entries, table["dm_followers"],
                               version="dmg-initial@0.1"),
         InitialMarkerDetector(nlp, dmg09, table["dm_followers"],
-                              version="dmg09-and-but@0.1"),
+                              version="dmg09-and-but@0.2", line_initial=True),
         LLMStandaloneDetector("DMG-05", _DMG05_SYS, client=client,
                               gate=_has_like, version="dmg05-like@0.1"),
     ]

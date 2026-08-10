@@ -156,6 +156,30 @@ _IMP08_SYS = ("Return IMP-08 for an imperative coordinated with and/or expressin
               "shout).")
 
 _VB_FORM = [{"RIGHT_ID": "v", "RIGHT_ATTRS": {"TAG": "VB"}}]
+
+
+def _imp07_gate(doc, token_ids):
+    """Directive 'let' opens its clause ("Let me help"); lexical allow-'let'
+    sits after a subject ("they let anyone near")."""
+    v = doc[token_ids[0]]
+    if any(c.dep_ in ("nsubj", "nsubjpass") and c.i < v.i for c in v.children):
+        return False
+    first = next((t for t in v.sent if not t.is_punct and not t.is_space),
+                 None)
+    return first is not None and first.i == v.i
+
+
+def _imp08_gate(doc, token_ids):
+    """Imperative + and/or + consequence CLAUSE: the base verb must open its
+    clause and carry a cc and a conjoined clause with its own subject."""
+    v = doc[token_ids[0]]
+    if any(c.dep_ in ("nsubj", "nsubjpass") for c in v.children):
+        return False
+    if not any(c.dep_ == "cc" for c in v.children):
+        return False
+    return any(c.dep_ == "conj" and
+               any(g.dep_ in ("nsubj", "nsubjpass") for g in c.children)
+               for c in v.children)
 _LET_FORM = [
     {"RIGHT_ID": "v", "RIGHT_ATTRS": {"LEMMA": "let"}},
     {"LEFT_ID": "v", "REL_OP": ">", "RIGHT_ID": "o",
@@ -170,7 +194,9 @@ def build(nlp, client=None):
         LLMReadingDetector(nlp, ["IMP-04"], _VB_FORM, _IMP04_SYS,
                            client=client, version="imp04-subj@0.1"),
         LLMReadingDetector(nlp, ["IMP-07"], _LET_FORM, _IMP07_SYS,
-                           client=client, version="imp07-let@0.1"),
+                           client=client, version="imp07-let@0.2",
+                           gate=_imp07_gate),
         LLMReadingDetector(nlp, ["IMP-08"], _VB_FORM, _IMP08_SYS,
-                           client=client, version="imp08-cond@0.1"),
+                           client=client, version="imp08-cond@0.2",
+                           gate=_imp08_gate),
     ]

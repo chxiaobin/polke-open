@@ -312,7 +312,8 @@ _V46_SYS = ("Return VTA-46 if a stative verb (cognition/perception/possession/"
             "emotion: know, believe, own, like) is used in the simple, RESISTING "
             "the progressive. If the stative verb actually appears IN the "
             "progressive (I'm loving it), that is not this construct - return "
-            "NONE.")
+            "NONE. Modal obligation 'have to / has to VERB' is not stative "
+            "possession - return NONE for those.")
 _V47_SYS = ("Return VTA-47 if it contrasts a stative perception verb (see/hear) "
             "with an active one (look/listen/watch).")
 _V48_SYS = ("Return VTA-48 if a normally stative verb is COERCED into the "

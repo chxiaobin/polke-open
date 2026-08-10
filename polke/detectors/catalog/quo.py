@@ -59,6 +59,18 @@ class _QuotativeGo(Detector):
                 continue
             if _quote_follows(doc, t.i):
                 out.append(_mk(self, doc, "QUO-01", t.i, t.i, text_id))
+                continue
+            # spoken path (no quote marks): motion go has a complement to its
+            # right (go WITH X, go ROUND); quotative go opens directly into
+            # speech — an interjection/pronoun clause or a capitalised word.
+            if any(k.dep_ in ("prep", "prt", "dobj", "attr", "oprd")
+                   and k.i > t.i for k in t.children):
+                continue
+            nxt = next((x for x in doc[t.i + 1:]
+                        if not x.is_space and not x.is_punct), None)
+            titled = nxt is not None and nxt.is_title and nxt.i > 0
+            if _speechy_follows(doc, t.i) or titled:
+                out.append(_mk(self, doc, "QUO-01", t.i, t.i, text_id))
         return out
 
 
@@ -66,12 +78,17 @@ _QUOTE_OPENERS = {"oh", "no", "yeah", "yes", "what", "why", "how", "wow",
                   "whoa", "hey", "ooh", "nah", "okay", "ok", "right", "well"}
 
 
+_ACC_PRONOUNS = {"me", "him", "her", "us", "them", "it"}
+_PERSON_SUBJ = {"i", "you", "he", "she", "we", "they", "everyone", "everybody"}
+
+
 def _speechy_follows(doc, i):
     """Speech path for the quotative (transcripts carry no quote marks):
     be + like/all counts as quotative when what follows opens direct speech
     — a pronoun-subject clause or an interjection ("I was like oh my god",
-    "he's like no way"). Comparative "he's like his dad" (PRP$) and
-    approximator "it's like really strange" (RB) do not match."""
+    "he's like no way"). Comparative "he's like his dad" (PRP$), "be like
+    THEM" (accusative pronoun) and approximator "it's like really strange"
+    (RB) do not match."""
     # scan within the same LINE (utterance) — the parser often opens a new
     # sentence exactly at the quote ("I was like | oh my god"), so the
     # sentence boundary must not stop the scan, but a line break must
@@ -80,6 +97,8 @@ def _speechy_follows(doc, i):
             break
         if t.is_space or t.is_punct:
             continue
+        if t.tag_ == "PRP" and t.lower_ in _ACC_PRONOUNS:
+            return False              # "be like THEM" = comparison, not quote
         return (t.tag_ in ("PRP", "UH", "WP", "WRB")
                 or t.lower_ in _QUOTE_OPENERS)
     return False
@@ -98,9 +117,22 @@ class _QuotativeBeLikeAll(Detector):
         for t in doc:
             if t.lower_ not in self._comps:
                 continue
-            be_left = (t.i > 0 and doc[t.i - 1].lemma_ == "be") or \
-                      t.head.lemma_ == "be"
-            if not be_left:
+            be = None
+            if t.i > 0 and doc[t.i - 1].lemma_ == "be":
+                be = doc[t.i - 1]
+            elif t.head.lemma_ == "be":
+                be = t.head
+            if be is None:
+                continue
+            # the quoter must be a person: "it's like she's moody" (similative)
+            # and "that's all I remember" have non-person subjects
+            subj = next((k for k in be.children
+                         if k.dep_ in ("nsubj", "nsubjpass")), None)
+            if subj is None and be.head is not be:
+                subj = next((k for k in be.head.children
+                             if k.dep_ in ("nsubj", "nsubjpass")), None)
+            if subj is not None and subj.pos_ != "PROPN" \
+                    and subj.lower_ not in _PERSON_SUBJ:
                 continue
             if _quote_follows(doc, t.i) or _speechy_follows(doc, t.i):
                 lo = t.i - 1 if t.i > 0 and doc[t.i - 1].lemma_ == "be" else t.i
@@ -174,8 +206,21 @@ _QUO05_SYS = (
     "- Framed direct speech: \"He said, 'I'll be back tomorrow.'\"\n"
     "- Framed thought: \"He wondered whether she would come.\"\n"
     "- Plain narration or dialogue with quotation marks.\n"
+    "- In casual conversation, the speaker's OWN current statements, "
+    "opinions or questions ('I'd rather her spend time with Sarah', 'is it "
+    "just two?') are ordinary dialogue, NOT free indirect speech. QUO-05 "
+    "requires a narrated past scene whose words/thoughts are re-enacted "
+    "without a frame.\n"
     'Return only JSON: {"construct_id": "QUO-05"|"NONE", '
     '"confidence": 0.0-1.0, "rationale": "..."}')
+
+
+def _quo05_gate(sent):
+    """Free indirect speech needs a backshift cue: a past-tense verb or a
+    past-oriented modal somewhere in the sentence."""
+    return any(t.tag_ == "VBD"
+               or (t.tag_ == "MD" and t.lower_ in ("would", "could", "might"))
+               for t in sent)
 
 
 def build(nlp, client=None):
@@ -185,5 +230,6 @@ def build(nlp, client=None):
         LLMReadingDetector(nlp, ["QUO-03", "REP-11"], _QUO03_FORM, _QUO03_SYS,
                            client=client, version="quo03-historic@0.1"),
         LLMStandaloneDetector("QUO-05", _QUO05_SYS, client=client,
-                              version="quo05-free-speech@0.1"),
+                              version="quo05-free-speech@0.2",
+                              gate=_quo05_gate),
     ]

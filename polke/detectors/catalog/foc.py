@@ -72,6 +72,14 @@ class _FocusRules(SentenceScoped):
                     None)
         if subj is None:
             return None
+        if subj.dep_ in ("poss", "det", "amod", "compound") \
+                and subj.head.i > subj.i:
+            subj = subj.head             # "so did HER SISTER" — take the head
+        # additive inversion is clause-FINAL ("so do I", "so did the spread");
+        # 'so' + operator + subject + MORE material is a question or a
+        # discourse-so clause ("so did you go back?")
+        if any(not (t.is_punct or t.is_space) for t in doc[subj.i + 1:]):
+            return None
         return ((0, subj.i), subj.lower_ in _PRON_SUBJ or subj.tag_ == "PRP")
 
     def _foc10_pp(self, doc):

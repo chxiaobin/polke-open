@@ -20,6 +20,8 @@ def classify_passive(doc, token_ids):
     verb = doc[token_ids[0]]
     if verb.tag_ != "VBN" or not has_be_auxpass(verb):
         return None  # get-passive / non-be -> handled elsewhere
+    if verb.lemma_ == "get" and any(c.dep_ == "dobj" for c in verb.children):
+        return None  # possession "('s) got X" misparsed as passive
     chain = aux_chain(verb)
     modal = [k for k in chain if k.tag_ == "MD"]
     to = [k for k in chain if k.tag_ == "TO"]
@@ -60,7 +62,10 @@ def _by_agent_exclude(doc, token_ids):
 
 
 def _ditransitive_ok(doc, token_ids):
-    return "PAS-13" if has_be_auxpass(doc[token_ids[0]]) else None
+    verb = doc[token_ids[0]]
+    if verb.lemma_ == "get" and any(c.dep_ == "dobj" for c in verb.children):
+        return None  # possession have-got, not a retained-object passive
+    return "PAS-13" if has_be_auxpass(verb) else None
 
 
 def _phrasal_key(doc, token_ids):

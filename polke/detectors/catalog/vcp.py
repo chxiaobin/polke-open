@@ -145,6 +145,13 @@ _NAMING = {"appoint", "name", "elect", "call", "declare", "crown", "designate",
            "style", "title", "rename", "deem", "vote", "pronounce", "consider",
            "judge", "make"}
 
+# Verbs that take an object predicative (VCP-26/27) even when spaCy mis-parses
+# the predicate; used to gate the evidence-poor objpred branches.
+_OBJPRED_VERBS = _NAMING | {"paint", "keep", "find", "drive", "leave", "get",
+                            "turn", "render", "wipe", "cut", "hold", "prove",
+                            "believe", "presume", "imagine", "want", "like",
+                            "prefer", "push", "set", "send"}
+
 # VCP-19 / VCP-20 prepositional-verb table (shared; form splits noun vs -ing).
 _PREP_VERB = {
     ("depend", "on"), ("depend", "upon"), ("look", "at"), ("look", "for"),
@@ -521,8 +528,14 @@ def _io_that_key(doc, ids):
 # --------------------------------------------------------------------------- #
 # VCP-25 : V + IO + wh-clause.
 # --------------------------------------------------------------------------- #
+_IO_WH_VERBS = {"tell", "ask", "show", "teach", "remind", "advise", "inform",
+                "explain"}
+
+
 def _classify_io_wh(doc, ids):
-    cc = doc[ids[2]]
+    v, cc = doc[ids[0]], doc[ids[2]]
+    if v.lemma_.lower() not in _IO_WH_VERBS:
+        return None
     return "VCP-25" if _wh_in(cc) else None
 
 
@@ -547,11 +560,24 @@ def _classify_objpred(doc, ids):
     for cc in ccomps:
         if not any(k.dep_ in ("nsubj", "nsubjpass") for k in cc.children):
             continue
+        if cc.pos_ in ("VERB", "AUX"):
+            # a verbal ccomp is normally a finite complement clause (VCP-11/13);
+            # accept it as a mis-tagged predicate adjective only for verbs that
+            # take object predicatives and only when the "clause" is bare.
+            if v.lemma_.lower() not in _OBJPRED_VERBS:
+                continue
+            if any(k.dep_ not in ("nsubj", "nsubjpass") for k in cc.children):
+                continue
         if _has_to(cc) or cc.tag_ in ("VB", "VBN"):
             continue                                  # -> VCP-29/30/33
         if cc.pos_ in ("NOUN", "PROPN") or _is_nominal(cc):
             return "VCP-27"
         return "VCP-26"                               # JJ or mis-tagged VBD adjective
+
+    # C/D below have no structural predicate evidence, so they are restricted
+    # to the naming/considering verb class.
+    if v.lemma_.lower() not in _NAMING:
+        return None
 
     # C) predicate = a second dobj, or a dobj carrying the real object as poss.
     if len(dobjs) >= 2:
@@ -730,7 +756,10 @@ _INTRANS_SYS = (
     "reading, usually + adverb or won't/wouldn't: 'this shirt washes easily', "
     "'the book sells well', 'the door won't lock') | "
     "VCP-07 reciprocal intransitive (a plural/conjoined subject acting on each "
-    "other: 'they met', 'we argued', 'the two lines intersect')."
+    "other: 'they met', 'we argued', 'the two lines intersect').\n"
+    "If it is none of these - an ordinary agent-subject intransitive ('she "
+    "smiled'), a copular clause ('we got so hot'), or the verb actually has "
+    "an object here - return NONE."
 )
 _MEANING_SYS = (
     "The bracketed verb takes a non-finite complement whose FORM (to-infinitive "
@@ -743,7 +772,9 @@ _PERCEPTION_SYS = (
     "leave') | VCP-32 object + -ing, ongoing perception or continuation ('I "
     "caught him cheating', 'she kept me waiting') | VCP-33 object + past "
     "participle, resultative/causative ('I had it repaired', 'I want it "
-    "finished')."
+    "finished').\n"
+    "If the matrix verb fits none of these patterns (help/let/make/suppose/"
+    "say belong to other constructs), return NONE."
 )
 _ANTIC_SYS = (
     "Return VCP-35 if the bracketed verb takes an anticipatory/dummy 'it' "
@@ -897,9 +928,15 @@ def build(nlp, client=None):
                                     _classify_catenative, version="vcp40-caten@0.1"))
 
     # --- LLM tier (registered, skipped offline) -----------------------------
+    def _intrans_gate(doc, token_ids):
+        v = doc[token_ids[0]]
+        return not any(c.dep_ in ("dobj", "attr", "acomp", "oprd",
+                                  "ccomp", "xcomp") for c in v.children)
+
     dets.append(LLMReadingDetector(nlp, ["VCP-05", "VCP-06", "VCP-07"],
                                    _NSUBJ_FORM, _INTRANS_SYS, client=client,
-                                   version="vcp05-07-intrans@0.1"))
+                                   version="vcp05-07-intrans@0.2",
+                                   gate=_intrans_gate))
     dets.append(LLMReadingDetector(nlp, ["VCP-18"], _XCOMP_FORM, _MEANING_SYS,
                                    client=client, version="vcp18-meaning@0.1"))
     dets.append(LLMReadingDetector(nlp, ["VCP-31", "VCP-32", "VCP-33"],

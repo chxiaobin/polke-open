@@ -158,10 +158,14 @@ class _WereSubjunctiveDetector(Detector):
             subjs = [c for c in t.children if c.dep_ in ("nsubj", "nsubjpass", "expl")]
             marks = [c.lower_ for c in t.children if c.dep_ == "mark"]
             prev = doc[t.i - 1] if t.i > 0 else None
-            fire = (any(s.lower_ in self._SING for s in subjs)
-                    or any(m in ("if", "as") for m in marks)
-                    or (prev is not None and prev.lower_ in ("if", "as")))
-            if not fire:
+            # subjunctive needs BOTH an irrealis frame (if/as/though/wish) and
+            # a singular subject; bare singular "she were" is dialect past-BE
+            # (VER-03), bare "if they were" is the ordinary indicative.
+            irrealis = (any(m in ("if", "as", "though", "whether") for m in marks)
+                        or (prev is not None and prev.lower_ in ("if", "as"))
+                        or any(a.lemma_ == "wish" for a in t.ancestors))
+            singular = any(s.lower_ in self._SING for s in subjs)
+            if not (irrealis and (singular or not subjs)):
                 continue
             out.append(Annotation(
                 text_id=text_id, construct_id="VSP-07",

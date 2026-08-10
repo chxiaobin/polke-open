@@ -17,6 +17,23 @@ _ARG_DEPS = {"nsubj", "nsubjpass", "dobj", "pobj", "attr", "poss", "dative",
              "conj", "compound", "appos", "oprd"}
 
 
+_GREETINGS = {"thanks", "thank", "hi", "hello", "hey", "bye", "cheers",
+              "sorry", "please", "morning", "night", "welcome"}
+
+
+def _address_context(doc, sent, i, e):
+    """Something outside the name window that shows someone is being ADDRESSED
+    (a clause, a second person, a greeting). A bare-name utterance with only
+    fillers ("no no Milltown", "er Christmas Eve") is a mention/answer."""
+    for t in sent:
+        if i <= t.i < e or t.is_punct or t.is_space:
+            continue
+        if t.pos_ in ("VERB", "AUX") or t.tag_ in ("PRP", "PRP$") \
+                or t.lower_ in _GREETINGS:
+            return True
+    return False
+
+
 def _voc01(doc):
     """VOC-01 (rule tier): comma-peripheral proper-name/title NP. Same
     positional grammar as the lexicon vocatives, but over PROPN windows
@@ -50,9 +67,14 @@ def _voc01(doc):
             non_arg = (doc[j].dep_ not in _ARG_DEPS
                        or (doc[j].dep_ == "nsubj" and other_subj))
             tail_ok = all(t.is_punct or t.is_space for t in doc[e:sent.end])
-            final_nc = i > start and tail_ok and non_arg
+            addressed = _address_context(doc, sent, i, e)
+            final_nc = i > start and tail_ok and non_arg and addressed
             initial_nc = i == start and e < sent.end and non_arg and other_subj
-            if initial or final or medial or final_nc or initial_nc:
+            # summons: the whole utterance is just the name plus "?"
+            lead_ok = all(t.is_punct or t.is_space for t in doc[sent.start:i])
+            summons = (lead_ok and tail_ok and e < sent.end
+                       and any(t.text == "?" for t in doc[e:sent.end]))
+            if initial or final or medial or final_nc or initial_nc or summons:
                 yield (i, j)
             i = e
 

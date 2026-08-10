@@ -124,8 +124,13 @@ class _No(Detector):
     version = "det22-no@0.1"
 
     def match(self, doc, text_id="doc"):
+        # determiner 'no' modifies a following nominal ("no pets", "no music");
+        # response 'no' (INS-05) heads nothing even when tagged DT
         return [_ann(text_id, "DET-22", doc, t.i, t.i, self.version)
-                for t in doc if t.lower_ == "no" and t.tag_ == "DT"]
+                for t in doc
+                if t.lower_ == "no" and t.tag_ == "DT"
+                and t.dep_ in ("det", "neg") and t.head.i > t.i
+                and t.head.pos_ in ("NOUN", "PROPN", "PRON", "NUM", "ADJ")]
 
 
 class _Distributive(Detector):
@@ -208,10 +213,17 @@ def build(nlp, client=None):
         "DET-28": "possessive + own for emphatic ownership (my own room; a place "
                   "of my own)",
     }
+    def _det02_gate(sent):
+        # DET-02 needs a DETERMINER demonstrative (this week / that idea);
+        # standalone pronominal that's/this (dep nsubj/dobj/...) is PRO-14
+        return any(t.lower_ in ("this", "that", "these", "those")
+                   and t.dep_ == "det" for t in sent)
+
+    _gates = {"DET-02": _det02_gate}
     for cid, desc in _llm.items():
         dets.append(LLMStandaloneDetector(
             cid, f"Decide whether the sentence contains: {desc}. Return JSON "
             f'{{"construct_id":"{cid}"|"NONE","confidence":0..1,'
-            f'"rationale":"..."}}.', client=client,
+            f'"rationale":"..."}}.', client=client, gate=_gates.get(cid),
             version=f"{cid.lower()}-llm@0.1"))
     return dets

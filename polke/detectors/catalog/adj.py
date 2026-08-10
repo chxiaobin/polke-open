@@ -35,7 +35,7 @@ _ATTR_ONLY = {"main", "former", "sheer", "mere", "utter", "chief", "principal",
 _PRED_ONLY = ["asleep", "afraid", "alive", "alone", "aware", "awake",
               "ashamed", "aghast", "adrift", "afloat", "aback", "aflame",
               "aglow", "akin", "aloof", "amiss", "askew", "awash", "unwell",
-              "well", "ill", "poorly", "content", "aloof"]
+              "well", "ill", "poorly", "content", "aloof", "alright"]
 # Postpositive adjectives that follow their noun.
 _POSTPOS_ADJ = {"present", "involved", "concerned", "responsible", "available",
                 "elect", "galore", "aplenty", "incarnate", "proper",
@@ -276,9 +276,23 @@ def build(nlp, client=None):
     dets.append(RuleRoutingDetector(nlp, ["ADJ-03"], _AMOD_FORM,
                                     _classify_attr_only, span="match",
                                     version="adj03-attronly@0.1"))
-    # ADJ-04 predicative-only a-adjectives (surface lexicon).
+    # ADJ-04 predicative-only a-adjectives (surface lexicon). The ambiguous
+    # members (well/ill/content/poorly) only count in predicative structure —
+    # discourse 'well' and noun 'content' never sit under a linking verb.
+    _COPULAS = {"be", "feel", "look", "seem", "become", "get", "stay",
+                "keep", "remain", "sound"}
+
+    def _pred_only_gate(doc, start, end):
+        t = doc[start]
+        if t.lower_.startswith("a"):     # asleep/afraid/... are unambiguous
+            return True
+        return (t.dep_ in ("acomp", "oprd")
+                or (t.pos_ == "ADJ" and t.head.lemma_ in _COPULAS)
+                or t.head.lemma_ in _COPULAS)
+
     dets.append(PhraseLexiconDetector(nlp, "ADJ-04", _PRED_ONLY,
-                                      version="adj04-predonly@0.1"))
+                                      gate=_pred_only_gate,
+                                      version="adj04-predonly@0.2"))
     # ADJ-05 postpositive: indef-pronoun+adj / noun+postpositive-adj / titles.
     dets.append(CompositeDetector("ADJ-05", [
         _Scan("ADJ-05", _adj05, detector_type="lexicon"),

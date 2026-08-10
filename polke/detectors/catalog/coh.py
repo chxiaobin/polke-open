@@ -12,6 +12,15 @@ from ..llm import LLMStandaloneDetector
 from ...schema import Annotation, Span
 
 # phrase -> COH id. Extended well beyond the seed examples with the standard
+# Ambiguous single-word linkers: they are connectives only when they OPEN the
+# utterance ("So we left." / "Then she rang.") — degree 'so good', temporal
+# 'back then', phase 'not yet', copular 'that is', intensifier 'well' and
+# response 'right' all occur medially and are different constructs.
+_INITIAL_ONLY = {
+    "so": "COH-03", "then": "COH-04", "yet": "COH-02",
+    "well": "COH-11", "right": "COH-11", "certainly": "COH-09",
+}
+
 # linking-adverbial inventory (Halliday/Biber), still one group per item.
 _LINKERS = {
     # COH-01 additive
@@ -24,14 +33,14 @@ _LINKERS = {
     "on the other hand": "COH-02", "in contrast": "COH-02", "by contrast": "COH-02",
     "conversely": "COH-02", "even so": "COH-02", "instead": "COH-02",
     "on the contrary": "COH-02", "then again": "COH-02", "all the same": "COH-02",
-    "whereas": "COH-02", "yet": "COH-02",
+    "whereas": "COH-02",
     # COH-03 causal / resultative
     "therefore": "COH-03", "thus": "COH-03", "hence": "COH-03",
     "consequently": "COH-03", "as a result": "COH-03", "accordingly": "COH-03",
-    "for this reason": "COH-03", "as a consequence": "COH-03", "so": "COH-03",
+    "for this reason": "COH-03", "as a consequence": "COH-03",
     # COH-04 temporal / sequencing
     "first": "COH-04", "firstly": "COH-04", "second": "COH-04",
-    "secondly": "COH-04", "then": "COH-04", "next": "COH-04",
+    "secondly": "COH-04", "next": "COH-04",
     "afterwards": "COH-04", "subsequently": "COH-04", "finally": "COH-04",
     "meanwhile": "COH-04", "eventually": "COH-04", "to begin with": "COH-04",
     "in the end": "COH-04", "lastly": "COH-04", "beforehand": "COH-04",
@@ -41,7 +50,7 @@ _LINKERS = {
     "namely": "COH-05", "in particular": "COH-05", "to illustrate": "COH-05",
     "as an illustration": "COH-05", "including": "COH-05",
     # COH-06 reformulating / clarifying
-    "in other words": "COH-06", "that is": "COH-06", "that is to say": "COH-06",
+    "in other words": "COH-06", "that is to say": "COH-06",
     "or rather": "COH-06", "to put it another way": "COH-06", "i.e.": "COH-06",
     "put differently": "COH-06",
     # COH-07 summarising / concluding
@@ -54,16 +63,16 @@ _LINKERS = {
     "notably": "COH-08", "significantly": "COH-08",
     # COH-09 conceding
     "admittedly": "COH-09", "of course": "COH-09", "naturally": "COH-09",
-    "granted": "COH-09", "it is true that": "COH-09", "certainly": "COH-09",
+    "granted": "COH-09", "it is true that": "COH-09",
     "to be sure": "COH-09", "no doubt": "COH-09",
     # COH-10 conditional / consequence
     "otherwise": "COH-10", "in that case": "COH-10", "if so": "COH-10",
     "if not": "COH-10", "under the circumstances": "COH-10",
     "in which case": "COH-10",
     # COH-11 discourse markers (spoken / informal)
-    "well": "COH-11", "anyway": "COH-11", "by the way": "COH-11",
-    "you know": "COH-11", "i mean": "COH-11", "right": "COH-11",
-    "actually": "COH-11", "sort of": "COH-11", "kind of": "COH-11",
+    "anyway": "COH-11", "by the way": "COH-11",
+    "you know": "COH-11", "i mean": "COH-11",
+    "actually": "COH-11",
     # COH-13 the former/latter/above/following/aforementioned
     "the former": "COH-13", "the latter": "COH-13", "the above": "COH-13",
     "the following": "COH-13", "the aforementioned": "COH-13",
@@ -115,11 +124,35 @@ class _ConnectorPunctuation:
         return out
 
 
+def _initial_gate(doc, start, end):
+    """Ambiguous single-word linkers must be the first content token of their
+    sentence AND the sentence must open the utterance (line); unambiguous
+    phrases pass through."""
+    word = " ".join(doc[start:end].text.lower().split())
+    if word not in _INITIAL_ONLY:
+        return True
+    sent = doc[start].sent
+    for t in sent:
+        if t.is_punct or t.is_space:
+            continue
+        if t.i != start:
+            return False
+        break
+    j = sent.start - 1
+    while j >= 0 and (doc[j].is_space or doc[j].is_punct):
+        if "\n" in doc[j].text:
+            return True
+        j -= 1
+    return j < 0
+
+
 def build(nlp, client=None):
     dets = []
-    phrases = [(p, cid) for p, cid in _LINKERS.items()]
+    phrases = [(p, cid) for p, cid in _LINKERS.items()] + \
+              [(p, cid) for p, cid in _INITIAL_ONLY.items()]
     dets.append(PhraseLexiconDetector(nlp, _COH_IDS, phrases,
-                                      version="coh-linkers@0.1"))
+                                      gate=_initial_gate,
+                                      version="coh-linkers@0.2"))
     dets.append(_ConnectorPunctuation())
     # COH-12 anaphoric reference (pronominal/demonstrative/the-): LLM tier.
     dets.append(LLMStandaloneDetector(

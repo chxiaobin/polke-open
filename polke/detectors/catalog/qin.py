@@ -63,6 +63,20 @@ def _qin02(doc):
             continue                        # operator tags with "?" -> QUE-11/12
         commas = [t for t in sent if t.text == ","]
         if not commas:
+            # spoken path (no commas in transcripts): utterance-final
+            # pronoun+operator echoing an earlier operator with its own
+            # subject — "they're beautiful they are".
+            toks = [t for t in sent if not t.is_punct and not t.is_space]
+            if len(toks) >= 4:
+                t1, t2 = toks[-2], toks[-1]
+                op_ok = t2.tag_ == "MD" or (t2.tag_ in _OPERATOR_TAGS
+                                            and t2.lemma_ in ("be", "do", "have"))
+                if t1.tag_ == "PRP" and op_ok \
+                        and any(t.lemma_ == t2.lemma_ and t.i < t1.i
+                                for t in toks[:-2]) \
+                        and any(t.dep_ in ("nsubj", "nsubjpass") and t.i < t1.i
+                                for t in toks[:-2]):
+                    yield (t1.i, t2.i)
             continue
         last = commas[-1]
         tail = [t for t in doc[last.i + 1:sent.end] if not t.is_punct]

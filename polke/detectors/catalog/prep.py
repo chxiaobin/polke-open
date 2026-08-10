@@ -50,6 +50,19 @@ def _place_gate(doc, start, end):
     return _simple_pp(doc, start) and not _has_temporal_obj(doc[start])
 
 
+def _transitive_prep_gate(doc, start, end):
+    """True only when the matched phrase is a real transitive preposition
+    (has a pobj/pcomp), not a verb particle or bare adverb ("tidy up",
+    "hand it over", "sneak off")."""
+    for i in range(start, end):
+        t = doc[i]
+        if t.dep_ == "prt":
+            return False
+        if any(c.dep_ in ("pobj", "pcomp") for c in t.children):
+            return True
+    return False
+
+
 def _time_gate(doc, start, end):
     return _simple_pp(doc, start) and _has_temporal_obj(doc[start])
 
@@ -85,18 +98,18 @@ def build(nlp, client=None):
         nlp, "PREP-02",
         ["above", "over", "below", "under", "beneath", "between", "among",
          "behind", "beside", "opposite", "in front of", "next to"],
-        version="prep02@0.1"))
+        gate=_transitive_prep_gate, version="prep02@0.1"))
 
     # PREP-03 inside/outside, against, around, along, beyond.
     dets.append(PhraseLexiconDetector(
         nlp, "PREP-03",
         ["inside", "outside", "against", "around", "round", "along", "beyond"],
-        version="prep03@0.1"))
+        gate=_transitive_prep_gate, version="prep03@0.1"))
 
     # PREP-06 during/throughout/over/within.
     dets.append(PhraseLexiconDetector(
         nlp, "PREP-06", ["during", "throughout", "over", "within"],
-        version="prep06@0.1"))
+        gate=_transitive_prep_gate, version="prep06@0.1"))
 
     # PREP-08 from / ago / in + period (time span onset).
     dets.append(PhraseLexiconDetector(
@@ -109,14 +122,14 @@ def build(nlp, client=None):
     dets.append(PhraseLexiconDetector(
         nlp, "PREP-09",
         ["into", "onto", "out of", "off", "off of"],
-        version="prep09@0.1"))
+        gate=_transitive_prep_gate, version="prep09@0.1"))
 
     # PREP-10 path/route prepositions.
     dets.append(PhraseLexiconDetector(
         nlp, "PREP-10",
         ["towards", "toward", "away from", "up", "down", "across", "through",
          "along", "past", "via"],
-        version="prep10@0.1"))
+        gate=_transitive_prep_gate, version="prep10@0.1"))
 
     # PREP-17 complex prepositions (concession/cause/exception/reference).
     dets.append(PhraseLexiconDetector(
@@ -165,12 +178,23 @@ def build(nlp, client=None):
     # whose object is a wh-word fronted to its left (What ... looking at?).
     def _stranded(doc, tids):
         p = doc[tids[0]]
-        if p.dep_ not in ("prep", "prt", "agent", "dative"):
-            return None
+        if p.dep_ not in ("prep", "agent", "dative"):
+            return None                   # dep=prt is a verb particle, never stranding
         pobj = [c for c in p.children if c.dep_ in ("pobj", "pcomp")]
-        if not pobj:
+        if any(o.i < p.i for o in pobj):
+            return "PREP-22"              # fronted object = extraction
+        if pobj:
+            return None
+        # objectless prep counts only with extraction evidence: a wh-word
+        # earlier in the sentence, a relative/infinitival clause host, or a
+        # passive host ("was talked about").
+        head = p.head
+        sent = p.sent
+        if any(t.tag_ in ("WP", "WDT", "WP$") and t.i < p.i for t in sent):
             return "PREP-22"
-        if any(o.tag_ in ("WP", "WDT", "WP$", "WRB") and o.i < p.i for o in pobj):
+        if head.dep_ in ("relcl", "acl"):
+            return "PREP-22"
+        if any(c.dep_ in ("auxpass", "nsubjpass") for c in head.children):
             return "PREP-22"
         return None
     dets.append(RuleRoutingDetector(

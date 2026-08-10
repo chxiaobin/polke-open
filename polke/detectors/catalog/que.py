@@ -92,6 +92,9 @@ _SHORT_FORM = [
 ]
 
 
+_SHORT_OK_DEPS = {"intj", "nsubj", "nsubjpass", "neg", "punct", "aux", "dep"}
+
+
 def _classify_short(doc, token_ids):
     v, i = doc[token_ids[0]], doc[token_ids[1]]
     if i.lower_ not in _YESNO_WORDS:
@@ -99,6 +102,11 @@ def _classify_short(doc, token_ids):
     if _is_question(v.sent):
         return None
     if v.tag_ != "MD" and v.lemma_ not in ("do", "be", "have"):
+        return None
+    # a short answer is BARE: "Yes, I do." — any complement/adjunct on the
+    # operator means it is a full clause, not a short answer.
+    if any(c.dep_ not in _SHORT_OK_DEPS and not c.is_space
+           for c in v.children):
         return None
     return "QUE-03"
 
@@ -168,7 +176,21 @@ _EMBED_WH = [
 ]
 
 
+# Predicates that embed an interrogative clause; without one of these, an
+# if/when/wh clause is a conditional/adverbial, not an embedded question.
+_EMBED_GOVERNORS = {"know", "wonder", "ask", "see", "tell", "remember",
+                    "decide", "understand", "check", "find", "figure",
+                    "forget", "care", "matter", "sure", "clear", "depend",
+                    "doubt", "explain", "discover", "learn", "imagine",
+                    "guess", "mind", "say", "show", "work"}
+
+
 def _classify_embed(doc, token_ids):
+    emb = doc[token_ids[0]]
+    if emb.head.lemma_.lower() not in _EMBED_GOVERNORS:
+        return None
+    if _is_question(emb.sent) and emb.dep_ not in ("ccomp", "pcomp"):
+        return None
     return "QUE-15"
 
 
@@ -253,16 +275,43 @@ def build(nlp, client=None):
         version="que16-opener@0.1"))
 
     # LLM tier (skipped offline; registered).
+    def _tag_gate(doc, token_ids):
+        # a tag question ends in operator+pronoun ("... isn't she?"): require
+        # that shape among the last few tokens of the sentence.
+        sent = doc[token_ids[0]].sent
+        toks = [t for t in sent if not t.is_space and not t.is_punct][-4:]
+        for a, b in zip(toks, toks[1:]):
+            if (a.tag_ == "MD" or a.lemma_ in ("do", "be", "have")) \
+                    and b.tag_ == "PRP":
+                return True
+        return False
+
+    def _negq_gate(doc, token_ids):
+        sent = doc[token_ids[0]].sent
+        if not _is_question(sent):
+            return False
+        # tags ("..., isn't it?") belong to QUE-11/12/13, not QUE-14
+        first = next((t for t in sent if not t.is_space), None)
+        return not _tag_gate(doc, token_ids) \
+            or (first is not None and first.tag_ in _WH_TAGS)
+
     dets.append(LLMReadingDetector(
         nlp, ["QUE-11", "QUE-12", "QUE-13"], _TAG_FORM, _TAG_SYS,
-        client=client, version="que-tags@0.1"))
+        client=client, version="que-tags@0.2", gate=_tag_gate))
     dets.append(LLMReadingDetector(
         nlp, ["QUE-14"], _NEGQ_FORM, _NEGQ_SYS,
-        client=client, version="que14-negq@0.1"))
+        client=client, version="que14-negq@0.2", gate=_negq_gate))
     dets.append(LLMReadingDetector(
         nlp, ["QUE-10"], _WHATLIKE_FORM, _WHATLIKE_SYS,
         client=client, version="que10-whatlike@0.1"))
+    def _que17_gate(sent):
+        # alternative/echo/rhetorical questions are SHORT; long narrative
+        # sentences are never this construct
+        toks = [t for t in sent if not t.is_punct and not t.is_space]
+        return len(toks) <= 12 and (_is_question(sent) or len(toks) <= 4)
+
     dets.append(LLMStandaloneDetector(
-        "QUE-17", _ALT_ECHO_SYS, client=client, version="que17-alt-echo@0.1"))
+        "QUE-17", _ALT_ECHO_SYS, client=client, version="que17-alt-echo@0.2",
+        gate=_que17_gate))
 
     return dets

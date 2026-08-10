@@ -104,7 +104,7 @@ class InitialMarkerDetector(Detector):
     detector_type = "lexicon"
 
     def __init__(self, nlp, entries, dm_followers: Iterable[str],
-                 version: str = "0.1"):
+                 version: str = "0.1", line_initial: bool = False):
         self.version = version
         self._entries = []  # (token-tuple, cid, comma_mode) longest first
         cids = []
@@ -114,10 +114,24 @@ class InitialMarkerDetector(Detector):
         self._entries.sort(key=lambda e: -len(e[0]))
         self.construct_ids = sorted(set(cids))
         self._followers = {f.lower() for f in dm_followers}
+        # line_initial: the marker must open the UTTERANCE (line), not just a
+        # parser-internal sentence — needed for and/but (DMG-09), which occur
+        # medially all the time.
+        self._line_initial = line_initial
+
+    def _is_line_initial(self, doc, sent):
+        j = sent.start - 1
+        while j >= 0 and (doc[j].is_space or doc[j].is_punct):
+            if "\n" in doc[j].text:
+                return True
+            j -= 1
+        return j < 0
 
     def match(self, doc, text_id: str = "doc") -> List[Annotation]:
         out = []
         for sent in doc.sents:
+            if self._line_initial and not self._is_line_initial(doc, sent):
+                continue
             start = _content_start(doc, sent)
             for toks, cid, comma in self._entries:
                 end = start + len(toks)  # exclusive
@@ -234,6 +248,10 @@ class MedialFinalParentheticalDetector(Detector):
         return out
 
 
+_VOC_ARG_DEPS = {"nsubj", "nsubjpass", "dobj", "pobj", "attr", "poss",
+                 "dative", "conj", "compound", "appos", "oprd"}
+
+
 class VocativeDetector(Detector):
     """Comma-peripheral vocative NP from a closed lexicon (VOC-02/03).
 
@@ -271,7 +289,35 @@ class VocativeDetector(Detector):
                 after_comma = s > sent.start and doc[s - 1].text == ","
                 final = after_comma and all(t.is_punct for t in doc[e:sent.end])
                 medial = after_comma and e < sent.end and doc[e].text == ","
-                if initial or final or medial:
+                # Spoken paths — transcripts have no commas. Same grammar as
+                # the VOC-01 name rule: an utterance-final window that fills
+                # no argument slot ("do you want tea mum?"), or an initial
+                # window whose clause has its own subject ("mum can you sit
+                # down"). Argument uses ("ask dad", "mum and dad like them")
+                # keep their arg dep and never fire.
+                head = doc[e - 1]
+                other_subj = any(t.dep_ in ("nsubj", "nsubjpass")
+                                 and t.head == head.head
+                                 for t in doc if t.i < s or t.i >= e)
+                # a "dobj" window is still vocative when its verb already has
+                # another object ("what else do you want me to do dad?") or
+                # the real object sits inside the window as a compound
+                # ("do you want tea mum?")
+                other_obj = any(t.dep_ in ("dobj", "attr")
+                                and t.head == head.head and t.i != head.i
+                                for t in doc)
+                obj_inside = any(c.dep_ == "compound" and c.i < head.i
+                                 for c in head.children)
+                non_arg = (head.dep_ not in _VOC_ARG_DEPS
+                           or (head.dep_ == "nsubj" and other_subj)
+                           or (head.dep_ == "dobj" and (other_obj or obj_inside)))
+                no_det = not any(c.dep_ in ("det", "poss") for c in head.children)
+                tail_ok = all(t.is_punct or t.is_space
+                              for t in doc[e:sent.end])
+                final_nc = s > start and tail_ok and non_arg and no_det
+                initial_nc = (s == start and e < sent.end and non_arg
+                              and no_det and other_subj)
+                if initial or final or medial or final_nc or initial_nc:
                     out.append(_mk(self, doc, self.construct_ids[0],
                                    s, e - 1, text_id))
                 i = e

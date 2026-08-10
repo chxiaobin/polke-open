@@ -79,9 +79,15 @@ def _classify_zero(doc, token_ids):
     if not subj or subj[0].tag_ in _WH_TAGS:
         return None
     if v.dep_ == "relcl":
+        # a zero OBJECT relative has an object gap: a relcl verb with its own
+        # in-situ dobj is a run-on clause the parser glued on ("I am a
+        # planner I do it now"), not a relative.
+        if any(c.dep_ == "dobj" and c.i > v.i for c in v.children):
+            return None
         return "REL-04"
     objs = [c for c in v.children if c.dep_ in ("dobj", "nsubjpass")]
-    if objs and objs[0].i < subj[0].i:      # object fronted before subject
+    if objs and objs[0].i < subj[0].i \
+            and objs[0].pos_ in ("NOUN", "PROPN"):  # fronted lexical antecedent
         return "REL-04"
     return None
 
@@ -104,7 +110,7 @@ _WHOSE_FORM = [
 _STRAND_FORM = [
     {"RIGHT_ID": "v", "RIGHT_ATTRS": {"POS": {"IN": ["VERB", "AUX"]}}},
     {"LEFT_ID": "v", "REL_OP": ">", "RIGHT_ID": "p",
-     "RIGHT_ATTRS": {"DEP": {"IN": ["advmod", "prt", "prep"]}}},
+     "RIGHT_ATTRS": {"DEP": {"IN": ["advmod", "prep"]}}},
 ]
 
 
@@ -112,8 +118,24 @@ def _classify_strand(doc, token_ids):
     v, p = doc[token_ids[0]], doc[token_ids[1]]
     if p.lower_ not in _PREP_WORDS or p.i <= v.i:
         return None
-    if any(c.dep_ in ("pobj", "pcomp") for c in p.children):
-        return None                       # has an object -> not stranded
+    if any(c.dep_ in ("pobj", "pcomp") and c.i > p.i for c in p.children):
+        return None          # in-situ object -> not stranded (fronted one is)
+    # must actually sit inside a relative clause (finite or infinitival), or a
+    # fragment parse of one: ROOT verb whose subject is directly preceded by a
+    # nominal antecedent ("the house (that) she lives in").
+    if not any(t.dep_ in ("relcl", "acl") for t in (v, v.head)):
+        subj = next((c for c in v.children if c.dep_ in ("nsubj", "nsubjpass")),
+                    None)
+        if v.dep_ != "ROOT" or subj is None:
+            return None
+        ante = next((t for t in reversed(list(v.sent))
+                     if t.pos_ in ("NOUN", "PROPN") and t.i < subj.i), None)
+        if ante is None:
+            return None
+        # only determiners/punctuation/relativizers may intervene
+        if any(t.pos_ not in ("DET", "PUNCT", "PRON") and not t.is_space
+               for t in v.sent if ante.i < t.i < subj.i):
+            return None
     return "REL-11"
 
 

@@ -306,10 +306,23 @@ class _AsAsRule(Detector):
 
 
 # ---- gates for the flat-adverb split -------------------------------------- #
+_RESPONSE_FLATS = {"well", "right", "okay", "fine", "sure", "alright"}
+
+
 def _gate_flat_citation(doc, start, end):
     # ADV-02: flat form NOT used as a verb's manner adverb (citation / adjectival).
     t = doc[start]
-    return not (t.dep_ == "advmod" and t.head.pos_ == "VERB")
+    if t.dep_ == "advmod" and t.head.pos_ == "VERB":
+        return False
+    # discourse/response uses of well/right/okay are INS/DMG, not flat adverbs
+    if t.lower_ in _RESPONSE_FLATS:
+        if t.dep_ in ("intj", "discourse"):
+            return False
+        first = next((x for x in t.sent if not x.is_punct and not x.is_space),
+                     None)
+        if first is t:
+            return False
+    return True
 
 
 def _gate_flat_adverbial(doc, start, end):

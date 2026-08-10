@@ -195,6 +195,16 @@ def _cls15(doc):
         if any(c.dep_ == "xcomp" and any(g.tag_ == "TO" for g in c.children)
                for c in t.children):
             continue
+        # copular use needs a predicative complement (attr/oprd NP or a
+        # mis-tagged adjective); possession "have got X" (dobj), motion "go
+        # to X" (prep) and bare uses are not this construct.
+        has_pred = any(c.dep_ in ("attr", "oprd") or
+                       (c.dep_ == "advmod" and c.pos_ == "ADJ")
+                       for c in t.children)
+        # inventory citation fragments ("seem/appear/... + adj.")
+        citation = t.i + 1 < len(doc) and doc[t.i + 1].text == "/"
+        if not (has_pred or citation):
+            continue
         yield (t.i, t.i)
 
 

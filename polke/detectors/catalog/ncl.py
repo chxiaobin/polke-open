@@ -231,10 +231,20 @@ _IF_WH = [
 ]
 
 
+_POLAR_GOVERNORS = {"know", "wonder", "ask", "see", "tell", "remember",
+                    "decide", "check", "care", "matter", "sure", "doubt",
+                    "find", "forget", "mind", "question", "depend"}
+
+
 def _classify_if_wh(doc, token_ids):
     c = doc[token_ids[0]]
     if any(a.dep_ == "aux" and a.tag_ == "TO" for a in c.children):
         return None                                  # whether + to -> NCL-11
+    mark = doc[token_ids[1]]
+    # 'whether' is unambiguous; an 'if'-clause is an embedded question only
+    # under an interrogative-embedding predicate — otherwise conditional
+    if mark.lemma_ == "if" and c.head.lemma_.lower() not in _POLAR_GOVERNORS:
+        return None
     return "NCL-10"
 
 
@@ -291,8 +301,23 @@ _EXTRA_SYS = (
 )
 _ING_SYS = (
     "Return NCL-12 if an -ing clause functions nominally (as subject or object) "
-    "('His leaving early surprised us' / 'I appreciate your helping')."
+    "('His leaving early surprised us' / 'I appreciate your helping'). "
+    "Catenative chains (keep/stop/start/continue + V-ing) and progressive "
+    "aspect are NOT nominal -ing clauses - return NONE."
 )
+
+
+def _ncl12_gate(sent):
+    """A VBG in a nominal slot (subject/object/prep-object) or with a
+    possessive subject; catenative xcomp -ing never qualifies."""
+    for t in sent:
+        if t.tag_ != "VBG":
+            continue
+        if t.dep_ in ("csubj", "nsubj", "nsubjpass", "attr", "dobj",
+                      "pobj", "pcomp") \
+                or any(c.dep_ == "poss" for c in t.children):
+            return True
+    return False
 
 
 def build(nlp, client=None):
@@ -334,6 +359,7 @@ def build(nlp, client=None):
     dets.append(LLMStandaloneDetector(
         "NCL-09", _EXTRA_SYS, client=client, version="ncl09-extra@0.1"))
     dets.append(LLMStandaloneDetector(
-        "NCL-12", _ING_SYS, client=client, version="ncl12-ing@0.1"))
+        "NCL-12", _ING_SYS, client=client, version="ncl12-ing@0.2",
+        gate=_ncl12_gate))
 
     return dets

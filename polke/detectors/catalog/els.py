@@ -150,7 +150,18 @@ def _short_response(doc, token_ids):
         if t.text == "?":
             return False
         break
-    return True
+    # a bare backchannel ("yeah" / "right" / "oh") is INS-05, not ellipsis:
+    # something must remain BEYOND the response word — a pronoun, operator,
+    # or substitute (Yes, I DO / ME too / so do I)
+    _RESP_WORDS = {"yes", "no", "yeah", "yep", "nope", "nah", "right", "oh",
+                   "okay", "ok", "mm", "mhm", "sure", "aye", "exactly"}
+    rest = [t for t in toks if t.lower_ not in _RESP_WORDS]
+    if not rest:
+        return False
+    return any(t.pos_ in ("PRON", "AUX") or t.tag_ == "MD"
+               or t.lemma_ in ("do", "be", "have", "too", "so", "neither",
+                               "not", "one")
+               for t in rest)
 
 
 def build(nlp, client=None):

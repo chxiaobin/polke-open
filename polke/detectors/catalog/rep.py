@@ -65,21 +65,39 @@ _STMT_SYS = (
 _QUES_SYS = (
     "A reported question (statement word order, no inversion). Choose:\n"
     "REP-05 reported yes/no question with if/whether (He asked whether I "
-    "agreed) | REP-06 reported wh-question (She asked where I lived).")
+    "agreed) | REP-06 reported wh-question (She asked where I lived).\n"
+    "A conditional if-clause is NOT a reported question: in \"I said if I "
+    "get my nails done they'll be ruined\" the if-clause states a condition, "
+    "not a question someone asked - return NONE for those.")
 _REP02_SYS = ("Return REP-02 when a reported statement keeps the original tense "
               "(no backshift) because it is still true / just said / a general "
               "truth (He said the Earth is round).")
 _REP04_SYS = ("Return REP-04 for deictic shift in reported speech (this->that, "
               "here->there, now->then, today->that day, tomorrow->the next day, "
-              "ago->before).")
+              "ago->before). The reported clause must contain a SHIFTED deictic "
+              "(that day / there / then / the next day) standing in for the "
+              "original speaker's this/here/now/today. Unshifted deictics "
+              "('just this last week'), discourse 'then', or plain time "
+              "adverbs are NONE.")
 _REP11_SYS = ("Return REP-11 for reporting with a present-tense reporting verb, "
-              "typical of news/summaries (The report says that ...).")
+              "typical of news/summaries (The report says that ...). The "
+              "reporting verb itself must be PRESENT tense (says / say / "
+              "reckons); past frames ('was told', 'said', 'was inviting') are "
+              "NONE.")
 
 _REPORT_FORM = [
     {"RIGHT_ID": "v", "RIGHT_ATTRS": {"POS": "VERB"}},
     {"LEFT_ID": "v", "REL_OP": ">", "RIGHT_ID": "c",
      "RIGHT_ATTRS": {"DEP": "ccomp"}},
 ]
+
+_PRESENT_REPORT = {"say", "tell", "claim", "reckon", "state", "report",
+                   "reveal", "confirm", "insist", "suggest"}
+
+
+def _rep11_gate(sent):
+    return any(t.lemma_.lower() in _PRESENT_REPORT
+               and t.tag_ in ("VBZ", "VBP") for t in sent)
 _ROOT_FORM = [{"RIGHT_ID": "r", "RIGHT_ATTRS": {"DEP": "ROOT"}}]
 
 
@@ -101,5 +119,5 @@ def build(nlp, client=None):
         LLMStandaloneDetector("REP-04", _REP04_SYS, client=client,
                               version="rep04-deixis@0.1"),
         LLMStandaloneDetector("REP-11", _REP11_SYS, client=client,
-                              version="rep11-present@0.1"),
+                              version="rep11-present@0.2", gate=_rep11_gate),
     ]
