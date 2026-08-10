@@ -66,6 +66,9 @@ def cmd_build(args) -> int:
     from polke.registry import constructs
     inv = constructs()
     by_cat = defaultdict(dict)
+    probe_cap = args.probe_per_construct
+    if probe_cap is None:
+        probe_cap = args.per_construct
     for cid, groups in sorted(by_construct.items()):
         c = inv.get(cid, {})
         sys_sample = rng.sample(groups["sys"],
@@ -78,8 +81,23 @@ def cmd_build(args) -> int:
             "example": c.get("example", ""),
             "n_sys": len(groups["sys"]), "n_probe": len(groups["probe"]),
             "sys": sys_sample,
-            "probe": probe_sorted[:args.per_construct],
+            "probe": probe_sorted[:probe_cap],
         }
+    if args.budget:
+        # trim to a total-judgment budget: repeatedly drop one instance from
+        # the construct currently holding the most (probe last-added first)
+        def _total():
+            return sum(len(v["sys"]) + len(v["probe"])
+                       for cats in by_cat.values() for v in cats.values())
+        while _total() > args.budget:
+            v = max((v for cs in by_cat.values() for v in cs.values()),
+                    key=lambda v: len(v["sys"]) + len(v["probe"]))
+            if len(v["probe"]) >= len(v["sys"]) and v["probe"]:
+                v["probe"].pop()
+            elif v["sys"]:
+                v["sys"].pop()
+            else:
+                break
     for cat, constructs_ in sorted(by_cat.items()):
         (out / f"{cat}.json").write_text(
             json.dumps(constructs_, ensure_ascii=False, indent=1),
@@ -127,6 +145,12 @@ def main(argv=None) -> int:
     pb.add_argument("path", help="annotations folder")
     pb.add_argument("--out", required=True)
     pb.add_argument("--per-construct", type=int, default=5)
+    pb.add_argument("--probe-per-construct", type=int, default=None,
+                    help="cap for probe candidates per construct "
+                         "(default: same as --per-construct)")
+    pb.add_argument("--budget", type=int, default=0,
+                    help="total-judgment cap; trims the largest constructs "
+                         "first (0 = no cap)")
     pb.add_argument("--seed", type=int, default=42)
     pb.set_defaults(fn=cmd_build)
     pm = sub.add_parser("merge")
