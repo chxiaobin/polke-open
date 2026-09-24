@@ -16,7 +16,7 @@ from typing import Callable, List, Optional, Sequence
 
 from . import llm as llm_mod
 from .env import llm_concurrency, load_env, segment_mode, spacy_model
-from .registry import constructs
+from .registry import cefr_level, constructs
 
 
 def _line_senter(doc):
@@ -92,6 +92,7 @@ def catalog() -> list:
             "example": c.get("example", ""),
             "detector_type": c.get("detector_type", ""),
             "needs_llm": c.get("detector_type", "") in llm_mod.LLM_TYPES,
+            "cefr_level": cefr_level(c["id"]),
             "definition": c.get("definition_raw", ""),
             "use_notes": (c.get("use_notes") or "").strip(),
         })

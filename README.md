@@ -10,6 +10,12 @@ Written English* (Biber et al. 2021) and the *Cambridge Grammar of English*
 inventory with IDs, examples, and detector tiers is listed in
 [`docs/constructions.md`](docs/constructions.md).
 
+POLKE also ships a **CEFR level verifier** (`polke level`, and the `/verify`
+web UI of `polke serve`): it levels every word of a text with the CEFR-J /
+Octanove vocabulary profiles and every detected construction with a CEFR
+level from `polke/data/cefr_levels.csv` — see
+[Level verifier](#level-verifier-vocabulary--grammar-cefr-levels).
+
 Detectors come in four tiers:
 
 | tier | mechanism | needs LLM | constructs |
@@ -171,6 +177,66 @@ be redistributed** — keep the download and everything derived from it (the
 converted texts, and annotation records, which embed the source text) out of
 version control.
 
+## Level verifier: vocabulary & grammar CEFR levels
+
+`polke level` reports, sentence by sentence, the CEFR level of the
+vocabulary and of the grammar used:
+
+```bash
+polke level essay.txt              # table: vocab level, grammar level, sentence
+polke level essay.txt -v           # + every construction and the words above A2
+polke level essay.txt --json       # the stream records, one JSON object per line
+polke level - --no-llm < essay.txt # stdin; offline tiers only
+```
+
+Every line break is a sentence boundary; longer lines are split by the
+parser. The same analysis is exposed by the server as a web UI at
+`http://localhost:8100/verify` (the root URL redirects there): paste text,
+results stream in per sentence, words are colour-coded by level with the
+matching list entry on hover, each sentence lists its constructions with
+level, tier, confidence and span (hover to highlight, click to pin), and
+filters narrow the view by vocabulary level, grammar level, detector tier,
+minimum LLM confidence and construction category. Results can be exported as
+JSON.
+
+**Vocabulary levels** come from the Open Language Profiles word lists in
+`polke/data/` — the CEFR-J Vocabulary Profile 1.5 (A1–B2, 7 799 entries)
+and the Octanove Vocabulary Profile 1.0 (C1–C2, 2 136 entries). Each token
+is looked up by spaCy lemma under the list POS labels compatible with its
+tag; an entry with another POS is used as a fallback and flagged
+(`pos_match: false`). Multi-word entries (*bus stop*, *according to*) are
+matched greedily over token sequences first. Proper nouns, numbers and
+punctuation are not levelled; other words absent from both lists are
+reported as *not in list*. A sentence's vocabulary level is the highest
+level found in it.
+
+**Grammar levels**: the inventory itself has no CEFR levels, so
+`polke/data/cefr_levels.csv` assigns one to each of the 670 constructions,
+calibrated against the Cambridge English Grammar Profile, the CEFR-J Grammar
+Profile (`polke/data/cefrj-grammar-profile-20180315.csv`), the Core
+Inventory and the GSE. These are **informed estimates, not validated data**
+— edit the CSV to recalibrate (loaded at startup; also shown in `/reference`,
+`/catalog` and `docs/constructions.md`). The vernacular (`VER`) and
+dysfluency (`DYS`) strata are not level-bearing and appear as *unrated*. A
+sentence's grammar level is the highest level among its detected
+constructions, so a single false positive can raise it — the UI and `-v`
+show which construction is responsible.
+
+Python:
+
+```python
+from polke.cefr import LevelAnalyzer
+
+an = LevelAnalyzer()                                  # or LevelAnalyzer(annotator=existing)
+for rec in an.analyze_iter("I have lived here for years.\nIt was built in 1900."):
+    if rec["type"] == "sentence":
+        print(rec["max_vocab_level"], rec["max_grammar_level"], rec["text"])
+```
+
+Word-list licences: the CEFR-J profiles are © Tono Laboratory, TUFS, free
+for research and commercial use with citation; the Octanove profile is
+CC BY-SA 4.0 — see `polke/data/README-openlanguageprofiles.md`.
+
 ## Docker
 
 ```bash
@@ -203,11 +269,20 @@ polke:
 polke serve --port 8100     # or: uvicorn polke.server:app
 ```
 
-- `GET /health` — service status + LLM readiness
-- `GET /catalog` — the 670-construct inventory (incl. definitions/use notes)
-- `GET /reference` — browsable HTML reference: search, part/category/LLM-tier
-  filters, and a stable anchor per construction (`/reference#PAS-01`)
+- `GET /health` — service status + LLM readiness + word-list sizes
+- `GET /catalog` — the 670-construct inventory (incl. definitions/use notes
+  and `cefr_level`)
+- `GET /reference` — browsable HTML reference: search, part/category/CEFR
+  level/LLM-tier filters, and a stable anchor per construction (`/reference#PAS-01`)
 - `POST /annotate` — `{"text": "...", "constructions": ["PAS", "REL-01"], "context": ["optional preceding utterances"]}`
+- `GET /verify` — the level verifier UI (`GET /` redirects here)
+- `POST /verify/analyze` — `{"text": "...", "use_llm": true, "constructions": ["PAS"]}`
+  → NDJSON stream: one `meta` record, one `sentence` record per sentence (text,
+  `vocab.tokens` with level/headword/list source, `vocab.phrases`,
+  `constructions` with level/tier/confidence/span/rationale, `max_vocab_level`,
+  `max_grammar_level`), one `done` record with totals
+- `POST /verify/analyze/json` — the same as one JSON document
+- `GET /verify/vocab?q=word` — word-list entries for one word
 
 ```bash
 curl -s localhost:8100/annotate -H 'content-type: application/json' \
@@ -234,6 +309,8 @@ spans = ann.annotate("She has lived here for years.", selection=["VTA"])
 | `POLKE_SEGMENT` | `parser`, or `line` = each input line is one sentence (utterance-per-line transcripts) | `parser` |
 | `OPENAI_BASE_URL` | point the OpenAI client at a self-hosted OpenAI-compatible server (vLLM, TGI, …) | OpenAI API |
 | `POLKE_LLM_NO_THINK` | `1` = disable reasoning mode on self-hosted reasoning models (they otherwise spend the whole token budget thinking); leave unset for the OpenAI API | unset |
+| `POLKE_SENTENCE_CONCURRENCY` | level verifier: sentences analysed in parallel when the LLM tiers are on | `3` |
+| `POLKE_MAX_SENTENCES` / `POLKE_MAX_CHARS` | level verifier: caps per request | `500` / `100000` |
 
 ### Self-hosted / open-weights models
 
@@ -275,8 +352,13 @@ polke/
   schema.py registry.py pipeline.py build.py    core: dataclasses, data, build
   detectors/          rule/lexicon/LLM detector machinery + per-category catalog
   data/               constructs.json (inventory), detectors.json (contract),
-                      lexicons.json (curated word lists)
+                      lexicons.json (curated word lists), cefr_levels.csv
+                      (CEFR level per construct), CEFR-J / Octanove
+                      vocabulary profiles
   annotate.py         high-level Annotator API
+  vocab.py cefr.py    word-list vocabulary levelling + the per-sentence
+                      level verifier (polke level, /verify)
+  static/verify/      the level verifier web UI
   viewer.py           self-contained HTML annotation viewer (polke view)
   cli.py server.py    command line and FastAPI service
 docs/                 constructions.md (full inventory reference; regenerate with

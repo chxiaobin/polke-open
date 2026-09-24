@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "polke"
-version = "0.2.0"
-description = "POLKE — span-level annotator for 670 pedagogical grammar constructions in English text"
+version = "0.3.0"
+description = "POLKE — span-level annotator for 670 pedagogical grammar constructions in English text, with a CEFR vocabulary/grammar level verifier"
 readme = "README.md"
 license = { text = "MIT" }
 authors = [{ name = "Xiaobin Chen" }]
@@ -36,7 +36,7 @@ polke = "polke.cli:main"
 include = ["polke*"]
 
 [tool.setuptools.package-data]
-polke = ["data/*.json"]
+polke = ["data/*.json", "data/*.csv", "data/*.md", "static/verify/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -11,6 +11,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 SOURCE = REPO / "polke" / "data" / "constructs.json"
+LEVELS = REPO / "polke" / "data" / "cefr_levels.csv"
 TARGET = REPO / "docs" / "constructions.md"
 
 TIER_LABELS = {
@@ -33,9 +34,21 @@ def cell(text: str) -> str:
     return re.sub(r"\s+", " ", text.strip()).replace("|", "\\|")
 
 
+def cefr_levels() -> dict:
+    """id -> CEFR level from cefr_levels.csv ("—" when unrated)."""
+    import csv
+    out = {}
+    with LEVELS.open(encoding="utf-8-sig", newline="") as fh:
+        for row in csv.DictReader(fh):
+            lv = row["level"].strip().upper()
+            out[row["id"].strip()] = lv if lv[:1] in "ABC" else "—"
+    return out
+
+
 def main() -> None:
     data = json.loads(SOURCE.read_text())
     constructs = data["constructs"]
+    levels = cefr_levels()
 
     parts: "OrderedDict[str, OrderedDict]" = OrderedDict()
     for c in constructs:
@@ -51,6 +64,13 @@ def main() -> None:
         f"(inventory schema {data['schema_version']}). This reference is generated "
         "from `polke/data/constructs.json` by `scripts/generate_constructions_doc.py` "
         "— do not edit it by hand.\n"
+    )
+    out.append(
+        "The **CEFR** column is the level assigned to each construction in "
+        "`polke/data/cefr_levels.csv` (EGP / CEFR-J-informed estimates used by "
+        "the level verifier, `polke level` and `/verify`; edit the CSV to "
+        "recalibrate). The vernacular and dysfluency strata are not "
+        "level-bearing (—).\n"
     )
     out.append(
         "Each construction has a stable ID (`CATEGORY-NN`) usable in the CLI "
@@ -81,14 +101,14 @@ def main() -> None:
         out.append(f"## {part}\n")
         for (cat, cat_name), items in cats.items():
             out.append(f"### {cat} — {cat_name}\n")
-            out.append("| ID | Family | Construction | Example | Detector |")
-            out.append("|---|---|---|---|---|")
+            out.append("| ID | CEFR | Family | Construction | Example | Detector |")
+            out.append("|---|---|---|---|---|---|")
             for c in items:
                 name = cell(c["name"])
                 if c.get("use_notes", "").strip():
                     name += f" — {cell(c['use_notes'])}"
                 out.append(
-                    f"| {c['id']} | {cell(c['family'])} | {name} "
+                    f"| {c['id']} | {levels.get(c['id'], '—')} | {cell(c['family'])} | {name} "
                     f"| {cell(c['example'])} | {TIER_LABELS[c['detector_type']]} |"
                 )
             out.append("")

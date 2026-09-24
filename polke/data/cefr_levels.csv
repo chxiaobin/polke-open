@@ -1,0 +1,671 @@
+id,level,name,note
+VTA-01,A1,General/timeless truth,EGP A1 present simple facts; Core Inventory A1
+VTA-02,A1,Permanent state,EGP A1 present simple states; Core Inventory A1
+VTA-03,A1,Habit / routine,EGP A1 habits with frequency adverbs; CEFR-J A1
+VTA-04,A2,Instructions / directions,Giving directions/instructions: Core Inventory A2 function
+VTA-05,B2,Commentary / demonstration,Sports commentary/demonstration use; EGP B2 present simple
+VTA-06,B2,Narrative / historic present,Historic/narrative present: EGP B2 storytelling
+VTA-07,B1,Performative,"Performative speech-act verbs (promise, apologise): EGP B1"
+VTA-08,B2,Headlines / captions,Headline register; EGP B2 present simple in news
+VTA-09,A2,Scheduled future,Timetable future: EGP A2; Core Inventory A2
+VTA-10,A2,Present in time/conditional clauses (future ref),Present after when/if for future: first conditional A2
+VTA-11,A1,Action in progress now,EGP A1 present continuous now; Core Inventory A1
+VTA-12,A2,Temporary situation,EGP A2 temporary situations; CEFR-J A2
+VTA-13,B1,Changing / developing situation,Developing situations with getting/changing: EGP B1
+VTA-14,B2,Repeated action + annoyance,always + continuous for annoyance: EGP B2
+VTA-15,A2,Fixed future arrangement,Present continuous for arrangements: EGP A2; Core Inventory A2
+VTA-16,B1,Background in present narrative,Continuous as narrative background: EGP B1
+VTA-17,A1,Completed single past event,EGP A1 past simple events; CEFR-J A1.3
+VTA-18,A2,Sequence of events (narrative),Sequencing past events in narrative: EGP A2
+VTA-19,A2,Past habit / repeated action,Past habits with time expressions: EGP A2
+VTA-20,A1,Past state,was/were and basic past states: EGP A1
+VTA-21,B2,Remote / polite (tentative),Tentative/polite past (I wondered if): EGP B2
+VTA-22,B1,Hypothetical/unreal past tense form,Unreal past in second conditional/wish: EGP B1
+VTA-23,A2,Action in progress at a past point,EGP A2 past continuous; CEFR-J A2.1
+VTA-24,B1,Interrupted action,Interrupted action with when: EGP B1
+VTA-25,B1,Background to past events,Background description in narrative: EGP B1
+VTA-26,B1,Parallel past actions,Parallel actions with while: EGP B1
+VTA-27,B2,Temporary past situation / repeated annoyance,always + past continuous for annoyance: EGP B2
+VTA-28,B2,Polite / tentative,I was wondering polite request: EGP B2
+VTA-29,A2,Experience (indefinite past),Experience with ever/never: EGP A2; Core Inventory A2
+VTA-30,B1,Unfinished time-span up to now,Unfinished time with for/since: EGP B1; Core Inventory B1
+VTA-31,A2,Recent event with present result,Recent events with just/already/yet: EGP A2
+VTA-32,B1,Resultative state change,Resultative present perfect: EGP B1
+VTA-33,B1,With superlative / first/last/only,Superlative/first time + present perfect: EGP B1
+VTA-34,B1,News reporting / announcement,News announcement use; EGP B1
+VTA-35,B1,Duration of activity up to now,Present perfect continuous duration: EGP B1; Core Inventory B1
+VTA-36,B2,Recent activity with present evidence. Your eyes are red,Present evidence use of continuous: EGP B2
+VTA-37,B2,Temporary / repeated recent activity,Temporary/repeated recent activity: EGP B2
+VTA-38,B2,Activity-focus vs result-focus (contrast w/ simple),Simple vs continuous contrast: EGP B2
+VTA-39,B1,Earlier past (anterior to a past point),Past perfect anteriority: EGP B1; Core Inventory B1
+VTA-40,B1,With by the time / before / after / when,Past perfect with by the time/before: EGP B1
+VTA-41,B1,Backshift in reported speech,Backshift in reported speech: EGP B1
+VTA-42,B2,In third/mixed conditionals,Third conditional: EGP B2; Core Inventory B2
+VTA-43,C1,Unfulfilled hopes/intentions,Past perfect for unfulfilled hopes: EGP C1
+VTA-44,B2,Duration up to a past point,Past perfect continuous: EGP B2; Core Inventory B2
+VTA-45,B2,Cause of a past state/result,Past perfect continuous for cause: EGP B2
+VTA-46,A2,Stative verbs resisting the progressive,Stative verbs avoiding continuous: EGP A2
+VTA-47,B1,Perception verbs: see/hear vs look/listen/watch,see/hear vs look/listen contrast: B1
+VTA-48,C1,Coercion of statives into progressive,Progressive statives (I'm loving it): EGP C1
+VTA-49,B1,Sequence of tenses in subordinate clauses,Tense agreement in reported clauses: EGP B1
+FUT-01,A2,Prediction / future fact,will for predictions: EGP A2; Core Inventory A2
+FUT-02,A2,Spontaneous decision (at moment of speaking),Spontaneous decisions: EGP A2
+FUT-03,A2,Offer,Offers with I'll: EGP A2
+FUT-04,A2,Promise / threat,Promises with will: EGP A2
+FUT-05,B1,Willingness / refusal (won't),won't for refusal: EGP B1
+FUT-06,B1,Request (Will you,Will you requests: EGP B1
+FUT-07,B2,Habitual/characteristic will,Characteristic/habitual will: EGP B2
+FUT-08,A2,Prior intention/plan,going to plans: EGP A2; Core Inventory A2
+FUT-09,A2,Prediction from present evidence. Look out,going to from evidence: EGP A2
+FUT-10,B1,was/were going to (unfulfilled intention),was going to unfulfilled: EGP B1
+FUT-11,A2,Present continuous for arrangement,Present continuous arrangements: EGP A2
+FUT-12,A2,Present simple for timetable,Present simple timetables: EGP A2
+FUT-13,A2,Present simple after time/conditional conjunctions,Present after when/if: first conditional A2
+FUT-14,B2,Future continuous (in progress at future point),Future continuous: EGP B2; CEFR-J B2
+FUT-15,C1,Future continuous (future as a matter of course / polite),Future continuous polite/matter of course: EGP C1
+FUT-16,B2,Future perfect simple,Future perfect: EGP B2; Core Inventory B2
+FUT-17,C1,Future perfect continuous,Future perfect continuous: EGP C1
+FUT-18,C1,be to (formal arrangement/instruction),be to formal future: EGP C1
+FUT-19,B1,be about to (imminence),be about to: EGP B1
+FUT-20,B2,be due to / be set to / be on the point of / be on the verge of,be due to/set to/on the verge of: B2
+FUT-21,B2,Future in the past (would / was to / was about to),Future in the past: EGP B2
+MOD-01,A1,can,can ability: EGP A1; Core Inventory A1
+MOD-02,A2,could,could past ability: EGP A2
+MOD-03,B1,was/were able to / managed to,was able to/managed to: EGP B1
+MOD-04,B1,be able to,be able to other tenses: EGP B1; CEFR-J B1.1
+MOD-05,B2,could have,could have + pp: EGP B2
+MOD-06,A1,can,can for permission: EGP A1
+MOD-07,A2,could / may / might,could/may for permission: EGP A2 (may B1)
+MOD-08,B1,be allowed to / be permitted to,be allowed to: EGP B1
+MOD-09,A2,Requests: can/could/will/would you,Requests can/could you: EGP A2
+MOD-10,A2,Offers/suggestions: shall I/we; why don't we; how about; let's,Shall I/let's suggestions: EGP A2
+MOD-11,B1,may / might / could,may/might possibility: EGP B1; Core Inventory B1
+MOD-12,B2,may / might / could have,may/might have + pp: EGP B2
+MOD-13,B1,can,can for general possibility: EGP B1
+MOD-14,B1,could / might,could/might for suggestions: EGP B1
+MOD-15,A2,must,must obligation: EGP A2; Core Inventory A2
+MOD-16,A2,have to / have got to,have to: EGP A2; CEFR-J A2.2
+MOD-17,A2,need to,need to: CEFR-J A2; EGP B1
+MOD-18,B2,be supposed to / be meant to,be supposed to: EGP B2
+MOD-19,C1,be required to / be obliged to,be required/obliged to formal: C1
+MOD-20,C2,shall,Legal/regulatory shall: C2
+MOD-21,A2,don't have to / needn't / don't need to,don't have to: EGP A2
+MOD-22,C1,needn't have + pp,needn't have + pp: EGP C1
+MOD-23,B2,didn't need to,didn't need to contrast: B2
+MOD-24,A2,mustn't / can't / not allowed to / may not,mustn't/can't prohibition: EGP A2
+MOD-25,A2,should / ought to,should for advice: EGP A2; Core Inventory A2
+MOD-26,B1,had better,had better: EGP B1
+MOD-27,B2,should/ought to/could/might have + pp,should have + pp: EGP B2
+MOD-28,A2,why don't you / why not / it might be a good idea to,Why don't you/why not: EGP A2
+MOD-29,B1,must,must deduction: EGP B1
+MOD-30,B1,can't / couldn't,can't deduction: EGP B1
+MOD-31,B2,must have / can't have + pp,must/can't have + pp: EGP B2
+MOD-32,B2,should / ought to,should for expectation: EGP B2
+MOD-33,C1,will / would,will/would for assumption: EGP C1
+MOD-34,B2,will / won't,won't for inanimate refusal: EGP B2
+MOD-35,B1,would,would for past habits: EGP B1
+MOD-36,C1,will,will for general truths: EGP C1
+MOD-37,B1,would rather / would sooner / would prefer,would rather/prefer: EGP B1
+MOD-38,B2,be bound to / be sure to,be bound to/sure to: B2
+MOD-39,B1,be likely to / be unlikely to (+ extraposed it is likely that),be likely to: EGP B1
+MOD-40,C1,dare (modal & blend uses),dare as modal: EGP C1
+PAS-01,A2,Present simple passive,Present simple passive: EGP A2
+PAS-02,A2,Past simple passive,Past simple passive: EGP A2; CEFR-J A2.1
+PAS-03,B1,Present continuous passive,Present continuous passive: EGP B1
+PAS-04,B2,Past continuous passive,Past continuous passive: EGP B2
+PAS-05,B1,Present perfect passive,Present perfect passive: EGP B1
+PAS-06,B2,Past perfect passive,Past perfect passive: EGP B2
+PAS-07,B1,Future / going to passive,will/going to passive: EGP B1
+PAS-08,B1,Modal passive,Modal passive: EGP B1
+PAS-09,B2,Perfect modal passive,Perfect modal passive: EGP B2
+PAS-10,B2,Infinitive/-ing passive,Passive infinitive/-ing: EGP B2
+PAS-11,B1,by-agent phrase,by-agent: EGP B1; Core Inventory B1
+PAS-12,B1,with-instrument / of-material,with-instrument/of-material: B1
+PAS-13,B2,Ditransitive passive (two patterns),Ditransitive passive: EGP B2; CEFR-J B2.1
+PAS-14,B2,Passive of phrasal/prepositional verbs,Passive of phrasal verbs: B2
+PAS-15,B2,Get-passive (dynamic/adversative/fortuitous),get-passive: EGP B2
+PAS-16,B2,Passive of reporting verbs (It is said that,It is said that impersonal: EGP B2
+PAS-17,C1,Subject-raised reporting passive (S is said to,S is said to raised passive: EGP C1
+PAS-18,B2,have/get something done (causative),have something done: EGP B2; CEFR-J B2.2
+PAS-19,C1,Adversative causative,Adversative had his car stolen: C1
+PAS-20,B2,need / want / require + -ing (passive meaning),need + -ing passive meaning: B2
+NFV-01,A2,Purpose (to / in order to / so as to),to-infinitive of purpose: EGP A2
+NFV-02,B2,Negative purpose (in order not to / so as not to),in order not to/so as not to: EGP B2
+NFV-03,A1,After certain verbs (subject-control),want/would like + to: EGP A1
+NFV-04,A2,After adjectives,Adjective + to-infinitive: EGP A2
+NFV-05,B1,After nouns,Noun + to-infinitive: EGP B1
+NFV-06,B1,After too / enough,too/enough + to: EGP B1
+NFV-07,B1,After wh-words,wh-word + to-infinitive: EGP B1; CEFR-J B1.1
+NFV-08,C1,Infinitive of result/outcome,Infinitive of result (only to): C1
+NFV-09,A1,After modals,Bare infinitive after modals: A1
+NFV-10,A2,After let / make (+ object),let/make + object + bare: EGP A2
+NFV-11,B1,After perception verbs (completed action),Perception verb + bare infinitive: B1
+NFV-12,B1,After had better / would rather / why (not),had better/would rather + bare: B1
+NFV-13,C1,After rather than / sooner than / but / except,rather than/but/except + bare: C1
+NFV-14,B1,help (+ to) + infinitive,help (to) + infinitive: B1
+NFV-15,A2,Gerund as subject,Gerund as subject: EGP A2
+NFV-16,A1,Gerund as object of verb,like/enjoy + -ing: EGP A1
+NFV-17,A2,Gerund after preposition,Preposition + -ing: EGP A2; CEFR-J A1.3
+NFV-18,C1,Gerund after possessive/genitive,Possessive + gerund: EGP C1
+NFV-19,B2,Gerund as complement of be,Gerund as be-complement: B2
+NFV-20,B2,Gerund in fixed expressions,it's no use/worth + -ing: EGP B2
+NFV-21,A2,Verb selects infinitive (no choice),Verbs taking to-infinitive: EGP A2
+NFV-22,B1,Verb selects -ing (no choice),Verbs taking -ing: EGP B1
+NFV-23,B1,"Both, little change",begin/like + to or -ing: B1
+NFV-24,B2,"Both, meaning change",stop/remember/try meaning change: EGP B2
+NFV-25,B2,like + inf vs -ing nuance,like to vs like -ing nuance: B2
+NFV-26,B2,Perfect infinitive/gerund,Perfect infinitive/gerund: EGP C1
+NFV-27,B2,Passive infinitive/gerund,Passive infinitive/gerund: EGP B2
+NFV-28,B2,Present participle clause (simultaneous/active),Present participle clause: EGP B2
+NFV-29,B2,Past participle clause (passive),Past participle clause: EGP B2
+NFV-30,C1,Perfect participle clause (anterior),Perfect participle clause: EGP C1
+NFV-31,A2,would like/love/hate/prefer + to-infinitive (specific occasion / polite) vs -ing (general),would like to + specific occasion: EGP A2
+VCP-01,A1,V (pure intransitive),Pure intransitive: A1
+VCP-02,A1,V + obligatory adverbial (place/direction/measure/duration),Verb + place/duration adverbial: A1
+VCP-03,A2,V + subject predicative,seem/look + adjective: EGP A2
+VCP-04,A2,V + subject predicative,become + NP; go + adjective: A2
+VCP-05,B1,Ergative / inchoative alternation (same verb intr/tr),Ergative alternation: B1
+VCP-06,C1,"Middle voice (patient-subject, generic)",Middle construction: C1
+VCP-07,B1,Reciprocal intransitive (plural/conjoined subject),Reciprocal intransitive: B1
+VCP-08,A1,V + NP (object),Basic SVO: EGP A1
+VCP-09,A2,V + reflexive pronoun,Reflexive object: EGP A2
+VCP-10,B1,V + reciprocal object,each other/one another object: EGP B1
+VCP-11,A2,V + that-clause,Verb + that-clause: EGP A2
+VCP-12,C1,V + (that) + mandative subjunctive,Mandative subjunctive: EGP C1
+VCP-13,B1,V + wh-clause,Verb + wh-clause: EGP B1
+VCP-14,B1,V + wh + to-infinitive,Verb + wh + to-infinitive: EGP B1
+VCP-15,A2,V + to-infinitive (subject control),Verb + to-infinitive: EGP A2
+VCP-16,A2,V + -ing,Verb + -ing: EGP A2
+VCP-17,B1,"V + to-inf OR -ing, ~no change",start to/-ing no change: B1
+VCP-18,B2,"V + to-inf vs -ing, meaning change",stop to/-ing meaning change: EGP B2
+VCP-19,A2,V + prep + NP (prepositional verb),Prepositional verbs depend on: EGP A2
+VCP-20,B1,V + prep + -ing,Verb + preposition + -ing: B1
+VCP-21,A2,V + IO + DO (double object),Double object give him a book: EGP A2
+VCP-22,A2,V + DO + to-NP (dative shift),Dative to-NP: EGP A2
+VCP-23,B1,V + DO + for-NP (benefactive),Benefactive for-NP: B1
+VCP-24,B1,V + IO + that-clause,Verb + IO + that-clause: B1
+VCP-25,B1,V + IO + wh-clause,Verb + IO + wh-clause: B1
+VCP-26,B1,V + O + adjective (object predicative),Object + adjective (make it clean): EGP B1
+VCP-27,B2,V + O + NP (object predicative),Object + NP predicative: B2
+VCP-28,B2,V + O + as-phrase,regard as: B2
+VCP-29,B1,V + O + to-infinitive (object control / ECM),want/ask + object + to-inf: EGP B1
+VCP-30,B1,V + O + bare infinitive (causative),make/let + object + bare: EGP B1
+VCP-31,B1,"V + O + bare infinitive (perception, completed)",see/hear + object + bare: B1
+VCP-32,B2,"V + O + -ing (perception/continuation, ongoing)",catch/keep + object + -ing: EGP B2
+VCP-33,B2,V + O + past participle,have/want + object + pp: EGP B2
+VCP-34,B2,V + O + prep + NP,accuse of/blame for pattern: B2
+VCP-35,B2,V + anticipatory it + complement,find it hard to: EGP B2
+VCP-36,C1,Existential/presentational verbs (there + V),there + presentational verb: C1
+VCP-37,A2,Light/delexical verb + NP,have a look/take a photo: A2
+VCP-38,B1,Verb idiom / fixed VP,take place/make sense idioms: B1
+VCP-39,C2,Cognate-object construction,"Cognate object, literary: C2"
+VCP-40,C1,Catenative chains (stacked non-finites),Stacked catenatives: C1
+VCP-41,B2,V + for + NP + to-infinitive,arrange for sb to: B2
+PHV-01,A2,Intransitive phrasal verb,Intransitive phrasal verbs: EGP A2
+PHV-02,A2,Transitive separable phrasal verb,Separable phrasal verbs: EGP A2
+PHV-03,B1,Obligatory separation with pronoun object,Pronoun between verb and particle: EGP B1
+PHV-04,A2,"Prepositional verb (inseparable, transitive)",Prepositional verbs look after: A2
+PHV-05,B1,Phrasal-prepositional verb (three-part),Three-part phrasal verbs: EGP B1
+PHV-06,B2,Literal vs idiomatic meaning,Idiomatic vs literal meanings: B2
+PHV-07,C1,"Aspectual particles (up completive, on/away continuative, out thoroughness)",Aspectual particle meanings: C1
+VSP-01,B1,used to + base (discontinued habit/state),used to: EGP B1; CEFR-J B1.1
+VSP-02,B1,used to negatives/questions,didn't use to/did you use to: B1
+VSP-03,B2,be/get used to + -ing/NP (familiarity),be/get used to + -ing: EGP B2
+VSP-04,B2,would rather/sooner/prefer (preference + tense rules),would rather + past tense: B2
+VSP-05,C1,Mandative subjunctive,Mandative subjunctive: EGP C1
+VSP-06,C2,Formulaic subjunctive,"Formulaic subjunctive, fixed: C2"
+VSP-07,B1,were-subjunctive,If I were you: EGP B1
+VSP-08,B1,wish/if only + past (present regret),wish + past: EGP B1
+VSP-09,B2,wish/if only + past perfect (past regret),wish + past perfect: EGP B2
+VSP-10,B2,wish + would (annoyance / desired change),wish + would: EGP B2
+VSP-11,B1,wish + could,wish + could: B1
+VSP-12,B2,It's (high) time + past,It's time + past: EGP B2
+VSP-13,A1,"have / have got (possession, states, relationships)",have/have got possession: EGP A1
+NOU-01,A1,Countable nouns (sg/pl),Countable singular/plural: A1
+NOU-02,A2,Uncountable nouns,Uncountable nouns: EGP A2
+NOU-03,B2,Nouns both count & uncount (meaning shift),Count/uncount meaning shift: B2
+NOU-04,A2,Pluralia tantum (only plural),Pluralia tantum: A2
+NOU-05,B1,Uncount nouns looking plural / singular agreement,news/mathematics singular agreement: B1
+NOU-06,B1,Partitives for uncount,Partitives piece of: EGP B1
+NOU-07,B1,Quantifying coercion,two coffees coercion: B1
+NOU-08,A1,Regular plurals (-s/-es/-y→-ies/-f→-ves),Regular plurals: EGP A1
+NOU-09,A1,Irregular plurals,Irregular plurals: EGP A1
+NOU-10,A2,Zero/invariant plurals,Zero plurals: A2
+NOU-11,C1,Foreign/Latinate plurals,Latinate plurals: C1
+NOU-12,C1,Compound-noun plurals,Compound plurals: C1
+NOU-13,A1,Possessive 's (singular),Possessive 's: EGP A1
+NOU-14,A2,Possessive s' (regular plural),Plural s': EGP A2
+NOU-15,A2,Irregular-plural possessive ('s),children's: A2
+NOU-16,A2,Of-genitive,of-genitive: A2
+NOU-17,B1,Double genitive,a friend of mine: EGP B1
+NOU-18,B2,Group genitive,Group genitive: B2
+NOU-19,B2,Time/measure genitive,two weeks' notice: B2
+NOU-20,B2,Local/elliptical genitive,at the baker's: B2
+NOU-21,A2,Noun + noun (compound),Noun compounds: EGP A2
+NOU-22,B1,Singular modifying noun,a three-hour meeting: B1
+NOU-23,B2,Collective nouns & agreement,Collective noun agreement: B2
+NOU-24,B1,Nationality/group nouns,the French group nouns: B1
+NOU-25,B2,Appositive noun phrase,Apposition: B2
+NOU-26,C1,Plural noun as premodifier,Plural premodifier: C1
+ART-01,A1,First mention / non-specific,a/an first mention: EGP A1
+ART-02,A1,Classifying (occupation/category),She's a teacher: EGP A1
+ART-03,A2,Per / rates,twice a day: EGP A2
+ART-04,A2,In exclamations,What a day: EGP A2
+ART-05,A1,a/an by sound,a/an by sound: A1
+ART-06,A1,Anaphoric (second mention),the second mention: EGP A1
+ART-07,A2,Cataphoric (post-modified),the + postmodifier: A2
+ART-08,A2,Situational / shared knowledge,Situational the: A2
+ART-09,A2,Unique referents,the sun/the government: EGP A2
+ART-10,A2,With superlative / ordinal / only/same/very,the + superlative/ordinal: EGP A2
+ART-11,B2,Generic the + singular (class),Generic the + singular: EGP B2
+ART-12,A1,the + musical instrument / invention,play the piano: EGP A1
+ART-13,B1,the + adjective/nationality (group),the rich/the unemployed: EGP B1
+ART-14,B1,the + decade/period,the 1990s: B1
+ART-15,A1,Generic plural/uncount,Zero generic plurals: EGP A1
+ART-16,A1,"Meals, transport, times",have lunch/by car/at night: A1
+ART-17,B1,Institutions (purpose sense),in hospital/at school purpose: B1
+ART-18,A1,Languages/subjects/sports/games,speak French/play tennis: A1
+ART-19,B1,After kind/sort/type of,kind of person: B1
+ART-20,A2,Countries: Ø vs the (unions/plurals),the USA/the Netherlands: A2
+ART-21,B1,Geography: the (rivers/seas/oceans/ranges/deserts) vs Ø (single mountains/lakes),the Thames/Lake Geneva: B1
+ART-22,B2,Institutions/buildings/media,the BBC/Oxford University: B2
+ART-23,B2,Fixed/idiomatic contrasts,in hospital vs in the hospital: B2
+ART-24,B1,most contrasts,most/the most/most of: B1
+DET-01,A1,Demonstratives (proximal/distal),this/that/these/those: EGP A1
+DET-02,B1,Demonstratives (temporal/textual/emotive),Textual/emotive demonstratives: B1
+DET-03,A1,Possessive determiners,Possessive determiners: EGP A1
+DET-04,A2,its vs it's (orthographic),its vs it's: A2
+DET-05,A1,"some (assertive, indefinite quantity)",some quantity: EGP A1
+DET-06,A2,some in offers/requests,some in offers: EGP A2
+DET-07,B1,some = certain/particular,some = certain: B1
+DET-08,A1,any (non-assertive: neg/question/conditional),any in negatives/questions: EGP A1
+DET-09,B1,any = no-matter-which / every,any = whichever: EGP B1
+DET-10,B2,any + comparative,any + comparative: B2
+DET-11,A1,much / many,much/many: EGP A1
+DET-12,A1,a lot of / lots of / plenty of,a lot of/lots of: EGP A1
+DET-13,B2,a great deal of / a large number of / a good many,a great deal of: B2
+DET-14,A2,(a) few / (a) little (count/uncount; +/− nuance),a few/a little: EGP A2
+DET-15,B1,fewer / less / least / fewest (+ prescriptive fewer/less),fewer/less: EGP B1
+DET-16,A2,too much/many; so much/many; as much/many,too much/many: EGP A2
+DET-17,A2,all / whole,all/whole: A2
+DET-18,A2,both (of),both (of): EGP A2
+DET-19,A2,each / every (+ singular agreement; each vs every),each/every: EGP A2
+DET-20,B1,either / neither (of),either/neither: EGP B1
+DET-21,A2,half (of),half (of): A2
+DET-22,A2,no (+ sg/pl/uncount),no + noun: EGP A2
+DET-23,B1,Predeterminers (all/both/half + det; such (a); what (a); rather/quite a; many a),such a/half the predeterminers: B1
+DET-24,B1,enough; several; various; certain; numerous,enough/several/various: B1
+DET-25,A2,"Numbers, fractions, multipliers",Numbers A1; fractions/multipliers B1: A2
+DET-26,B1,Distributive per / apiece / each,per/apiece/each: B1
+DET-27,A2,another / other(s) / the other(s),another/the other: EGP A2
+DET-28,B1,Possessive + own (emphatic ownership),my own: EGP B1
+PRO-01,A1,Personal subject/object,Subject/object pronouns: EGP A1
+PRO-02,B1,Generic/impersonal you / they / one / we,Generic you/they: EGP B1
+PRO-03,A1,Dummy it (weather/time/distance),It's raining: A1
+PRO-04,B1,Anticipatory it (extraposition),Anticipatory it: EGP B1
+PRO-05,A2,Possessive pronouns,mine/yours: EGP A2
+PRO-06,A2,Reflexive (true reflexive),Reflexives: EGP A2
+PRO-07,B1,Emphatic reflexive / by oneself,Emphatic myself/by himself: EGP B1
+PRO-08,B1,Reciprocal,each other: EGP B1
+PRO-09,A1,Indefinite compounds (some-/any-/no-/every- + -one/-body/-thing/-where),something/anybody: EGP A1
+PRO-10,B1,Indefinite + adjective / to-inf,something nice/to do: EGP B1
+PRO-11,B2,Singular they,Singular they: B2
+PRO-12,A2,one / ones substitution,one/ones: EGP A2
+PRO-13,C1,Generic/formal one,Generic one: C1
+PRO-14,A1,Demonstrative pronouns (standalone),This is mine: A1
+PRO-15,A2,Quantifying pronouns (of them),all of them/none of us: A2
+ADJ-01,A1,Attributive position,Attributive: A1
+ADJ-02,A1,Predicative position,Predicative: A1
+ADJ-03,B2,Attributive-only adjectives,main/former/sheer: B2
+ADJ-04,B1,"Predicative-only (a-adjectives, health)",asleep/afraid/alive: B1
+ADJ-05,B2,Postpositive adjectives,Postpositive: B2
+ADJ-06,B1,Adjective order (opinion–size–age–shape–colour–origin–material–purpose),Adjective order: EGP B1
+ADJ-07,B2,Coordinate vs cumulative adjectives (commas),Coordinate commas: B2
+ADJ-08,A1,Gradable adjectives + very/quite/rather,very + adjective: A1
+ADJ-09,B2,Non-gradable/absolute + absolutely/completely,absolutely + ungradable: EGP B2
+ADJ-10,B1,Classifying adjectives (non-gradable),Classifying adjectives: B1
+ADJ-11,A2,-ing participial adjective (source),-ing adjectives: EGP A2
+ADJ-12,A2,-ed participial adjective (experiencer),-ed adjectives: EGP A2
+ADJ-13,B1,Compound adjectives,Compound adjectives: B1
+ADJ-14,B1,Adjectives as nouns,the poor: EGP B1
+ADJ-15,A2,Comparative/superlative of adjectives,Comparatives/superlatives: EGP A2
+ADJ-16,A2,Adjective + to-infinitive,Adjective + to-infinitive: EGP A2
+ADJ-17,B2,Tough-movement,Tough-movement: B2
+ADJ-18,B1,Adjective + that-clause,Adjective + that-clause: EGP B1
+ADJ-19,A2,Adjective + preposition (+ -ing/NP),good at/interested in: EGP A2
+ADJ-20,B1,too/enough/so,too/enough/so that: EGP B1
+ADJ-21,B1,Adjective + for + NP + to-infinitive (incl. extraposed),for + NP + to-inf: EGP B1
+ADV-01,A1,Regular adverb (adj + -ly),-ly adverbs: EGP A1
+ADV-02,A2,Irregular adverb,well/fast/hard: A2
+ADV-03,A2,Same form as adjective,Flat adverbs: A2
+ADV-04,B2,Two adverb forms with meaning difference,"hard/hardly, late/lately: B2"
+ADV-05,A2,Adverbs of manner,Manner adverbs: EGP A2
+ADV-06,A1,Adverbs of place/direction,here/there/upstairs: A1
+ADV-07,A1,Adverbs of definite time,now/today/yesterday: A1
+ADV-08,A1,Adverbs of indefinite frequency,always/sometimes/never: EGP A1
+ADV-09,A2,Adverbs of definite frequency,daily/twice a week: A2
+ADV-10,A2,Degree adverbs,Degree adverbs: A2
+ADV-11,A2,Focusing adverbs,only/also/even: A2
+ADV-12,C1,Viewpoint/domain adverbs,Viewpoint adverbs: C1
+ADV-13,B1,Comment/stance adverbs (disjuncts),Stance adverbs: EGP B1; CEFR-J B1.2
+ADV-14,B1,Linking adverbs (conjuncts),however/therefore: EGP B1
+ADV-15,B1,Front/initial position,Fronted adverb: B1
+ADV-16,A2,Mid-position (after operator / before main verb),Mid-position: A2
+ADV-17,A1,End position,End position: A1
+ADV-18,B1,Order of manner–place–time,Manner-place-time order: B1
+ADV-19,C1,Scope of focusing adverbs (only/even),Scope of only/even: C1
+ADV-20,A2,Frequency adverbs with imperative,Always + imperative: A2
+ADV-21,A2,ever in questions/negatives,ever in questions: EGP A2
+ADV-22,B1,Modifying comparatives (much/far/a lot/a bit/slightly/even/no/any + comp),much/far + comparative: EGP B1
+ADV-23,B1,Modifying verbs (completely/totally/strongly agree),totally agree: B1
+ADV-24,A1,very/really/so + adjective/adverb,very/really/so: A1
+ADV-25,B1,quite/rather/fairly/pretty (downtoners; quite ambiguity),quite/rather/fairly: EGP B1
+ADV-26,B1,too / enough (+ for + to-inf),too/enough + to: EGP B1
+ADV-27,B1,Comparative/superlative adverbs,more quickly/fastest: B1
+ADV-28,B1,as,as quickly as: B1
+ADV-29,A2,Phase adverbs,still/already/yet: EGP A2
+COM-01,A2,Inflectional comparative (-er),-er comparatives: EGP A2
+COM-02,A2,Periphrastic comparative (more),more + adjective: EGP A2
+COM-03,B2,Two-syllable variation,cleverer/more clever variation: B2
+COM-04,A2,Irregular comparison,better/worse: EGP A2
+COM-05,A2,Inflectional superlative (-est),-est: EGP A2
+COM-06,A2,Periphrastic superlative (most),the most: EGP A2
+COM-07,B1,Superlative + restriction (in/of/ever + perfect),superlative + ever/in: EGP B1
+COM-08,B1,Than-clause (case + ellipsis),than me/than I am ellipsis: B1
+COM-09,B1,Equative as,as...as: EGP B1
+COM-10,B1,Negative equative,not as...as: EGP B1
+COM-11,B2,Multiples / scaled equative,twice as long: B2
+COM-12,B1,Modified comparative,much/far/a bit + comparative: EGP B1
+COM-13,B2,Proportional (the + comp,the more the better: EGP B2
+COM-14,B1,Incremental (comp and comp / more and more),more and more: EGP B1
+COM-15,B1,Decreasing comparison (less/least; fewer),less/least/fewer: B1
+COM-16,B1,like / unlike / as,like/unlike/as: B1
+COM-17,A2,the same as / similar to / different from(-to/-than),the same as/different from: A2
+COM-18,B1,so/such,so/such that: EGP B1
+PREP-01,A1,in / on / at (enclosure / surface / point),in/on/at place: EGP A1
+PREP-02,A1,Spatial relations,next to/behind/between: A1
+PREP-03,A2,"inside/outside, against, around, along, beyond",inside/against/along: A2
+PREP-04,A1,at / on / in (point / day / period),at/on/in time: EGP A1
+PREP-05,A2,for / since (duration / starting point),for/since: EGP A2
+PREP-06,B1,during / throughout / over / within,during/throughout/within: B1
+PREP-07,B1,by / until(till) (deadline / up to),by vs until: B1
+PREP-08,A2,from,from...to/ago/in an hour: A2
+PREP-09,A2,to / into / onto / out of / off / from,into/onto/out of: A2
+PREP-10,B1,towards / away from / up / down / across / through / along / past / over / under / via,towards/across/through/via: B1
+PREP-11,A2,of (possession/partitive/material/about),of possession/material: A2
+PREP-12,A2,with / without (accompaniment/instrument/manner),with/without: A2
+PREP-13,A2,by (agent/means/measure),by means/agent: A2
+PREP-14,A1,for (purpose/recipient/duration/exchange),for purpose/recipient: A1
+PREP-15,A2,about / on (topic),about/on topic: A2
+PREP-16,B1,as (role/function),as role: B1
+PREP-17,B1,Complex prepositions (concession/cause/exception),despite/because of/instead of: EGP B1
+PREP-18,A2,Verb + preposition,Verb + preposition: EGP A2
+PREP-19,A2,Adjective + preposition,Adjective + preposition: EGP A2
+PREP-20,B1,Noun + preposition,Noun + preposition: B1
+PREP-21,B1,Preposition + -ing (incl,look forward to + -ing: EGP B1
+PREP-22,B1,Preposition stranding,Preposition stranding: EGP A2/B2
+PREP-23,C1,Pied-piping (fronted preposition),Pied-piping to whom: EGP C1
+PREP-24,B1,Preposition omission,Preposition omission: B1
+PREP-25,B1,Prepositional phrase as postmodifier/complement/adjunct,PP postmodifier: B1
+CLS-01,A1,SV (intransitive),Basic SV pattern; EGP A1; CEFR-J A1.1
+CLS-02,A1,SVC (subject complement),be + noun/adj; EGP A1; CEFR-J A1.1
+CLS-03,A1,SVO (monotransitive),Basic SVO; EGP A1; Core Inventory A1
+CLS-04,A2,SVOO (ditransitive),give sb sth; EGP A2 two-object verbs
+CLS-05,B1,SVOC (object complement),name/make/call + obj + complement; EGP B1
+CLS-06,A1,SVA / SVOA (obligatory adverbial),live in / put on; EGP A1-A2 place adverbials
+CLS-07,A1,Canonical SVO word order (baseline),Baseline word order; Core Inventory A1
+CLS-08,A1,Basic subject–verb agreement (3sg -s),Present simple 3sg -s; EGP A1; CEFR-J A1.1
+CLS-09,A2,Coordinate-subject agreement (and = pl; or/nor = proximity),and-subjects plural A2; or/nor proximity later
+CLS-10,B2,Quantifier-headed agreement,a number of / none / each; EGP B2
+CLS-11,B2,Measure/amount as singular,Amount as singular subject; EGP B2
+CLS-12,C1,"Notional agreement (what-clauses, collectives)",Notional/collective agreement; EGP C1
+CLS-13,A1,Existential there is/are,there is/are; EGP A1; CEFR-J A1.1
+CLS-14,B1,Existential + modal/perfect/seem,there might be / seems to be; EGP B1-B2
+CLS-15,A2,Copular verbs (change & perception),become/get/look/feel + adj; EGP A2
+CLS-16,B1,Copular + adj vs adverb confusion,adj after copular verbs; EGP B1
+CLS-17,B1,seem/appear + to-infinitive,seem/appear + to-inf; EGP B1
+QUE-01,A1,Yes/no questions (operator: be/have/modal),be/have/modal yes-no questions; EGP A1
+QUE-02,A1,Yes/no with do-support,do/does/did questions; EGP A1
+QUE-03,A1,Short answers,Yes I do / No she hasn't; EGP A1
+QUE-04,A1,Object wh-questions,What/who object questions; EGP A1; CEFR-J A1.1
+QUE-05,A1,Adjunct wh-questions,where/when/why/how questions; EGP A1
+QUE-06,A1,how + adj/adv/much/many/long/often/far,How old/much/many; EGP A1; how long A2
+QUE-07,A2,Subject wh-questions (no inversion),Subject questions without inversion; EGP A2
+QUE-08,A2,which/what/whose + noun,which/what/whose + noun; EGP A2
+QUE-09,B1,Preposition placement in questions,Stranded preposition B1; For whom C1
+QUE-10,A2,What,What's X like?; EGP A2
+QUE-11,B1,Question tags (reversed polarity),Reversed-polarity tags; EGP B1; Core Inventory B1
+QUE-12,B2,Same-polarity / special tags,aren't I / will you / same-polarity; EGP B2-C1
+QUE-13,C1,Tags after negative/indefinite words,Tags with nothing/everyone; EGP C1
+QUE-14,B1,Negative questions,Negative questions; EGP B1
+QUE-15,B1,Indirect/embedded questions (no inversion; if/whether),Embedded questions if/whether; EGP B1; CEFR-J B1.1
+QUE-16,A2,how come / what if / what about / how about (+ -ing),What about/how about + -ing A2; how come B2
+QUE-17,B2,Alternative & echo & rhetorical questions,Alternative A2 but echo/rhetorical B2
+NEG-01,A1,Verb negation (not/n't + operator),don't/isn't/haven't; EGP A1
+NEG-02,A1,Contractions,Negative contractions; EGP A1
+NEG-03,A2,Non-assertive items in negative scope,any/anyone/yet/either in negatives; EGP A2
+NEG-04,A2,Negative determiners/pronouns,no/nobody/nothing; EGP A2
+NEG-05,B1,no vs not a/not any,no vs not any contrast; EGP B1
+NEG-06,B1,Semi-negative adverbs,hardly ever/rarely B1; seldom/scarcely B2
+NEG-07,B1,no longer / not,no longer / not any more; EGP B1
+NEG-08,A2,Transferred/raised negation,I don't think; EGP A2
+NEG-09,B1,Negative + either / neither / nor (echoing),Neither do I / I don't either; EGP B1
+NEG-10,B2,Constituent (local) negation,not surprisingly / not a sound; EGP B2
+NEG-11,C1,Scope ambiguity (partial vs total),Scope ambiguity awareness; C1
+NEG-12,B2,Litotes / understatement,Litotes as rhetorical understatement; B2
+NEG-13,C1,Negative fronting → inversion,Never have I / No sooner; EGP C1
+NEG-14,C1,Independent double negation,can't not / not that I don't; C1
+IMP-01,A1,Base-form imperative,Base imperative; EGP A1; CEFR-J A1.1
+IMP-02,A1,Negative imperative (don't / do not),Don't + verb; EGP A1
+IMP-03,B2,Emphatic / persuasive do,Emphatic do + imperative; EGP B2
+IMP-04,B2,Subject pronoun for emphasis/contrast,You sit here / Somebody call; EGP B2
+IMP-05,A2,always / never + imperative,Always/never + imperative; EGP A2
+IMP-06,A1,let's (suggestion) + negatives,Let's A1; Let's not B1
+IMP-07,A2,let me / let + object (3rd-person directive),Let me help A2; Let them wait B2
+IMP-08,B2,Imperative + and/or (conditional),Imperative + and/or as condition; EGP B2
+IMP-09,A1,Softened imperative,Please + imperative; EGP A1
+COORD-01,A1,and (addition / sequence / result / condition),and; EGP A1; Core Inventory A1
+COORD-02,A1,but / yet (contrast),but A1; yet B2
+COORD-03,A1,or (alternative/exclusion) / nor,or A1; nor C1
+COORD-04,A2,"so (result) / for (reason, formal)",so result A2; for reason C1
+COORD-05,B1,both,both ... and; EGP B1
+COORD-06,B1,either,either ... or; EGP B1
+COORD-07,B2,not only,not only ... but also; EGP B2
+COORD-08,B2,whether,whether ... or not; EGP B2
+COORD-09,C1,Ellipsis/gapping in coordination,Gapping/ellipsis in coordination; C1
+ASC-01,A2,when / whenever,when clauses A2; whenever B1
+ASC-02,B1,while / as (simultaneous),while/as simultaneous; EGP B1
+ASC-03,A2,before / after / until(till),before/after/until clauses; EGP A2
+ASC-04,B1,since (time starting point),since + clause with present perfect; EGP B1
+ASC-05,B1,as soon as / once / the moment / by the time / every time,as soon as B1; once/by the time B2
+ASC-06,B1,Present tense for future in time clauses (no will),Present for future in time clauses; EGP B1
+ASC-07,C1,no sooner,No sooner ... than inversion; EGP C1
+ASC-08,A1,Reason: because / since / as,because A1; since/as reason B1
+ASC-09,B2,Reason (formal): for / seeing (that) / now (that) / in that / given that,now that B2; in that / given that C1
+ASC-10,B1,Purpose (finite): so (that) / in order that + modal,so that + modal purpose; EGP B1
+ASC-11,A2,Purpose (non-finite): to / in order to / so as to / for + -ing,to-infinitive of purpose A2; in order to B1
+ASC-12,B2,Negative purpose: so as not to / in order not to / for fear (that) / lest,so as not to B2; lest C2
+ASC-13,B1,Result: so,so ... that / such ... that; EGP B1
+ASC-14,B2,Result: so that (no modal) / with the result that,so that result / with the result that; B2
+ASC-15,B1,although / though / even though,although/though/even though; EGP B1
+ASC-16,B2,while / whereas / whilst (contrast),whereas B2; whilst C1
+ASC-17,B1,despite / in spite of (+ NP/-ing/the fact that),despite/in spite of + NP/-ing; EGP B1
+ASC-18,B2,however / whatever / whoever / wherever / no matter how/what,whatever/no matter what; EGP B2
+ASC-19,C2,Concessive inversion (Adj/N + as/though + S + V),Tired as I was; rare literary inversion
+ASC-20,B1,even if,even if concessive condition; B1
+ASC-21,B2,Manner: as / (just) as / the way,as / the way manner clauses; B2
+ASC-22,B2,Unreal manner: as if / as though,as if / as though; EGP B2
+ASC-23,B1,Place: where / wherever / everywhere,where B1; wherever B2
+ASC-24,B2,Proportion: the + comp,the more ... the more; EGP B2
+ASC-25,B2,-ing participle clause,-ing participle clauses; EGP B2; CEFR-J B1.1
+ASC-26,C1,-ed participle clause,-ed participle adverbial clauses; EGP C1
+ASC-27,C1,Perfect participle clause,Having + -ed clauses; EGP C1
+ASC-28,C1,with + NP + complement (absolute),with + NP + complement absolute; C1
+ASC-29,C1,Verbless clauses,Verbless clauses; if necessary B2; when in doubt C1
+CON-01,A2,Zero conditional,Zero conditional; EGP A2
+CON-02,A2,First conditional,First conditional; EGP A2; Core Inventory A2
+CON-03,B1,Second conditional (+ If I were you),Second conditional; EGP B1; CEFR-J B1.2
+CON-04,B2,Third conditional,Third conditional; EGP B2; Core Inventory B2
+CON-05,C1,Mixed (past→present),Mixed conditional; EGP C1
+CON-06,C1,Mixed (present→past),Mixed conditional; EGP C1
+CON-07,B1,unless (= if not),unless; EGP B1
+CON-08,B2,as/so long as / provided (that) / on condition that,as long as B1; provided B2; on condition C1
+CON-09,B2,even if / only if / whether,only if / whether ... or; B2
+CON-10,B1,in case (precaution),in case; EGP B1
+CON-11,B2,suppose / supposing / imagine / what if,suppose/supposing B2; what if B1
+CON-12,C1,but for / if it weren't/hadn't been for / otherwise,but for / if it weren't for; EGP C1
+CON-13,C1,Inversion (no if),Had I known / Should you; EGP C1
+CON-14,B2,Implied/incomplete conditionals,if so / if not / otherwise; B2
+CON-15,B2,Imperative/coordination as condition,Imperative + and as condition; EGP B2
+CON-16,C1,if + would/could (politeness/insistence),if you would (politeness); EGP C1
+CON-17,C1,Tentative conditionals (were to / should / happen to),were to / should / happen to; EGP C1
+REL-01,A2,Defining: who (people),Defining who; EGP A2; CEFR-J A1.3
+REL-02,A2,Defining: which (things),Defining which; EGP A2
+REL-03,A2,Defining: that (people/things),Defining that; EGP A2; CEFR-J A1.1
+REL-04,B1,Zero relative (object),Zero object relative; EGP B1
+REL-05,B1,whose (possessive relative),whose relative; EGP B1
+REL-06,B2,"whom (object, formal)",whom formal object relative; EGP B2
+REL-07,B2,that-preference contexts (superlative/all/only/indefinite),that after superlative/all/only; B2 usage
+REL-08,B1,"Non-defining (people/things, commas, no that)",Non-defining who/which; EGP B1; CEFR-J B1.1
+REL-09,B2,Sentential relative (which = whole clause),Sentential which; EGP B2
+REL-10,C1,Quantifier + of + which/whom,many of whom / some of which; EGP C1
+REL-11,B2,Stranded preposition in relative,Stranded preposition in relatives; EGP B2
+REL-12,B2,Pied-piped preposition,in which / to whom; EGP B2; CEFR-J B2.1
+REL-13,B1,Relative adverbs (where/when/why),where/when B1; why B2
+REL-14,C1,whereby (formal),whereby formal relative; C1
+REL-15,B2,-ing participle (active),-ing reduced relatives; EGP B2
+REL-16,B2,-ed participle (passive),-ed reduced relatives; EGP B2
+REL-17,B2,to-infinitive relative,the best way to do / first to; B2
+REL-18,B1,Adjective/prepositional reduced relative,woman in the corner A2; people responsible C1
+NCL-01,A2,That-clause as object,I think (that); EGP A1-A2
+NCL-02,B2,That-clause as subject / extraposed,It is clear that B1; subject that-clause C1
+NCL-03,B2,Appositive that-clause (after noun),the fact that; EGP B2
+NCL-04,B1,That-clause after adjective,sure/glad/afraid that; EGP B1
+NCL-05,B1,that-omission rules,Awareness of that-omission constraints; B1
+NCL-06,C1,Subjunctive that-clause,Mandative subjunctive; EGP C1-C2
+NCL-07,B1,Wh-nominal clause (subject/object/complement),what he wants object B1; subject wh-clause B2
+NCL-08,B1,Wh- + to-infinitive,what to do / where to go; EGP B1
+NCL-09,B2,Extraposition / anticipatory it (subject & object),It's no use -ing / find it odd; B2
+NCL-10,B1,if/whether clause (embedded polar),wonder if/whether; EGP B1; CEFR-J B1.1
+NCL-11,B2,whether,whether or not / of whether; EGP B2
+NCL-12,C1,Nominal -ing clause,Possessive + -ing nominal clause; EGP C1
+NCL-13,B2,Noun + wh-complement clause,the question of whether; no idea how B1
+NCL-14,B1,Noun + of + -ing complement clause,possibility of / risk of + -ing; B1
+REP-01,B1,Reported statements + backshift,Reported statements with backshift; EGP B1
+REP-02,B2,No backshift (still-true / just-said / general truth),No backshift for still-true facts; B2
+REP-03,B1,Pronoun & possessive shift,Pronoun/possessive shift with backshift; B1
+REP-04,B2,"Deixis shift (this→that, here→there, now→then, today→that day, tomorrow→the next day, ago→before)",Deictic shift here/there now/then; B2
+REP-05,B1,Reported questions (yes/no → if/whether),Reported yes/no with if/whether; EGP B1
+REP-06,B1,Reported wh-questions (statement order),Reported wh-questions statement order; EGP B1
+REP-07,B1,Reported commands/requests (+ O + (not) to-inf),tell/ask sb (not) to; EGP B1
+REP-08,A2,say vs tell (+ patterns),say vs tell sb; EGP A2; CEFR-J A2.2
+REP-09,B2,Illocutionary reporting verbs + patterns,offer/promise/suggest/accuse of patterns; EGP B2
+REP-10,B1,"Modals in reported speech (will→would, can→could, must→had to, may→might)",would/could backshift B1; must to had to B2
+REP-11,B1,Reporting with present tense (news/summaries),Present tense reporting verbs; B1
+FOC-01,B2,It-cleft (subject focus),EGP B2 it-cleft; CEFR-J cleft B2
+FOC-02,B2,It-cleft (object/adjunct focus),EGP B2 cleft on object/adjunct; CEFR-J B2
+FOC-03,C1,It wasn't until,EGP C1 It was not until...that
+FOC-04,B2,Wh-cleft / pseudo-cleft,EGP B2 wh-cleft; wider range at C1
+FOC-05,B2,Reversed pseudo-cleft,EGP B2 reversed cleft (That's what...)
+FOC-06,B2,All (that),EGP B2 all/the reason + is focus
+FOC-07,C1,Object/complement fronting,EGP C1 fronted object/complement for emphasis
+FOC-08,C1,Adverbial fronting (marked theme),EGP C1 marked theme fronting for effect
+FOC-09,B2,Directional fronting + subject-verb inversion,Here comes/Down came; formulaic inversion B2
+FOC-10,C1,Subject-verb inversion after place/as/than (formal),EGP C1 locative inversion; formal/literary
+FOC-11,C1,Negative/restrictive fronting + subject-operator inversion,EGP C1; Core Inventory C1; CEFR-J CI C1
+FOC-12,B1,Emphatic do/did,EGP B1 emphatic do/did
+FOC-13,B1,Additive inversion (so/neither/nor),EGP B1 so do I / neither; GSE B2
+FOC-14,B1,so/such for emphasis,EGP so+adj A2; such a + noun B1
+FOC-15,B2,Wh-intensifiers (on earth / ever / the hell),EGP B2 what on earth / ever
+FOC-16,C1,End-weight / end-focus (information packaging),End-weight packaging choices; C1 discourse competence
+FOC-17,B2,Right/left dislocation (informal),EGP B2 heads and tails (spoken)
+FOC-18,B2,Thing-is focus formula,EGP B2 The thing is... focus formula
+ELS-01,B1,VP-ellipsis (post-operator),EGP B1 ellipsis after auxiliary (she has)
+ELS-02,B1,Infinitive ellipsis (to),EGP B1 I'd love to; ellipsis of VP after to
+ELS-03,C1,Gapping / stripping,Gapping/stripping; rare written coordination reduction
+ELS-04,B1,Nominal ellipsis,Nominal ellipsis (two/the first); the rich B2
+ELS-05,B2,do / do so / do it / do that substitution,EGP B2 do so substitution
+ELS-06,A2,Clausal so / not,EGP A2 I think so; I hope not B1
+ELS-07,B2,the same / such substitution,the same B1; such was... C2; overall B2
+ELS-08,A1,Response/answer ellipsis,EGP A1 short answers Yes I do; Me too A2
+ELS-09,A2,one/ones (nominal substitution),EGP A2 one/ones substitution; CEFR-J A2.1
+ELS-10,A2,Comparative-clause ellipsis,EGP A2 than me; than expected B2
+ELS-11,B1,Situational ellipsis (informal),EGP B1 situational ellipsis informal speech
+COH-01,B2,Additive linkers,in addition B1; moreover/furthermore B2
+COH-02,B1,Adversative/contrastive linkers,however B1; nevertheless/nonetheless B2
+COH-03,B1,Causal linkers,therefore B1; consequently/hence B2
+COH-04,A2,Temporal/sequencing linkers,first/then/next/finally A2; subsequently C1
+COH-05,A2,Exemplifying linkers,for example A2; namely/in particular B2
+COH-06,B2,Reformulating/clarifying linkers,in other words B2; or rather C1
+COH-07,B1,Summarising/concluding linkers,in conclusion B1; to sum up B2
+COH-08,B2,Emphasising linkers,in fact B1; indeed/above all B2
+COH-09,B2,Conceding linkers,of course A2; admittedly/granted C1
+COH-10,B1,Conditional/consequence linkers,otherwise/in that case B1; if so B2
+COH-11,B1,"Discourse markers (spoken/informal, register-flagged)",EGP B1 well/anyway/you know/I mean
+COH-12,B2,Anaphoric reference (pronominal/demonstrative/the-),Demonstrative+noun and such cases reference; academic B2
+COH-13,C1,the former / the latter / the above / the following / aforementioned,EGP C1 the former/the latter
+COH-14,B2,Punctuation of connectors (semicolon/comma conventions),Semicolon+however conventions; B2 written accuracy
+INS-01,A1,Interjections,Oh/Wow basic interjections; A1
+INS-02,A1,Greetings & farewells,Core Inventory A1 greetings and farewells
+INS-03,A2,Attention signals,Excuse me A1; Hey/Look/Listen A2
+INS-04,B1,Response elicitors (freestanding),Right?/Okay?/You know? interactional elicitors B1
+INS-05,A2,Response forms / minimal responses & backchannels,Yeah/Sure A1; Absolutely/Exactly B1
+INS-06,A2,Hesitators / filled pauses,er/um fillers to hold turn; A2
+INS-07,A1,Polite speech-act formulae,Core Inventory A1 please/thanks/sorry
+INS-08,B2,Expletives & taboo interjections,Expletives; register-sensitive; B2 receptive-productive
+INS-09,C1,Taboo/expletive intensifiers (pre-adjective/NP),Taboo intensifiers; rare informal register C1
+VAG-01,B1,General extenders / coordination tags,EGP B1 and things/and stuff; B2 wider
+VAG-02,A2,Vague category nouns & placeholders,thing(s)/stuff A2; thingy/whatsit C1
+VAG-03,B1,Hedging sort of / kind of (+ VP/AdjP/NP),EGP B1 kind of; sort of B2
+VAG-04,A2,Numeral approximators,about fifty A2; or so B1; -ish B2
+CMT-01,B1,First-person epistemic parentheticals,EGP B1 final I think; medial B2
+CMT-02,B2,Interactive parentheticals (medial/final),EGP B2 medial you know/you see/mind you
+CMT-03,B1,As-comment clauses,as you know/as I said B1; as it happens C1
+CMT-04,B2,Medial/final reporting clause (incl. inversion),EGP B2 reporting clause inversion said X
+VOC-01,A1,Vocative: name / title,Name/title vocatives A1
+VOC-02,A2,Vocative: kinship & endearment / familiarizers,Mum/mate/love familiarizers A2
+VOC-03,B1,"Vocative: impersonal, plural & honorifics",you guys/folks/ladies and gentlemen B1
+DMG-01,B1,well (utterance launcher),EGP B1 well as utterance launcher
+DMG-02,A2,oh (change-of-state / receipt),EGP A2 oh change-of-state marker
+DMG-03,B1,"you know (shared-knowledge monitor, initial)",EGP B1 you know shared-knowledge marker
+DMG-04,B1,I mean (reformulation marker),EGP B1 I mean reformulation
+DMG-05,B2,Discourse like (filler / focus / approximator),Discourse like; informal flagged; B2
+DMG-06,B1,so (utterance launcher / topic opener),EGP B1 so as topic opener/summariser
+DMG-07,B1,anyway / anyhow (resumptive / closing),EGP B1 anyway resumptive/closing
+DMG-08,B1,"right / okay (transition, acceptance, closing)",right/okay transition markers B1
+DMG-09,B1,Turn-initial and / but,Turn-initial and/but; conversational B1
+QIN-01,B1,Declarative question,EGP B1 declarative questions
+QIN-02,C1,Statement (copy) tags,Copy tags He's mad he is; dialectal C1
+QIN-03,B2,Exclamation tags,Exclamation tags Wasn't it...!; B2
+QIN-04,A2,Follow-up / two-step questions,Elliptical follow-up wh-questions A2
+QIN-05,B1,Preface questions,Guess what?/You know what? B1
+QIN-06,B2,Invariant tags,Invariant tags yeah?/eh?; innit vernacular; B2
+EXC-01,A2,What-exclamative clause,EGP A2 What a...! exclamative
+EXC-02,B1,How-exclamative clause,EGP B1 How + adj! exclamative
+EXC-03,A2,Verbless / phrasal exclamatives,Nice one!/Brilliant! A2; ironic forms C1
+QUO-01,B2,Quotative go,Quotative go; informal narrative B2
+QUO-02,B2,Quotative be like / be all,Quotative be like; informal B2
+QUO-03,B2,Conversational historic-present reporting,EGP B2 historic present in narrative
+QUO-04,B1,Past progressive reporting frame,EGP B1 was saying reporting frame
+QUO-05,C2,Free direct & free indirect speech/thought,Free indirect speech; literary C2
+SIT-01,B1,Initial subject ellipsis,EGP B1 subject ellipsis Doesn't matter
+SIT-02,B1,Subject + operator ellipsis,EGP B1 Want a coffee? spoken ellipsis
+SIT-03,B2,Operator-only (medial) ellipsis,You seen John?; near-vernacular aux-drop B2
+SIT-04,B2,Other situational fragments (copula/determiner/preposition drop),Ready? A2; Good film that C1; overall B2
+ISB-01,B2,Stand-alone if-clause (polite directive/offer),EGP B2 If you could just... polite directive
+ISB-02,A2,Stand-alone because/cos-clause,Because-answer to why A2
+ISB-03,C1,Stand-alone which-comment clause,Freestanding which-comment; C1 stylistic
+PSC-01,B1,try and + verb,EGP B1 try and + verb
+PSC-02,A2,go/come and + verb,EGP A2 come and/go and + verb
+PSC-03,B2,nice and / good and + adjective,nice and warm; idiomatic B2
+VER-01,NR,Negative concord (multiple negation),Vernacular stratum; not level-bearing
+VER-02,NR,ain't (= be/have negative),Vernacular stratum; not level-bearing
+VER-03,NR,Non-standard concord,Vernacular stratum; not level-bearing
+VER-04,NR,Demonstrative them,Vernacular stratum; not level-bearing
+VER-05,NR,Leveled/regularized verb forms,Vernacular stratum; not level-bearing
+VER-06,NR,Reduced semi-modals gonna / wanna / gotta (transcribed),Vernacular stratum; transcription variant
+VER-07,NR,Double comparative/superlative,Vernacular stratum; not level-bearing
+DYS-01,NR,Repeats,Performance layer; not competence construct
+DYS-02,NR,Retrace-and-repair / reformulation,Performance layer; not competence construct
+DYS-03,NR,Incomplete / abandoned utterance,Performance layer; not competence construct
+DYS-04,NR,Syntactic blend (anacoluthon),Performance layer; not competence construct

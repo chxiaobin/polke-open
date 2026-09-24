@@ -26,3 +26,31 @@ def lexicons() -> dict:
 
 def construct(cid: str) -> dict:
     return constructs()[cid]
+
+
+UNRATED = "unrated"
+CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"]
+
+
+@functools.lru_cache(maxsize=1)
+def cefr_levels() -> dict:
+    """construct id -> {"level": "B1" | "unrated", "note": "..."} from
+    data/cefr_levels.csv (A1–C2, or NR for the non-level-bearing vernacular
+    and dysfluency strata). Constructs absent from the file are unrated."""
+    import csv
+    out: dict = {}
+    path = DATA / "cefr_levels.csv"
+    if not path.exists():
+        return out
+    with path.open(encoding="utf-8-sig", newline="") as fh:
+        for row in csv.DictReader(fh):
+            cid = (row.get("id") or "").strip()
+            lv = (row.get("level") or "").strip().upper()
+            if cid:
+                out[cid] = {"level": lv if lv in CEFR_LEVELS else UNRATED,
+                            "note": (row.get("note") or "").strip()}
+    return out
+
+
+def cefr_level(cid: str) -> str:
+    return cefr_levels().get(cid, {}).get("level", UNRATED)

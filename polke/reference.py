@@ -14,7 +14,7 @@ import json
 
 from . import __version__
 from .llm import LLM_TYPES
-from .registry import constructs
+from .registry import CEFR_LEVELS, cefr_level, constructs
 
 TIER_LABELS = {
     "rule": "rule",
@@ -69,6 +69,10 @@ a.cid:hover { text-decoration: underline; }
 .tier { font-size: .72rem; padding: .1rem .5rem; border-radius: 999px;
   background: var(--chip); color: var(--muted); white-space: nowrap; }
 .tier.needs-llm { color: var(--accent); }
+.cefr { font-size: .72rem; font-weight: 600; padding: .1rem .45rem; border-radius: 4px;
+  color: #fff; background: #9ca3af; white-space: nowrap; min-width: 1.6rem; text-align: center; }
+.cefr.A1 { background: #16a34a; } .cefr.A2 { background: #0d9488; } .cefr.B1 { background: #2563eb; }
+.cefr.B2 { background: #7c3aed; } .cefr.C1 { background: #ea580c; } .cefr.C2 { background: #dc2626; }
 .hidden { display: none !important; }
 """
 
@@ -78,6 +82,7 @@ _JS = """
       partSel = document.getElementById('part'),
       catSel = document.getElementById('cat'),
       llm = document.getElementById('llm'),
+      lvlSel = document.getElementById('level'),
       count = document.getElementById('count'),
       rows = Array.prototype.slice.call(document.querySelectorAll('li.row')),
       catsByPart = JSON.parse(document.getElementById('cats-by-part').textContent);
@@ -96,10 +101,11 @@ _JS = """
   function apply() {
     var needle = q.value.trim().toLowerCase(),
         part = partSel.value, cat = catSel.value, llmOnly = llm.checked,
-        shown = 0;
+        level = lvlSel.value, shown = 0;
     rows.forEach(function (r) {
       var ok = (!part || r.dataset.part === part) &&
                (!cat || r.dataset.cat === cat) &&
+               (!level || r.dataset.level === level) &&
                (!llmOnly || r.dataset.llm === '1') &&
                (!needle || r.dataset.search.indexOf(needle) >= 0);
       r.classList.toggle('hidden', !ok);
@@ -118,6 +124,7 @@ _JS = """
   partSel.addEventListener('change', function () { rebuildCats(); apply(); });
   catSel.addEventListener('change', apply);
   llm.addEventListener('change', apply);
+  lvlSel.addEventListener('change', apply);
   rebuildCats(); apply();
 })();
 """
@@ -145,11 +152,14 @@ def _row(c: dict) -> str:
     example = (f'<p class="ex">{e(c.get("example", ""))}</p>'
                if c.get("example") else "")
     tier = TIER_LABELS.get(c.get("detector_type", ""), c.get("detector_type", ""))
+    level = cefr_level(c["id"])
+    badge = (f'<span class="cefr {level}" title="CEFR level (data/cefr_levels.csv)">'
+             f'{level if level in CEFR_LEVELS else "—"}</span>')
     return (
         f'<li class="row" id="{e(c["id"])}" data-part="{e(c.get("part", ""))}" '
-        f'data-cat="{e(c.get("category_name", ""))}" '
+        f'data-cat="{e(c.get("category_name", ""))}" data-level="{e(level)}" '
         f'data-llm="{"1" if needs_llm else "0"}" data-search="{e(search)}">'
-        f'<a class="cid" href="#{e(c["id"])}">{e(c["id"])}</a>'
+        f'<a class="cid" href="#{e(c["id"])}">{e(c["id"])}</a>{badge}'
         f'<div class="body"><p class="name">{e(c.get("name", ""))}</p>'
         f'{example}<p class="sub">{sub}</p></div>'
         f'<span class="tier{" needs-llm" if needs_llm else ""}">{e(tier)}</span>'
@@ -177,6 +187,9 @@ def reference_html() -> str:
 
     part_options = "".join(f'<option value="{e(p)}">{e(p)}</option>'
                            for p in parts)
+    level_options = "".join(f'<option value="{lv}">{lv}</option>'
+                            for lv in CEFR_LEVELS) + \
+        '<option value="unrated">unrated</option>'
 
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
@@ -186,12 +199,14 @@ def reference_html() -> str:
 <body><div class="wrap">
 <h1>POLKE — construction inventory</h1>
 <p class="meta">{n} grammatical constructions · polke {e(__version__)} ·
-<a href="https://github.com/chxiaobin/polke-open">source &amp; docs</a></p>
+<a href="https://github.com/chxiaobin/polke-open">source &amp; docs</a> ·
+<a href="/verify">level verifier</a></p>
 <div class="controls">
 <input id="q" type="search" placeholder="Search id, name, example…"
  aria-label="Search constructions">
 <select id="part" aria-label="Part"><option value="">All parts</option>{part_options}</select>
 <select id="cat" aria-label="Category"><option value="">All categories</option></select>
+<select id="level" aria-label="CEFR level"><option value="">All CEFR levels</option>{level_options}</select>
 <label><input type="checkbox" id="llm"> LLM tier only</label>
 <span id="count"></span>
 </div>

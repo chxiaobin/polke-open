@@ -16,6 +16,10 @@ project root). Recognised variables:
                             parser decides) or "line" (each input line is one
                             sentence — for transcribed speech, one utterance
                             per line)
+    POLKE_SENTENCE_CONCURRENCY  sentences analysed in parallel by the level
+                            verifier when the LLM tiers are on (default 3)
+    POLKE_MAX_SENTENCES     verifier cap on sentences per request (default 500)
+    POLKE_MAX_CHARS         verifier cap on input length (default 100000)
 """
 from __future__ import annotations
 
@@ -79,3 +83,23 @@ def llm_concurrency() -> int:
     except ValueError:
         return 8
     return max(1, n)
+
+
+def _int_env(name: str, default: int, lo: int = 1) -> int:
+    try:
+        return max(lo, int(os.getenv(name, str(default))))
+    except ValueError:
+        return default
+
+
+def sentence_concurrency() -> int:
+    """Sentences the level verifier analyses in parallel (LLM runs only)."""
+    return _int_env("POLKE_SENTENCE_CONCURRENCY", 3)
+
+
+def max_sentences() -> int:
+    return _int_env("POLKE_MAX_SENTENCES", 500)
+
+
+def max_chars() -> int:
+    return _int_env("POLKE_MAX_CHARS", 100_000, lo=100)

@@ -8,6 +8,7 @@ dist/
 .pytest_cache/
 annotations/
 *.annotations.json
+notes
 
 # local verification corpus (sampled from ARES hiwi-texts; not for distribution)
 examples/verification-corpus/

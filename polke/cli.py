@@ -7,7 +7,8 @@
     polke view PATH [-o FILE]           build an HTML viewer for annotations
     polke probe PATH [-c IDS]           LLM sweep for false-negative candidates
     polke score PATH VERDICTS           P/R/F1 per construct from adjudication
-    polke serve [--host H] [--port P]   run the HTTP API
+    polke level PATH [--no-llm]         CEFR vocabulary + grammar level per sentence
+    polke serve [--host H] [--port P]   run the HTTP API (+ /verify UI)
 
 `annotate` reads every *.txt file under PATH (or the single file PATH), runs
 the detectors, and writes one `<name>.annotations.json` per input into
@@ -62,6 +63,9 @@ def cmd_check(args) -> int:
     print(f"constructs       : {len(constructs())} total, {n_llm} need an LLM")
     print(f"LLM model        : {status['model']}")
     print(f"LLM API ready    : {status['ready']} ({status['reason']})")
+    from .registry import cefr_levels
+    rated = sum(1 for v in cefr_levels().values() if v["level"] != "unrated")
+    print(f"CEFR levels      : {rated} constructs rated (data/cefr_levels.csv)")
     if not status["ready"]:
         _warn(llm_mod.warning_text(status))
     return 0
@@ -390,6 +394,54 @@ def cmd_score(args) -> int:
     return 0
 
 
+def cmd_level(args) -> int:
+    """Per-sentence CEFR levels (vocabulary from the word lists, grammar
+    from the annotated constructions). Table on stdout, or --json for the
+    stream records (one JSON object per line)."""
+    from .cefr import LevelAnalyzer
+    load_env()
+    if args.path == "-":
+        text = sys.stdin.read()
+    else:
+        path = Path(args.path)
+        if not path.is_file():
+            _warn(f"error: {args.path} is not a file")
+            return 2
+        text = path.read_text(encoding="utf-8")
+    try:
+        an = LevelAnalyzer(no_llm=args.no_llm)
+    except RuntimeError as exc:
+        _warn(f"error: {exc}")
+        return 2
+    if not an.llm_status["ready"] and not args.no_llm:
+        pass  # LevelAnalyzer already logged the warning
+    sel = ([s for part in args.constructions for s in part.split(",") if s]
+           if args.constructions else None)
+    if not args.json:
+        print(f"{'#':>4}  {'vocab':<6} {'grammar':<8} sentence")
+    for rec in an.analyze_iter(text, selection=sel, use_llm=not args.no_llm):
+        if args.json:
+            print(json.dumps(rec, ensure_ascii=False))
+            continue
+        if rec["type"] == "sentence":
+            print(f"{rec['index'] + 1:>4}  {rec['max_vocab_level'] or '-':<6} "
+                  f"{rec['max_grammar_level'] or '-':<8} {rec['text']}")
+            if args.verbose:
+                for c in rec["constructions"]:
+                    print(f"{'':>6}{c['level']:<8} {c['id']:<9} {c['name']} "
+                          f"[{c['matched']}]")
+                hi = [f"{t['headword']} ({t['level']})"
+                      for t in rec["vocab"]["tokens"]
+                      if t["level"] and t["level"] not in ("A1", "A2")]
+                if hi:
+                    print(f"{'':>6}words above A2: {', '.join(dict.fromkeys(hi))}")
+        elif rec["type"] == "done":
+            s = rec["summary"]
+            print(f"\n{s['sentences']} sentences, {s['words']} words; "
+                  f"vocab {s['vocab_levels']}; grammar {s['grammar_levels']}")
+    return 0
+
+
 def cmd_serve(args) -> int:
     import uvicorn
     uvicorn.run("polke.server:app", host=args.host, port=args.port,
@@ -508,6 +560,24 @@ def main(argv=None) -> int:
                     help="hide constructs with support below N (they still "
                          "count in totals)")
 
+    pl = sub.add_parser("level",
+                        help="CEFR level check: vocabulary level (CEFR-J / "
+                             "Octanove word lists) and grammar level (from "
+                             "the annotated constructions) per sentence")
+    pl.add_argument("path", help="a text file ('-' = stdin); every line "
+                                 "break is a sentence boundary")
+    pl.add_argument("-c", "--constructions", action="append", default=None,
+                    metavar="IDS",
+                    help="restrict the grammar side to these construct ids "
+                         "/ category prefixes (default: all)")
+    pl.add_argument("--no-llm", action="store_true",
+                    help="skip the LLM tiers even if a key is configured")
+    pl.add_argument("-v", "--verbose", action="store_true",
+                    help="also list each sentence's constructions and its "
+                         "words above A2")
+    pl.add_argument("--json", action="store_true",
+                    help="emit the stream records as JSON lines")
+
     ps = sub.add_parser("serve", help="run the HTTP API")
     ps.add_argument("--host", default="127.0.0.1")
     ps.add_argument("--port", type=int, default=8100)
@@ -518,7 +588,7 @@ def main(argv=None) -> int:
             "explain": cmd_explain, "annotate": cmd_annotate,
             "view": cmd_view, "adjudicate": cmd_adjudicate,
             "probe": cmd_probe, "score": cmd_score,
-            "serve": cmd_serve}[args.cmd](args)
+            "level": cmd_level, "serve": cmd_serve}[args.cmd](args)
 
 
 if __name__ == "__main__":

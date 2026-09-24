@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>POLKE — CEFR level verifier</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%276%27 fill=%27%232563eb%27/%3E%3Ctext x=%2716%27 y=%2722%27 font-size=%2716%27 font-family=%27sans-serif%27 font-weight=%27700%27 fill=%27white%27 text-anchor=%27middle%27%3EC%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/verify/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">POLKE</span> level verifier
+    <span class="sub">vocabulary (CEFR-J / Octanove) · grammar (POLKE)</span>
+  </div>
+  <div class="nav"><a href="/reference">construction reference</a></div>
+  <div id="status" class="status">connecting…</div>
+</header>
+
+<main class="layout">
+  <section class="input-panel">
+    <label for="text" class="label">Text to analyse
+      <span class="hint">Paste sentences. Each line break forces a sentence boundary; long lines are split by the parser.</span>
+    </label>
+    <textarea id="text" rows="10" placeholder="I have lived here for years.&#10;If I had known, I would have come earlier."></textarea>
+    <div class="controls">
+      <label class="check"><input type="checkbox" id="use-llm" checked> Use LLM-backed construction tiers</label>
+      <button id="sample" class="btn ghost" type="button">Load sample</button>
+      <button id="analyze" class="btn primary" type="button">Analyse</button>
+      <button id="cancel" class="btn ghost" type="button" hidden>Cancel</button>
+    </div>
+    <div id="progress" class="progress" hidden><div class="bar"></div><span class="ptext"></span></div>
+    <div id="error" class="error" hidden></div>
+  </section>
+
+  <aside class="filters" id="filters">
+    <h2>Filters</h2>
+    <div class="fgroup">
+      <div class="fhead"><span>Vocabulary levels</span>
+        <button class="link" data-all="vocab">all</button><button class="link" data-none="vocab">none</button></div>
+      <div class="chips" id="vocab-levels"></div>
+    </div>
+    <div class="fgroup">
+      <div class="fhead"><span>Grammar levels</span>
+        <button class="link" data-all="gram">all</button><button class="link" data-none="gram">none</button></div>
+      <div class="chips" id="gram-levels"></div>
+    </div>
+    <div class="fgroup">
+      <div class="fhead"><span>Detector tier</span></div>
+      <div class="chips" id="tiers">
+        <label class="chip on"><input type="checkbox" value="rule" checked>rule</label>
+        <label class="chip on"><input type="checkbox" value="lexicon" checked>lexicon</label>
+        <label class="chip on"><input type="checkbox" value="llm" checked>LLM-backed</label>
+      </div>
+      <label class="range">Min. confidence <span id="conf-val">0.00</span>
+        <input type="range" id="conf" min="0" max="1" step="0.05" value="0"></label>
+    </div>
+    <div class="fgroup">
+      <details>
+        <summary>Grammar categories <span id="cat-count"></span></summary>
+        <div class="fhead"><button class="link" data-all="cat">all</button><button class="link" data-none="cat">none</button></div>
+        <div id="categories" class="catlist"></div>
+      </details>
+    </div>
+    <div class="fgroup">
+      <div class="fhead"><span>Display</span></div>
+      <label class="check"><input type="checkbox" id="color-words" checked> Colour words by level</label>
+      <label class="check"><input type="checkbox" id="show-phrases" checked> Mark multi-word entries</label>
+      <label class="check"><input type="checkbox" id="only-matching"> Only sentences with matches</label>
+      <label class="check"><input type="checkbox" id="show-rationale"> Show LLM rationale</label>
+    </div>
+    <div class="fgroup">
+      <button id="export" class="btn ghost small" type="button" disabled>Download JSON</button>
+      <button id="reset" class="btn ghost small" type="button">Reset filters</button>
+    </div>
+    <div class="legend">
+      <div class="fhead"><span>Legend</span></div>
+      <div class="legend-row"><span class="lv lv-A1">A1</span><span class="lv lv-A2">A2</span><span class="lv lv-B1">B1</span><span class="lv lv-B2">B2</span><span class="lv lv-C1">C1</span><span class="lv lv-C2">C2</span><span class="lv lv-none">not in list</span></div>
+      <p class="hint">Word levels: CEFR-J Vocabulary Profile 1.5 (A1–B2) and Octanove Vocabulary Profile 1.0 (C1–C2). Grammar levels: EGP/CEFR-J–informed estimates per POLKE construction (<code>polke/data/cefr_levels.csv</code>).</p>
+    </div>
+  </aside>
+
+  <section class="results">
+    <div id="summary" class="summary" hidden></div>
+    <div id="sentences"></div>
+    <div id="empty" class="empty">Paste text and press <b>Analyse</b>.</div>
+  </section>
+</main>
+
+<div id="tooltip" class="tooltip" hidden></div>
+<script src="/static/verify/app.js"></script>
+</body>
+</html>
