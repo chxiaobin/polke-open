@@ -25,3 +25,6 @@ examples/test-corpus-bnc/
 
 # Jev wild-calibration study (contains licensed corpus text)
 examples/jev-wild-calibration/
+
+# BLC full-study run data (corpus text)
+examples/blc-run/
