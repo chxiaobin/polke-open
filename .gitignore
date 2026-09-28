@@ -22,3 +22,6 @@ examples/verification-corpus-bnc*/
 # model bake-off logs (local measurement artefacts)
 examples/bakeoff-logs/
 examples/test-corpus-bnc/
+
+# Jev wild-calibration study (contains licensed corpus text)
+examples/jev-wild-calibration/
