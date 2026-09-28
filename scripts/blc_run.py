@@ -38,7 +38,10 @@ def main(argv=None) -> int:
     args = ap.parse_args(argv)
 
     sample = Path(args.sample)
-    batches = sorted((sample / "batches").glob("batch_*.txt"))
+    # a blc_sample.py layout has batches/; any other dir of utterance-per-
+    # line .txt files (e.g. the full converted corpus) works the same way
+    bdir = sample / "batches" if (sample / "batches").is_dir() else sample
+    batches = sorted(bdir.glob("*.txt"))
     out_dir = sample / "annotations"
     out_dir.mkdir(exist_ok=True)
     pending = [b for b in batches
