@@ -51,6 +51,7 @@ flowchart TD
     REC --> SC["score: P / R / F1 vs human verdicts"]
 ```
 
+A rendered copy of this diagram is in `docs/pipeline.svg` (for slides/paper).
 Offline tiers (rule, lexicon) finish at the merge directly; only the 280
 LLM-gated constructs take the deferred-task path through the thread pool.
 Spans always originate from the parser side (left), never from the model.
