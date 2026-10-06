@@ -5,6 +5,56 @@ Technical companion to `docs/constructions.md` (what is detected) and
 machinery. `polke explain <IDS>` prints the live configuration — patterns,
 lexicons, prompts, contract sentences — for any construct.
 
+## Pipeline at a glance
+
+```mermaid
+flowchart TD
+    subgraph data["Data layer"]
+        CJ["constructs.json - 670-construct inventory"]
+        LJ["lexicons.json - curated word lists"]
+        DJ["detectors.json - contract sentences"]
+    end
+
+    CJ --> B["build_all: catalog modules compile matchers, lexicons, prompts"]
+    LJ --> B
+    B --> REG[("registry: construct_id to detector")]
+    DJ -. "contract suite gates every change" .-> REG
+
+    T["input text (utterance per line)"] --> NLP
+
+    subgraph mainthread["Main thread - one spaCy doc per text"]
+        NLP["spaCy: line-senter, tagger, parser"] --> DOC[("doc")]
+        DOC --> RULE["rule tier (181): DependencyMatcher patterns + deterministic routers"]
+        DOC --> LEX["lexicon tier (209): patterns gated by word lists"]
+        DOC --> PROP["hybrid proposers (215): matcher finds candidate span"]
+        DOC --> STAND["llm tier (65): whole-utterance presence question"]
+        PROP --> MARK["sentence with the candidate span marked"]
+    end
+    REG --> DOC
+
+    MARK --> TASKS["deferred judgment tasks (plain strings, no doc access)"]
+    STAND --> TASKS
+
+    subgraph pool["ThreadPoolExecutor - POLKE_LLM_CONCURRENCY parallel calls"]
+        TASKS --> CLS["OpenAIClassifier: rationale-first JSON contract, judgment cache"]
+    end
+    CLS <--> LLM[("self-hosted LLM (Gemma-4-31B, reasoning off)")]
+    CLS --> JUDGE{"one sibling construct id, or NONE"}
+
+    RULE --> OUT["annotations: merged, filtered to selection, sorted"]
+    LEX --> OUT
+    JUDGE --> OUT
+
+    OUT --> REC["record JSON: text + spans + tier + confidence + evidence"]
+    REC --> V["viewer / adjudicate"]
+    REC --> PRB["recall probe (second-model miss candidates)"]
+    REC --> SC["score: P / R / F1 vs human verdicts"]
+```
+
+Offline tiers (rule, lexicon) finish at the merge directly; only the 280
+LLM-gated constructs take the deferred-task path through the thread pool.
+Spans always originate from the parser side (left), never from the model.
+
 ## 1. Data layer: three JSON files are the single source of truth
 
 | file | role |
